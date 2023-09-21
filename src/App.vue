@@ -1,15 +1,14 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <sign-in-box class="signin-box"/>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import SignInBox from './components/SignInBox.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    SignInBox
   }
 }
 </script>
@@ -23,4 +22,8 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+
+.signin-box {
+}
+
 </style>
