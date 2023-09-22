@@ -14,15 +14,32 @@
 
 <script>
 import StdButton from '@/components/StdButton.vue'
+import axios from 'axios'
 
 export default {
   name: 'SignInBox',
   components: {
     StdButton
   },
+  data() {
+    return {
+      test: null
+    }
+  },
+  async mounted() {
+    axios.get('http://127.0.0.1:3000/users') 
+    .then(response => {
+      this.test = response.data
+
+      console.log(this.test)
+    })
+  .catch(e => {
+    console.log(e)
+    })
+  },
   methods: {
     signin() {
-      console.log("test")
+      console.log(this.test)
     }
   }
 }
