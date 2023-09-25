@@ -14,7 +14,7 @@
 
 <script>
 import StdButton from '@/components/StdButton.vue'
-import axios from 'axios'
+import http from '@/services/http-helper.js'
 
 export default {
   name: 'SignInBox',
@@ -27,15 +27,14 @@ export default {
     }
   },
   async mounted() {
-    axios.get('http://127.0.0.1:3000/users') 
-    .then(response => {
+    try {
+      const response = await http.get('users') 
       this.test = response.data
 
       console.log(this.test)
-    })
-  .catch(e => {
-    console.log(e)
-    })
+    } catch(err) {
+      console.log(err)
+    }
   },
   methods: {
     signin() {

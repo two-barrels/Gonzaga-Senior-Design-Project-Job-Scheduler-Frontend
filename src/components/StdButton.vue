@@ -1,5 +1,5 @@
 <template>
-<div class="signin-button" @click="signin()">
+<div class="signin-button" >
     {{ title }}
 </div>
 </template>
