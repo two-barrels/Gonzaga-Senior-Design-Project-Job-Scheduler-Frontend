@@ -1,15 +1,17 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <SpaceName spaceID="Conference Room 1"/>
+  <CalendarComp/>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import SpaceName from './components/SpaceName.vue'
+import CalendarComp from './components/CalendarComp.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    SpaceName,
+    CalendarComp
   }
 }
 </script>
