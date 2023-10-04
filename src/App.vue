@@ -1,26 +1,43 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <AvailableSpaces />
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import AvailableSpaces from './components/AvailableSpaces.vue';
+
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    AvailableSpaces
+  },
+  data(){
+    return {
+      
+    }
+  },
+  computed: {
+
+  },
+  methods: {
   }
 }
 </script>
 
 <style>
-#app {
+h1 {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  text-align: left;
   color: #2c3e50;
   margin-top: 60px;
+}
+p{
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: left;
+  color: #2c3e50;
 }
 </style>
