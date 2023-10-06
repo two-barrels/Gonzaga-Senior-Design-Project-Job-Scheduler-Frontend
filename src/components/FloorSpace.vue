@@ -23,7 +23,7 @@
   import '@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css'
 
   export default {
-    name: 'FloorSpace',
+    name: 'floor-space',
     props: {
       floorName: String,
     }, 

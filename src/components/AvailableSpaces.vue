@@ -1,19 +1,16 @@
 <template>
     <h1>Available Spaces</h1>
-    <FloorSpace floorName="Floor 1"/>
-    <FloorSpace floorName="Floor 2"/>
+    <floor-space floorName="Floor 1"/>
+    <floor-space floorName="Floor 2"/>
   </template>
   
   <script>
   import FloorSpace from "./FloorSpace.vue"
   
   export default {
-    name: 'SingleFloor',
-    props: {
-
-    },
+    name: 'available-spaces',
     components: {
-      FloorSpace
+      'floor-space': FloorSpace
     }
   }
   </script>
