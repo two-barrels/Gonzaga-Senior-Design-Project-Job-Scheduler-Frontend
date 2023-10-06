@@ -1,16 +1,13 @@
 <template>
-  <SpaceName spaceID="Conference Room 1"/>
   <CalendarComp/>
 </template>
 
 <script>
-import SpaceName from './components/SpaceName.vue'
 import CalendarComp from './components/CalendarComp.vue'
 
 export default {
   name: 'App',
   components: {
-    SpaceName,
     CalendarComp
   }
 }
