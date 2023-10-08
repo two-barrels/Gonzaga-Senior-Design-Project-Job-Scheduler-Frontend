@@ -1,25 +1,22 @@
 <template>
-  <CalendarComp/>
+  <calendar-comp/>
+  <available-spaces />
 </template>
 
 <script>
 import CalendarComp from './components/CalendarComp.vue'
+import AvailableSpaces from './components/AvailableSpaces.vue';
+
 
 export default {
   name: 'App',
   components: {
-    CalendarComp
+    CalendarComp,
+    AvailableSpaces
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 </style>

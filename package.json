@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@daypilot/daypilot-lite-vue": "^3.18.0",
+    "@dafcoe/vue-collapsible-panel": "^0.2.0",
     "core-js": "^3.8.3",
     "vue": "^3.2.13"
   },
