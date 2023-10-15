@@ -1,14 +1,14 @@
 <template>
-  <sign-in-box class="signin-box"/>
+  <SessionManager />
 </template>
 
 <script>
-import SignInBox from './components/SignInBox.vue'
+import SessionManager from './components/SessionManager.vue'
 
 export default {
   name: 'App',
   components: {
-    SignInBox
+    SessionManager
   }
 }
 </script>
@@ -22,8 +22,4 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
-
-.signin-box {
-}
-
 </style>
