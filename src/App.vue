@@ -1,18 +1,23 @@
 <template>
-  <calendar-comp/>
-  <available-spaces />
+  <component :is="currentComponent"></component>
 </template>
 
 <script>
-import CalendarComp from './components/CalendarComp.vue'
 import AvailableSpaces from './components/AvailableSpaces.vue';
+import Tmp from './components/Tmp.vue'
 
 
 export default {
   name: 'App',
   components: {
-    CalendarComp,
-    AvailableSpaces
+    AvailableSpaces,
+    Tmp
+  },
+  computed: {
+    currentComponent() {
+      console.log(window.location.pathname.substring(1))
+      return window.location.pathname.substring(1)
+    }
   }
 }
 </script>
