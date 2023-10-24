@@ -3,23 +3,7 @@
         <h1 class="sm-title">Two Barrels Sign in Page</h1>
         <div class="sm-card">
             <div v-if="isLoggedIn">
-                <button @click= "logoutUser" class="logout-button" >Logout</button>
-                <table class="table">
-                    <thead class="thead-dark">
-                    <tr class="table-headers">
-                        <th scope="col">ID</th>
-                        <th scope="col">email</th>
-                        <th scope="col">Token</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr class="table-rows">
-                        <th class="table-row">[{{ this.getUserID }}]</th>
-                        <td class="table-row table-row-username">{{ this.getUserEmail }}</td>
-                        <td class="table-row">{{ this.getAuthToken }}</td>
-                    </tr>
-                    </tbody>
-                </table>
+              <component :is="currentComponent"></component>
             </div>
             <div v-else>
                 <h3>Sign Up!</h3>
@@ -53,10 +37,20 @@
 <script>
 import "@/store/index.js"
 import { mapActions, mapGetters } from 'vuex'
+import AvailableSpaces from '@/components/AvailableSpaces.vue';
+import CalendarComp from '@/components/CalendarComp.vue'
 export default {
     name: "SessionManager",
+  components: {
+    AvailableSpaces,
+    CalendarComp
+  },
     computed: {
         ...mapGetters(["getAuthToken", "getUserEmail", "getUserID", "isLoggedIn"]),
+      currentComponent() {
+        console.log(window.location.pathname.substring(1))
+        return window.location.pathname.substring(1) != '' ? window.location.pathname.substring(1) : 'AvailableSpaces'
+      }
     },
     data() {
         return {
