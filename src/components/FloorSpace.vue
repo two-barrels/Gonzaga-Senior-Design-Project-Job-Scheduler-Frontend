@@ -7,7 +7,7 @@
         </template>
         <template #content>
           <p> Click on a room or desk to check time availability</p>
-          <button> Desk 1</button>
+          <a href="/CalendarComp"><button> Desk 1</button></a>
           <button> Conference Room 1</button>
         </template>
     </vue-collapsible-panel>
