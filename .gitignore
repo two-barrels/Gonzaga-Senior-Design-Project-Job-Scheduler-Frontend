@@ -3,11 +3,14 @@ node_modules
 /dist
 .vscode
 package-lock.json
+yarn.lock
+package.json
 
 
 # local env files
 .env.local
 .env.*.local
+.env.yml
 
 # Log files
 npm-debug.log*
