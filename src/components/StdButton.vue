@@ -1,5 +1,5 @@
 <template>
-<div class="signin-button" >
+<div :class="buttonType" >
     {{ title }}
 </div>
 </template>
@@ -9,7 +9,8 @@
 export default {
     name: 'SignInBox',
     props: {
-        title: String
+        title: String,
+        buttonType: String
     }
 }
 </script>
@@ -17,22 +18,27 @@ export default {
 <style>
 
 .std-button {
-min-height: 15px;
-width: fit-content;
-padding: 10px;
-border: 1px black solid;
-background-color: aqua;
-border-radius: 5px;
-position: absolute;
-left: 0;
-right: 0;
-margin-right: auto;
-margin-left: auto;
-margin-top: 10px;
-&:hover {
-    background-color: rgb(0, 160, 160);
-    cursor: pointer;
+    min-height: 15px;
+    width: fit-content;
+    padding: 10px;
+    border: 1px black solid;
+    background-color: aqua;
+    border-radius: 5px;
+    &:hover {
+        background-color: rgb(0, 160, 160);
+        cursor: pointer;
+    }
 }
+
+.login-button {
+    min-height: 8px;
+    width: fit-content;
+    padding: 5px;
+    border-bottom: 1px black solid;
+    &:hover {
+        background-color: rgb(0, 160, 160);
+        cursor: pointer;
+    }
 }
 
 </style>

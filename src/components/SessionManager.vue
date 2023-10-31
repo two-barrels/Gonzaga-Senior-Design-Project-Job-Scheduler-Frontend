@@ -2,10 +2,7 @@
     <div class="container">
         <h1 class="sm-title">Two Barrels Sign in Page</h1>
         <div class="sm-card">
-            <div v-if="isLoggedIn">
-              <component :is="currentComponent"></component>
-            </div>
-            <div v-else>
+            <div>
                 <h3>Sign Up!</h3>
                     <form @submit="onSignUp" class="sign-up-form">
                         <input class="sign-up-form-email" type="email" v-model="signUpEmail" placeholder="Email" />
@@ -37,14 +34,8 @@
 <script>
 import "@/store/index.js"
 import { mapActions, mapGetters } from 'vuex'
-import AvailableSpaces from '@/components/AvailableSpaces.vue';
-import CalendarComp from '@/components/CalendarComp.vue'
 export default {
     name: "SessionManager",
-  components: {
-    AvailableSpaces,
-    CalendarComp
-  },
     computed: {
         ...mapGetters(["getAuthToken", "getUserEmail", "getUserID", "isLoggedIn"]),
       currentComponent() {
@@ -54,10 +45,11 @@ export default {
     },
     data() {
         return {
-        signUpEmail: "",
-        signUpPassword: "",
-        loginEmail: "",
-        loginPassword: "",
+          signUpEmail: "",
+          signUpPassword: "",
+          loginEmail: "",
+          loginPassword: "",
+          loaded: false
         };
     },
     methods: {
