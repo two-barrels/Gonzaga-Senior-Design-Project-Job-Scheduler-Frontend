@@ -2,26 +2,7 @@
     <div class="container">
         <h1 class="sm-title">Two Barrels Sign in Page</h1>
         <div class="sm-card">
-            <div v-if="isLoggedIn">
-                <button @click= "logoutUser" class="logout-button" >Logout</button>
-                <table class="table">
-                    <thead class="thead-dark">
-                    <tr class="table-headers">
-                        <th scope="col">ID</th>
-                        <th scope="col">email</th>
-                        <th scope="col">Token</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr class="table-rows">
-                        <th class="table-row">[{{ this.getUserID }}]</th>
-                        <td class="table-row table-row-username">{{ this.getUserEmail }}</td>
-                        <td class="table-row">{{ this.getAuthToken }}</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div v-else>
+            <div>
                 <h3>Sign Up!</h3>
                     <form @submit="onSignUp" class="sign-up-form">
                         <input class="sign-up-form-email" type="email" v-model="signUpEmail" placeholder="Email" />
@@ -57,13 +38,18 @@ export default {
     name: "SessionManager",
     computed: {
         ...mapGetters(["getAuthToken", "getUserEmail", "getUserID", "isLoggedIn"]),
+      currentComponent() {
+        console.log(window.location.pathname.substring(1))
+        return window.location.pathname.substring(1) != '' ? window.location.pathname.substring(1) : 'AvailableSpaces'
+      }
     },
     data() {
         return {
-        signUpEmail: "",
-        signUpPassword: "",
-        loginEmail: "",
-        loginPassword: "",
+          signUpEmail: "",
+          signUpPassword: "",
+          loginEmail: "",
+          loginPassword: "",
+          loaded: false
         };
     },
     methods: {

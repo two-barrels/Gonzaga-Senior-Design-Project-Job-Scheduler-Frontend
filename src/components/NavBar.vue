@@ -1,0 +1,60 @@
+<template>
+    <div class="nav-bar">
+        <std-button title="More Shtuff" @click="toggleDropdown()" button-type="std-button"></std-button>
+        <div v-if="showDropdown" class="dropdown">
+            <a href="/AvailableSpaces"><std-button title="Spaces" button-type="login-button"/></a>
+            <std-button title="Admin Portal" @click="settings()" button-type="login-button"/>
+            <std-button title="settings" @click="settings()" button-type="login-button"/>
+            <std-button title="logout" @click="logoutUser()" button-type="login-button"/>
+        </div>
+    </div>
+    <slot></slot>
+</template>
+  
+<script>
+import StdButton from '@/components/StdButton.vue'
+import { mapActions } from 'vuex'
+
+
+export default {
+    name: 'App',
+    components: {
+        StdButton
+    },
+    data() {
+        return {
+            showDropdown: false
+        };
+    },
+    computed: {
+        currentComponent() {
+        console.log(window.location.pathname.substring(1))
+        return window.location.pathname.substring(1) != '' ? window.location.pathname.substring(1) : 'AvailableSpaces'
+        }
+    },
+    methods: {
+        ...mapActions(["logoutUser"]),
+        toggleDropdown() {
+            this.showDropdown = !this.showDropdown
+        }
+    }
+}
+</script>
+
+<style>
+.dropdown {
+    background-color: grey;
+    min-height: 30px;
+    width: 100px;
+    position: absolute;
+}
+
+.nav-bar {
+    background-color: lightblue;
+    width: 100%;
+    height: 60px;
+    padding: 5px;
+    position: relative;
+}
+
+</style>
