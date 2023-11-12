@@ -39,11 +39,14 @@ import "@/store/index.js"
 import { mapActions, mapGetters } from 'vuex'
 import AvailableSpaces from '@/components/AvailableSpaces.vue';
 import CalendarComp from '@/components/CalendarComp.vue'
+import EditSpaces from '@/components/EditSpaces.vue'
+
 export default {
     name: "SessionManager",
   components: {
     AvailableSpaces,
-    CalendarComp
+    CalendarComp,
+    EditSpaces
   },
     computed: {
         ...mapGetters(["getAuthToken", "getUserEmail", "getUserID", "isLoggedIn"]),
