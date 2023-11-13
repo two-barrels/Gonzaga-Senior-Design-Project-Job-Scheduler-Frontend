@@ -1,5 +1,6 @@
+
 import { createStore } from 'vuex'
-import floor_space from "@/store/modules/floor_space"
+import sessionManager from "@/store/modules/session_manager"
 
 
 export default createStore({
@@ -7,6 +8,6 @@ export default createStore({
   mutations: {},
   actions: {},
   modules: {
-   floor_space,
+    sessionManager,
   },
 });
