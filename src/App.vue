@@ -13,7 +13,7 @@ import { mapGetters } from 'vuex'
 import AvailableSpaces from '@/components/AvailableSpaces.vue'
 import CalendarComp from '@/components/CalendarComp.vue'
 import NavBar from '@/components/NavBar.vue'
-
+import EditSpaces from '@/components/EditSpaces.vue'
 
 export default {
   name: 'App',
@@ -21,7 +21,8 @@ export default {
     SessionManager,
     AvailableSpaces,
     CalendarComp,
-    NavBar
+    NavBar,
+    EditSpaces
   },
   computed: {
     ...mapGetters(["isLoggedIn"]),

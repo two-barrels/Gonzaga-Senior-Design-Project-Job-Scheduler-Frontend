@@ -1,10 +1,10 @@
 <template>
-  <Toast position="top-center" group="bc" @close="togglewarnonCancel()">
+  <Toast position="top-center" group="bc" @close="toggleWarnCancel()">
       <template #message>
         <div class ="warning">
           <p> Are you sure you want to remove this space? </p><br>
-          <button @click="togglewarnonDelete(); createConfirmationToast()"> Confirm </button>
-          <button @click = "togglewarnonDelete()"> Cancel </button>
+          <button @click="toggleWarnDelete(); createConfirmationToast()"> Confirm </button>
+          <button @click = "toggleWarnDelete()"> Cancel </button>
         </div>
       </template>
     </Toast>
@@ -13,61 +13,53 @@
         <h3> Edit Space </h3>
           <form>
             <label for="sname">Space Name:</label><br>
-            <input type="text" class="sname" value="Desk"><br>
+            <input type="text" class="sname" v-model="popupSpaceData.spaces_name"><br>
             <label for="floor_num">Floor Name:</label><br>
             <select name="Floors">
-            <option value="f1">{{floorName}}</option>
+            <option value="f1" v-for="(val, idx) in floors_data" :key="idx">{{val.floor_id}}</option>
             </select><br>
             <label for="max_num">Max Occupancy:</label><br>
-            <input type="number" class="max_num" min="1"><br>
+            <input type="number" class="max_num" min="1" v-model="popupSpaceData.max_occupancy"><br>
             <label>Space Details:</label><br>
-            <textarea class="descript" rows="7" cols="50"></textarea><bbr></bbr>
+            <textarea class="descript" rows="7" cols="50" v-model="popupSpaceData.description"></textarea><bbr></bbr>
             <Button @click="createConfirmationToast()" class ="editbuttsave" label = "Save" > Save </Button>
             <Button @click="createConfirmationToast(); togglePopup()" class ="exitbuttsave" label = "Save and Exit" ></Button>
             <button v-on:click="togglePopup()"> Exit </button> 
           </form>
     </div>
-    <div v-if="pressed" class="popup"> 
-      <h3> Edit Space </h3>
-          <form>
-            <label for="sname">Space Name:</label><br>
-            <input type="text" class="sname" value="Desk"><br>
-            <label for="floor_num">Floor ID:</label><br>
-            <input type="number" class="floor_num" min="1"><br>
-            <label for="max_num">Max Occupancy:</label><br>
-            <input type="number" class="max_num" min="1"><br>
-            <label>Space Details:</label><br>
-            <textarea class="descript" rows="5" cols="50"></textarea><br>
-            <Button @click="createConfirmationToast()" class ="editbuttsave" label = "Save" ></Button>
-            <Button @click="createConfirmationToast(); togglePopup()" class ="exitbuttsave" label = "Save and Exit" ></Button>
-            <button v-on:click="confFunc()"> Exit </button> 
-          </form>
-    </div>
+
     <div class = "floor">
       <vue-collapsible-panel-group>
-    <vue-collapsible-panel :expanded="false">
+    <vue-collapsible-panel :expanded="false" @Click="onGetInfo" v-for="(val, idx) in floors_data" :key="idx">
         <template #title>
+          <div class="displayFloors">
+            Floor {{ val.floor_id }}
+          </div>
             {{floorName}}
         </template>
         <template #content>
             <p> Click on a room or desk to edit </p>
-            <div class = "desk">
-                <div class="edit">
-                    <button v-on:click="togglePopup()"> Edit </button> 
-                </div> 
-                <div class="delete">
-                    <Button @click="createWarningToast()" label = "Delete" ></Button>
-                </div> 
-                <h1> Desk 1</h1>
-            </div>
-            <div class = "desk">
-              <div class="edit">
-                    <button v-on:click="confFunc()"> Edit </button> 
-                </div> 
-                <div class="delete">
-                    <Button @click="createWarningToast()" label = "Delete"></Button>
-              </div> 
-              <h1> Conference Room 1</h1>
+            <div 
+              class="spaces-buttons"
+              v-for="(value, index) in spaces_data"
+              :key="index"
+            >
+              <div v-if="val.floor_id == value.floor_id">
+                <div>
+                    <div class = "space">
+                      <div class="edit">
+                          <button @click="togglePopup(value)"> Edit </button> 
+                      </div> 
+                      <div class="delete">
+                          <Button @click="createWarningToast()" label = "Delete" ></Button>
+                      </div> 
+                      <h1> {{ value.spaces_name }}</h1>
+                      <p>Space Description: {{ value.description }}</p>
+                      <p>Max Occupancy: {{ value.max_occupancy }}</p>
+                      <hr> 
+                    </div>
+                </div>
+              </div>
             </div>
         </template>
     </vue-collapsible-panel>
@@ -81,13 +73,11 @@
     VueCollapsiblePanel,
   } from '@dafcoe/vue-collapsible-panel'
   import '@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css'
- 
   import { useToast } from 'primevue/usetoast';
   import Button from 'primevue/button'
   import Toast from 'primevue/toast'
   import vClickOutside from 'v-click-outside'
-
- // import {useToast} from 'primevue/usetoast'
+  import http_helper from '@/services/http_helper'
  
 
   
@@ -95,12 +85,15 @@
     name: 'edit-floor-space',
     data()
     {
-        return{
-            pressed: false,
-            showPopup: false,
-            toast:useToast(),
-            visible:false
-        };
+      return{
+          popupSpaceData: {},
+          spaces_data: [],
+          floors_data: [],
+          floor_numbers:[],
+          showPopup: false,
+          toast:useToast(),
+          visible:false
+      };
         
     },
     directives: {
@@ -116,13 +109,25 @@
       Toast,
     },
     async mounted(){
-        
+        const spacesPromise = http_helper.get('spaces')
+        const floorsPromise = http_helper.get('spaces/get_floors')
+        const [spacesResponse, floorsResponse] = await Promise.all([spacesPromise, floorsPromise])
+        if(spacesResponse.error) {
+        throw Error
+        }
+        else {
+          this.spaces_data = spacesResponse.data
+        }
+        if(floorsResponse.error){
+          throw Error
+        }
+        else {
+          this.floors_data = floorsResponse.data
+        }
     },
     methods: {     
-        confFunc(){
-          this.pressed = !this.pressed;
-        },
-        togglePopup() {
+        togglePopup(spaceData) {
+          this.popupSpaceData = spaceData;
           this.showPopup = !this.showPopup
         },
         createConfirmationToast() {
@@ -132,13 +137,18 @@
           this.toast.add({ severity: 'warn', summary: 'Delete', group: 'bc'});
            
         },
-        togglewarnonDelete(){
+        toggleWarnDelete(){
           this.toast.removeGroup('bc');
         },
-        togglewarnonCancel(){
+        toggleWarnCancel(){
           this.toast.removeGroup('bc');
           this.visible = false;
-        }
+        },
+        onGetInfo(){
+          console.log(this.spaces_data)
+          console.log(this.floors_data)
+        },
+
     }
   }
   </script>
@@ -169,7 +179,7 @@
   }
 
   /* Popup container - can be anything you want */
-.desk .edit {
+.space .edit {
   position: relative;
   float:right;
   cursor: pointer;
@@ -180,7 +190,7 @@
 }
 
 
-.desk{
+.space{
     border-bottom: 1px solid grey;
     margin-top: unset;
     padding-top: 0px;
@@ -189,7 +199,7 @@
     padding-left: 5px;
 }
 
-.desk .delete{
+.space .delete{
   position: relative;
   float: right;
   cursor: pointer;

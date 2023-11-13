@@ -3,7 +3,7 @@
         <std-button title="More Shtuff" @click="toggleDropdown()" button-type="std-button"></std-button>
         <div v-if="showDropdown" class="dropdown">
             <a href="/AvailableSpaces"><std-button title="Spaces" button-type="login-button"/></a>
-            <std-button title="Admin Portal" @click="settings()" button-type="login-button"/>
+            <a href="/EditSpaces"><std-button title="Admin Portal" button-type="login-button"/></a>
             <std-button title="settings" @click="settings()" button-type="login-button"/>
             <std-button title="logout" @click="logoutUser()" button-type="login-button"/>
         </div>
@@ -36,6 +36,9 @@ export default {
         ...mapActions(["logoutUser"]),
         toggleDropdown() {
             this.showDropdown = !this.showDropdown
+        },
+        goToAdminPortal(){
+
         }
     }
 }
