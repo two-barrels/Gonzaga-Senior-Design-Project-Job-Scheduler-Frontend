@@ -1,11 +1,10 @@
-<template>
+  <template>
     <h1>Available Spaces</h1>
-    <floor-space floorName="Floor 1"/>
-    <floor-space floorName="Floor 2"/>
+    <floor-space/>
   </template>
   
   <script>
-  import FloorSpace from "./FloorSpace.vue"
+  import FloorSpace from "@/components/FloorSpace.vue"
   
   export default {
     name: 'available-spaces',
@@ -22,7 +21,7 @@
     -moz-osx-font-smoothing: grayscale;
     text-align: left;
     color: #2c3e50;
-    margin-top: 60px;
+    margin-top: 15px;
   }
   p{
     font-family: Avenir, Helvetica, Arial, sans-serif;
