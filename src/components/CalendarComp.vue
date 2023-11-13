@@ -14,7 +14,8 @@
 
 <script>
 import {DayPilot, DayPilotCalendar, DayPilotNavigator} from '@daypilot/daypilot-lite-vue'
-//import CalendarConfig from '@/service/calendar-config.js'
+import http from '@/services/http-helper.js'
+import date from '@/services/curr-date-helper.js'
 
 export default {
   name: 'CalendarComp',
@@ -25,15 +26,15 @@ export default {
         showMonths: 2,
         skipMonths: 2,
         selectMode: "Week",
-        startDate: "2023-10-15", //month first shown
-        selectionDay: "2023-10-15", //week first highlighted
+        startDate: date.currentDate(), //month first shown
+        selectionDay: date.currentDate(), //week first highlighted
         onTimeRangeSelected: args => {
           this.config.startDate = args.day;
         }
       },
       config: {
         viewType: "Week",
-        startDate: "2023-10-15",
+        startDate: date.currentDate(), // first week displayed
         durationBarVisible: false,
         timeRangeSelectedHandling: "Enabled",
         onTimeRangeSelected: async (args) => {
@@ -72,41 +73,24 @@ export default {
     }
   },
   methods: {
-    loadEvents() {
-      // placeholder for an HTTP call
-      const events = [
-        {
-           id: 1,
-           start: "2023-10-16T10:00:00",
-           end: "2023-10-16T11:00:00",
-           text: "Event 1",
-           backColor: "#6aa84f",
-           borderColor: "#38761d",
-         },
-         {
-           id: 2,
-           start: "2023-10-16T13:00:00",
-           end: "2023-10-16T16:00:00",
-           text: "Event 2",
-           backColor: "#f1c232",
-           borderColor: "#bf9000",
-         },
-         {
-           id: 3,
-           start: "2023-10-17T13:30:00",
-           end: "2023-10-17T16:30:00",
-           text: "Event 3",
-           backColor: "#cc4125",
-           borderColor: "#990000",
-         },
-         {
-           id: 4,
-           start: "2023-10-17T10:30:00",
-           end: "2023-10-17T12:30:00",
-           text: "Event 4"
-         },
-      ];
-      this.calendar.update({events})
+    async loadEvents() {
+      try {
+        const events = []
+        const response = await http.get('reservations')
+        console.log(response.data)
+
+        response?.data?.forEach((item, index) => {
+          events.push({
+            id: index,
+            start: item?.start_time,
+            end: item?.end_time,
+            text: "Booked",
+          })
+        })
+        this.calendar.update({events})
+      } catch (error) {
+        console.error('Error loading events:', error);
+      }
     },
   },
   async mounted() {
@@ -132,7 +116,7 @@ export default {
 }
 
 .calendar_default_event_inner {
-  background: #2e78d6;
+  background: #f16d01;
   color: white;
   border-radius: 5px;
   opacity: 0.9;
