@@ -1,11 +1,10 @@
-<template>
+  <template>
     <h1>Available Spaces</h1>
-    <floor-space floorName="Floor 1"/>
-    <floor-space floorName="Floor 2"/>
+    <floor-space/>
   </template>
   
   <script>
-  import FloorSpace from "@/FloorSpace.vue"
+  import FloorSpace from "@/components/FloorSpace.vue"
   
   export default {
     name: 'available-spaces',
