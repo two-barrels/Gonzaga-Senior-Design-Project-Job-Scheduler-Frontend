@@ -1,7 +1,6 @@
 <template>
     <h1>Edit Available Spaces</h1>
-    <edit-floor-space floorName="Floor 1"/>
-    <edit-floor-space floorName="Floor 2"/>
+    <edit-floor-space/>
   </template>
   
   <script>

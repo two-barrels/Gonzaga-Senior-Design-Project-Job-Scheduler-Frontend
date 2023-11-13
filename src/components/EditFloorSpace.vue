@@ -115,6 +115,9 @@
       Button,
       Toast,
     },
+    async mounted(){
+        
+    },
     methods: {     
         confFunc(){
           this.pressed = !this.pressed;
