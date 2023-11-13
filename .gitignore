@@ -5,7 +5,7 @@ node_modules
 package-lock.json
 yarn.lock
 package.json
-
+yarn.lock
 
 # local env files
 .env.local
