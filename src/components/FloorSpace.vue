@@ -12,7 +12,11 @@
               <template #content>
                 <p> Click on a room or desk to check time availability:</p>
                 <hr> 
-                <div class="spacesButtons" v-for="(value, index) in spaces_data" :key="index">
+                <div 
+                  class="spaces-buttons"
+                  v-for="(value, index) in spaces_data"
+                  :key="index"
+                >
                   <div v-if="val.floor_id == value.floor_id">
                     <div>
                       <button>{{value.spaces_name }}</button>  

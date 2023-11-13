@@ -21,8 +21,8 @@ const actions = {
               commit("setSpacesInfo", response);
             })
             .catch((error) => {
-              reject(error);
-            });
+              reject(error)
+            })
         });
       },
 };
