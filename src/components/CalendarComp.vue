@@ -50,6 +50,7 @@ export default {
             id: DayPilot.guid(),
             text: modal.result
           });
+          await http.post('reservations', {space_id: 246, account_id: 101, start_time: args.start, end_time: args.end})
         },
         eventDeleteHandling: "Disabled",
         onEventMoved: () => {
