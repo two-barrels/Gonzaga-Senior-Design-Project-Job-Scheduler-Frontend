@@ -9,15 +9,15 @@
   },
   "dependencies": {
     "@dafcoe/vue-collapsible-panel": "^0.2.0",
+    "axios": "^1.5.1",
     "@daypilot/daypilot-lite-vue": "^3.18.0",
     "axios": "^1.5.0",
     "core-js": "^3.8.3",
     "primeicons": "^6.0.1",
     "primevue": "^3.38.1",
     "vue": "^3.2.13",
-    "vue-router": "4",
-    "vue-toasted": "^1.1.28",
-    "vuex": "^4.0.2"
+    "vuex": "^4.0.2",
+    "vue-router": "4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
