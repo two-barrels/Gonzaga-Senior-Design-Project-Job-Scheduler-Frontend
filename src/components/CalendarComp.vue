@@ -87,10 +87,7 @@ export default {
             text: "Booked",
           })
         })
-        console.log(events) //list of objects
-        
         this.calendar.update({events})
-
       } catch (error) {
         console.error('Error loading events:', error);
       }
