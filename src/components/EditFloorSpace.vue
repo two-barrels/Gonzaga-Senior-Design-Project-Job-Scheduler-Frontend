@@ -1,10 +1,10 @@
 <template>
-  <Toast position="top-center" group="bc" @close="toggleWarnCancel()">
+  <Toast position="top-center" group="bc">
       <template #message>
         <div class ="warning">
-          <p> Are you sure you want to remove this space? </p><br>
-          <button @click="toggleWarnDelete(); createConfirmationToast()"> Confirm </button>
-          <button @click = "toggleWarnDelete()"> Cancel </button>
+          <p> Are you sure you want to remove {{popupSpaceData.spaces_name }}?</p><br>
+          <button @click="toggleWarnDelete()"> Confirm </button>
+          <button @click = "toggleWarnCancel()"> Cancel </button>
         </div>
       </template>
     </Toast>
@@ -22,8 +22,8 @@
             <input type="number" class="max_num" min="1" v-model="popupSpaceData.max_occupancy"><br>
             <label>Space Details:</label><br>
             <textarea class="descript" rows="7" cols="50" v-model="popupSpaceData.description"></textarea><bbr></bbr>
-            <Button @click="createConfirmationToast(); saveChanges()" class ="editbuttsave" label = "Save" > Save </Button>
-            <Button @click="createConfirmationToast(); togglePopup(); saveChanges()" class ="exitbuttsave" label = "Save and Exit" ></Button>
+            <Button @click="saveChanges()" class ="editbuttsave" label = "Save" > Save </Button>
+            <Button @click="saveChanges();togglePopup()" class ="exitbuttsave" label = "Save and Exit" ></Button>
             <button v-on:click="togglePopup()"> Exit </button> 
           </form>
     </div>
@@ -51,7 +51,7 @@
                           <button @click="togglePopup(value)"> Edit </button> 
                       </div> 
                       <div class="delete">
-                          <Button @click="createWarningToast()" label = "Delete" ></Button>
+                          <Button @click="createWarningToast(value)" label = "Delete" ></Button>
                       </div> 
                       <h1> {{ value.spaces_name }}</h1>
                       <p>Space Description: {{ value.description }}</p>
@@ -77,7 +77,7 @@
   import Button from 'primevue/button'
   import Toast from 'primevue/toast'
   import vClickOutside from 'v-click-outside'
-  import http_helper from '@/services/http_helper'
+  import http from '@/services/http-helper'
  
 
   
@@ -109,8 +109,8 @@
       Toast,
     },
     async mounted(){
-        const spacesPromise = http_helper.get('spaces')
-        const floorsPromise = http_helper.get('spaces/get_floors')
+        const spacesPromise = http.get('spaces')
+        const floorsPromise = http.get('spaces/get_floors')
         const [spacesResponse, floorsResponse] = await Promise.all([spacesPromise, floorsPromise])
         if(spacesResponse.error) {
         throw Error
@@ -131,12 +131,11 @@
           this.showPopup = !this.showPopup
         },
         saveChanges(){
-          http_helper.put(`spaces/${this.popupSpaceData.id}`, this.popupSpaceData)
+          http.put(`spaces/${this.popupSpaceData.id}`, this.popupSpaceData)
             .then(response => {
                 // Handle success
                 console.log(response.data);
                 // Optionally close the popup or show a success message
-                this.showPopup = false;
                 this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'});
             })
             .catch(error => {
@@ -146,14 +145,28 @@
                 this.toast.add({severity:'error', summary:'Error saving changes', life:2000, group:'tc'});
             })
         },
-        createConfirmationToast() {
-          this.toast.add({severity:'success', summary:"Changes Saved Successfully", life:2000, group:'tc'}) // detail: 'Are you sure you want to remove this space?'
-        },
-        createWarningToast() {
+        // createConfirmationToast() {
+        //   this.toast.add({severity:'success', summary:"Changes Saved Successfully", life:2000, group:'tc'}) // detail: 'Are you sure you want to remove this space?'
+        // },
+        createWarningToast(spaceData) {
+          this.popupSpaceData = spaceData;
           this.toast.add({ severity: 'warn', summary: 'Delete', group: 'bc'});
-           
         },
         toggleWarnDelete(){
+          console.log("Deleting space with id:", this.popupSpaceData.id);
+          http.delete(`spaces/${this.popupSpaceData.id}`)
+            .then(response => {
+                // Handle success
+                console.log(response.data);
+                // Optionally close the popup or show a success message
+                this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'});
+            })
+            .catch(error => {
+                // Handle error
+                console.error(error);
+                // Optionally show an error message
+                this.toast.add({severity:'error', summary:'Error saving changes', life:2000, group:'tc'});
+            })
           this.toast.removeGroup('bc');
         },
         toggleWarnCancel(){
