@@ -22,12 +22,21 @@
             <input type="number" class="max_num" min="1" v-model="popupSpaceData.max_occupancy"><br>
             <label>Space Details:</label><br>
             <textarea class="descript" rows="7" cols="50" v-model="popupSpaceData.description"></textarea><bbr></bbr>
-            <Button @click="saveChanges()" class ="editbuttsave" label = "Save" > Save </Button>
-            <Button @click="saveChanges();togglePopup()" class ="exitbuttsave" label = "Save and Exit" ></Button>
-            <button v-on:click="togglePopup()"> Exit </button> 
+            <div v-if="check">
+              <Button @click="saveChanges()" class ="editbuttsave" label = "Save" > Save </Button>
+              <Button @click="saveChanges();togglePopup()" class ="exitbuttsave" label = "Save and Exit" ></Button>
+              <button @click="togglePopup()"> Exit </button> 
+            </div>
+            <div v-else>
+              <Button @click="createSpace();createSpacePopUp()" class ="exitbuttsave" label = "Create Space" ></Button>
+              <button @click="createSpacePopUp()"> Exit </button> 
+            </div>
+            
           </form>
     </div>
-
+    <div class ="createSpace">
+      <button @click="createSpacePopUp()"> Create Space </button>
+    </div>
     <div class = "floor">
       <vue-collapsible-panel-group>
     <vue-collapsible-panel :expanded="false" @Click="onGetInfo" v-for="(val, idx) in floors_data" :key="idx">
@@ -86,13 +95,15 @@
     data()
     {
       return{
+          dummySpace: { spaces_name: 'Room', floor_id: 1, max_occupancy: 1, description: "Description"},
           popupSpaceData: {},
           spaces_data: [],
           floors_data: [],
           floor_numbers:[],
           showPopup: false,
           toast:useToast(),
-          visible:false
+          visible:false,
+          check: true
       };
         
     },
@@ -125,8 +136,29 @@
           this.floors_data = floorsResponse.data
         }
     },
-    methods: {     
+    methods: {  
+        createSpace(){
+          http.post(`spaces/`, this.popupSpaceData)
+            .then(response => {
+                // Handle success
+                console.log(response.data);
+                // Optionally close the popup or show a success message
+                this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'});
+            })
+            .catch(error => {
+                // Handle error
+                console.error(error);
+                // Optionally show an error message
+                this.toast.add({severity:'error', summary:'Error saving changes', life:2000, group:'tc'});
+            })
+        },
+        createSpacePopUp(){
+          this.check = false
+          this.popupSpaceData = this.dummySpace
+          this.showPopup = !this.showPopup
+        },   
         togglePopup(spaceData) {
+          this.check = true
           this.popupSpaceData = spaceData;
           this.showPopup = !this.showPopup
         },
@@ -145,9 +177,6 @@
                 this.toast.add({severity:'error', summary:'Error saving changes', life:2000, group:'tc'});
             })
         },
-        // createConfirmationToast() {
-        //   this.toast.add({severity:'success', summary:"Changes Saved Successfully", life:2000, group:'tc'}) // detail: 'Are you sure you want to remove this space?'
-        // },
         createWarningToast(spaceData) {
           this.popupSpaceData = spaceData;
           this.toast.add({ severity: 'warn', summary: 'Delete', group: 'bc'});
