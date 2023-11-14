@@ -1,3 +1,5 @@
+// currently not being utilized
+
 import {DayPilot} from '@daypilot/daypilot-lite-vue'
 
 export default {
