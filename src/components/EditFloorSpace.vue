@@ -22,8 +22,8 @@
             <input type="number" class="max_num" min="1" v-model="popupSpaceData.max_occupancy"><br>
             <label>Space Details:</label><br>
             <textarea class="descript" rows="7" cols="50" v-model="popupSpaceData.description"></textarea><bbr></bbr>
-            <Button @click="createConfirmationToast()" class ="editbuttsave" label = "Save" > Save </Button>
-            <Button @click="createConfirmationToast(); togglePopup()" class ="exitbuttsave" label = "Save and Exit" ></Button>
+            <Button @click="createConfirmationToast(); saveChanges()" class ="editbuttsave" label = "Save" > Save </Button>
+            <Button @click="createConfirmationToast(); togglePopup(); saveChanges()" class ="exitbuttsave" label = "Save and Exit" ></Button>
             <button v-on:click="togglePopup()"> Exit </button> 
           </form>
     </div>
@@ -129,6 +129,22 @@
         togglePopup(spaceData) {
           this.popupSpaceData = spaceData;
           this.showPopup = !this.showPopup
+        },
+        saveChanges(){
+          http_helper.put(`spaces/${this.popupSpaceData.id}`, this.popupSpaceData)
+            .then(response => {
+                // Handle success
+                console.log(response.data);
+                // Optionally close the popup or show a success message
+                this.showPopup = false;
+                this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'});
+            })
+            .catch(error => {
+                // Handle error
+                console.error(error);
+                // Optionally show an error message
+                this.toast.add({severity:'error', summary:'Error saving changes', life:2000, group:'tc'});
+            })
         },
         createConfirmationToast() {
           this.toast.add({severity:'success', summary:"Changes Saved Successfully", life:2000, group:'tc'}) // detail: 'Are you sure you want to remove this space?'
