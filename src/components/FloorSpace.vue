@@ -56,24 +56,16 @@
       }
     },
     async mounted(){
-      const spacesPromise = http_helper.get('spaces') 
-      const floorsPromise = http_helper.get('spaces/get_floors')
-      const [spacesResponse,floorsResponse] = await Promise.all([spacesPromise, floorsPromise])
-
-      if(spacesResponse.error) {
-        throw Error
-      }
-      else {
+      try{
+        const spacesPromise = http_helper.get('spaces') 
+        const floorsPromise = http_helper.get('spaces/get_floors')
+        const [spacesResponse,floorsResponse] = await Promise.all([spacesPromise, floorsPromise])  
         this.spaces_data = spacesResponse.data
-      }
-      if(floorsResponse.error){
-        throw Error
-      }
-      else {
         this.floors_data = floorsResponse.data
       }
-    },
-    computed: {
+      catch(error){
+        console.error(error)
+      }
     },
     methods: {
       onGetInfo(){
