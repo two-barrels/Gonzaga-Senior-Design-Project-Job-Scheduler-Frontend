@@ -15,7 +15,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 
 .std-button {
     min-height: 15px;
