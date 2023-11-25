@@ -2,7 +2,6 @@
     <div class = "floor" >
       <vue-collapsible-panel-group >
         <div>
-          
           <vue-collapsible-panel :expanded="false" @Click="onGetInfo" v-for="(val, idx) in floors_data" :key="idx">
               <template #title> 
                 <div class="displayFloors">
@@ -19,7 +18,7 @@
                 >
                   <div v-if="val.floor_id == value.floor_id">
                     <div>
-                      <button>{{value.spaces_name }}</button>  
+                      <std-button :title="value.spaces_name" buttonType="std-button"/>  
                       <p>Space Description: {{ value.description }}</p>
                       <p>Max Occupancy: {{ value.max_occupancy }}</p>
                       <hr> 
@@ -41,6 +40,7 @@
   import '@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css'
   import http_helper from '@/services/http_helper'
   import "@/store/index.js"
+  import StdButton from "@/components/StdButton.vue"
 
   export default {
     name: 'floor-space',
@@ -51,6 +51,7 @@
     components: {
       VueCollapsiblePanelGroup,
       VueCollapsiblePanel,
+      'std-button':StdButton
     },
     data(){
       return{
@@ -96,7 +97,7 @@
     border-color: green;
     border-radius: 5px;
     transition-duration: 0.4s;
-    &::hover {
+    &:hover {
       background-color: green;
       color: white;
     }
