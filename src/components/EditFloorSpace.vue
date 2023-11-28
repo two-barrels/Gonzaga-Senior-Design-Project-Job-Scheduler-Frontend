@@ -2,7 +2,7 @@
   <Toast position="top-center" group="bc">
       <template #message>
         <div class ="warning">
-          <p> Are you sure you want to remove {{popupSpaceData.spaces_name }}?</p><br>
+          <p> Are you sure you want to remove {{popupSpaceDataHold.spaces_name }}?</p><br>
           <button @click="toggleWarnDelete()"> Confirm </button>
           <button @click = "toggleWarnCancel()"> Cancel </button>
         </div>
@@ -13,15 +13,15 @@
         <h3> Edit Space </h3>
           <form>
             <label for="sname">Space Name:</label><br>
-            <input type="text" class="sname" v-model="popupSpaceData.spaces_name"><br>
+            <input type="text" class="sname" v-model="popupSpaceDataHold.spaces_name"><br>
             <label for="floor_num">Floor Name:</label><br>
             <select name="Floors">
-            <option value="f1" v-for="(val, idx) in floors_data" :key="idx">{{val.floor_id}}</option>
+            <option v-for="(val, idx) in floors_data" :key="idx" @click="changeFloor(val.floor_name)"> {{val.floor_name}}</option> 
             </select><br>
             <label for="max_num">Max Occupancy:</label><br>
-            <input type="number" class="max_num" min="1" v-model="popupSpaceData.max_occupancy"><br>
+            <input type="number" class="max_num" min="1" v-model="popupSpaceDataHold.max_occupancy"><br>
             <label>Space Details:</label><br>
-            <textarea class="descript" rows="7" cols="50" v-model="popupSpaceData.description"></textarea><bbr></bbr>
+            <textarea class="descript" rows="7" cols="50" v-model="popupSpaceDataHold.description"></textarea><bbr></bbr>
             <div v-if="check">
               <Button @click="saveChanges()" class ="editbuttsave" label = "Save" > Save </Button>
               <Button @click="saveChanges();togglePopup()" class ="exitbuttsave" label = "Save and Exit" ></Button>
@@ -42,7 +42,7 @@
     <vue-collapsible-panel :expanded="false" @Click="onGetInfo" v-for="(val, idx) in floors_data" :key="idx">
         <template #title>
           <div class="displayFloors">
-            Floor {{ val.floor_id }}
+            Floor {{ val.floor_name }}
           </div>
             {{floorName}}
         </template>
@@ -53,7 +53,7 @@
               v-for="(value, index) in spaces_data"
               :key="index"
             >
-              <div v-if="val.floor_id == value.floor_id">
+              <div v-if="val.floor_name == value.floor_name">
                 <div>
                     <div class = "space">
                       <div class="edit">
@@ -95,8 +95,9 @@
     data()
     {
       return{
-          dummySpace: { spaces_name: 'Room', floor_id: 1, max_occupancy: 1, description: "Description"},
+          dummySpace: { spaces_name: 'Room', floor_name: 1, max_occupancy: 1, description: "Description"},
           popupSpaceData: {},
+          popupSpaceDataHold: {},
           spaces_data: [],
           floors_data: [],
           floor_numbers:[],
@@ -120,49 +121,48 @@
       Toast,
     },
     async mounted(){
-        const spacesPromise = http.get('spaces')
-        const floorsPromise = http.get('spaces/get_floors')
-        const [spacesResponse, floorsResponse] = await Promise.all([spacesPromise, floorsPromise])
-        if(spacesResponse.error) {
-        throw Error
-        }
-        else {
+        try{
+          const spacesPromise = http.get('spaces')
+          const floorsPromise = http.get('spaces/get_floors')
+          const [spacesResponse, floorsResponse] = await Promise.all([spacesPromise, floorsPromise])
           this.spaces_data = spacesResponse.data
-        }
-        if(floorsResponse.error){
-          throw Error
-        }
-        else {
           this.floors_data = floorsResponse.data
+        }
+        catch(error){
+          console.error(error)
         }
     },
     methods: {  
-        createSpace(){
-          http.post(`spaces/`, this.popupSpaceData)
-            .then(response => {
-                // Handle success
-                console.log(response.data);
-                // Optionally close the popup or show a success message
-                this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'});
-            })
-            .catch(error => {
-                // Handle error
-                console.error(error);
-                // Optionally show an error message
-                this.toast.add({severity:'error', summary:'Error saving changes', life:2000, group:'tc'});
-            })
+        async createSpace(){
+          this.popupSpaceData = this.popupSpaceDataHold
+          try{
+            const response = await http.post('spaces/', this.popupSpaceData)
+            console.log(response)
+            this.popupSpaceData.id = response.data.id
+            this.spaces_data.push(this.popupSpaceData)
+            this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'});
+            console.log(response.data.id);
+          }
+          catch(error){
+            console.error(error)
+          }
+        },
+        changeFloor(floorVal){
+          console.log(floorVal)
+          this.popupSpaceDataHold.floor_name = floorVal
         },
         createSpacePopUp(){
           this.check = false
-          this.popupSpaceData = this.dummySpace
+          this.popupSpaceDataHold = this.dummySpace
           this.showPopup = !this.showPopup
         },   
         togglePopup(spaceData) {
           this.check = true
-          this.popupSpaceData = spaceData;
+          this.popupSpaceDataHold = spaceData;
           this.showPopup = !this.showPopup
         },
         saveChanges(){
+          this.popupSpaceData = this.popupSpaceDataHold
           http.put(`spaces/${this.popupSpaceData.id}`, this.popupSpaceData)
             .then(response => {
                 // Handle success
@@ -178,15 +178,17 @@
             })
         },
         createWarningToast(spaceData) {
-          this.popupSpaceData = spaceData;
+          this.popupSpaceDataHold = spaceData;
           this.toast.add({ severity: 'warn', summary: 'Delete', group: 'bc'});
         },
         toggleWarnDelete(){
+          this.popupSpaceData = this.popupSpaceDataHold
           console.log("Deleting space with id:", this.popupSpaceData.id);
           http.delete(`spaces/${this.popupSpaceData.id}`)
             .then(response => {
                 // Handle success
                 console.log(response.data);
+                this.spaces_data = this.spaces_data.filter(item => item.id !== this.popupSpaceData.id)
                 // Optionally close the popup or show a success message
                 this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'});
             })
@@ -203,6 +205,7 @@
           this.visible = false;
         },
         onGetInfo(){
+          console.log("drop-down clicked")
           console.log(this.spaces_data)
           console.log(this.floors_data)
         },
@@ -287,4 +290,5 @@
 }
 
   </style>
+
   
