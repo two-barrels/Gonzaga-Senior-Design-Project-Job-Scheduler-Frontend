@@ -24,8 +24,8 @@
             <textarea class="descript" rows="7" cols="50" v-model="popupSpaceDataHold.description"></textarea><bbr></bbr>
             <div v-if="check">
               <Button @click="saveChanges()" class ="editbuttsave" label = "Save" > Save </Button>
-              <Button @click="saveChanges();togglePopup()" class ="exitbuttsave" label = "Save and Exit" ></Button>
-              <button @click="togglePopup()"> Exit </button> 
+              <Button @click="saveChanges()" class ="exitbuttsave" label = "Save and Exit" ></Button>
+              <button @click="closePopup()"> Exit </button> 
             </div>
             <div v-else>
               <Button @click="createSpace();createSpacePopUp()" class ="exitbuttsave" label = "Create Space" ></Button>
@@ -57,7 +57,7 @@
                 <div>
                     <div class = "space">
                       <div class="edit">
-                          <button @click="togglePopup(value)"> Edit </button> 
+                          <button @click="openPopup(value, index)"> Edit </button> 
                       </div> 
                       <div class="delete">
                           <Button @click="createWarningToast(value)" label = "Delete" ></Button>
@@ -104,7 +104,8 @@
           showPopup: false,
           toast:useToast(),
           visible:false,
-          check: true
+          check: true,
+          idx: null
       };
         
     },
@@ -153,22 +154,31 @@
         },
         createSpacePopUp(){
           this.check = false
-          this.popupSpaceDataHold = this.dummySpace
+          this.popupSpaceDataHold = JSON.parse(JSON.stringify(this.dummySpace))
+          console.log(this.popupSpaceDataHold)
           this.showPopup = !this.showPopup
         },   
-        togglePopup(spaceData) {
+        closePopup() {
           this.check = true
-          this.popupSpaceDataHold = spaceData;
+          this.idx = null
+          this.popupSpaceDataHold = null
+          this.showPopup = !this.showPopup
+        },
+        openPopup(spaceData, idex) {
+          this.check = true
+          this.idx = idex
+          this.popupSpaceDataHold = JSON.parse(JSON.stringify(spaceData))
           this.showPopup = !this.showPopup
         },
         saveChanges(){
-          this.popupSpaceData = this.popupSpaceDataHold
-          http.put(`spaces/${this.popupSpaceData.id}`, this.popupSpaceData)
+          http.put(`spaces/${this.popupSpaceDataHold.id}`, this.popupSpaceDataHold)
             .then(response => {
                 // Handle success
                 console.log(response.data);
                 // Optionally close the popup or show a success message
                 this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'});
+                this.spaces_data[this.idx] = this.popupSpaceDataHold
+                this.closePopup()
             })
             .catch(error => {
                 // Handle error
