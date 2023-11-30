@@ -4,13 +4,13 @@
         <div>
           <vue-collapsible-panel 
             :expanded="false" 
-            @Click="onGetInfo" 
-            v-for="(val, idx) in floors_data" 
+            @click="onGetInfo" 
+            v-for="(floor, idx) in floors_data" 
             :key="idx"
           >
               <template #title> 
                 <div class="floor-title">
-                  Floor {{ val.floor_id }} 
+                  Floor {{ floor.floor_id }} 
                 </div>
               </template>
               <template #content>
@@ -22,7 +22,7 @@
                   v-for="(value, index) in spaces_data"
                   :key="index"
                 >
-                  <div v-if="val.floor_id == value.floor_id" class="ind-floor">
+                  <div v-if="floor.floor_id == value.floor_id" class="ind-floor">
                     <div>
                       <h2>{{ value.spaces_name }}</h2> 
                       <p>Max Occupancy: {{ value.max_occupancy }} </p> 
