@@ -1,7 +1,8 @@
 <template>
   <div v-if="isLoggedIn">
     <nav-bar>
-      <component :is="currentComponent" :props="propsToPass"></component>
+      <component :is="currentComponent"></component>
+      <!-- <component :is="currentComponent" :props="propsToPass"></component> -->
     </nav-bar>
   </div>
   <SessionManager v-else/>
