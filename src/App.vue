@@ -1,7 +1,7 @@
 <template>
   <div v-if="isLoggedIn">
     <nav-bar>
-      <component :is="currentComponent"></component>
+      <component :is="currentComponent" :props="propsToPass"></component>
     </nav-bar>
   </div>
   <SessionManager v-else/>
@@ -28,7 +28,10 @@ export default {
     currentComponent() {
       console.log(window.location.pathname.substring(1))
       return window.location.pathname.substring(1) != '' ? window.location.pathname.substring(1) : 'AvailableSpaces'
-    }
+    },
+    // propsToPass() {
+    //   return this.$route.query
+    // }
   },
 }
 </script>

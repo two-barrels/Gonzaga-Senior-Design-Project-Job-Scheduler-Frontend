@@ -19,7 +19,7 @@
                 >
                   <div v-if="val.floor_id == value.floor_id">
                     <div>
-                      <button>{{value.spaces_name }}</button>  
+                      <a href="/CalendarComp"><button>{{value.spaces_name }}</button></a>
                       <p>Space Description: {{ value.description }}</p>
                       <p>Max Occupancy: {{ value.max_occupancy }}</p>
                       <hr> 
@@ -78,6 +78,10 @@
       }
     },
     computed: {
+      currentComponent() {
+        console.log(window.location.pathname.substring(1))
+        return window.location.pathname.substring(1) != '' ? window.location.pathname.substring(1) : 'CalendarComp'
+        }
     },
     methods: {
       onGetInfo(){
