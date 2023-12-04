@@ -2,9 +2,10 @@
 node_modules
 /dist
 .vscode
-package-lock.json
 yarn.lock
 package.json
+package-lock.json
+
 
 
 # local env files

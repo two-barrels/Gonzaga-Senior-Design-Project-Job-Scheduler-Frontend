@@ -1,28 +1,33 @@
 <template>
-    <div class = "floor" >
-      <vue-collapsible-panel-group >
+    <div class="drop-down" >
+      <vue-collapsible-panel-group>
         <div>
-          
-          <vue-collapsible-panel :expanded="false" @Click="onGetInfo" v-for="(val, idx) in floors_data" :key="idx">
+          <vue-collapsible-panel 
+            :expanded="false" 
+            @click="onGetInfo" 
+            v-for="(floor, idx) in floors_data" 
+            :key="idx"
+          >
               <template #title> 
-                <div class="displayFloors">
-                  Floor {{ val.floor_id }} 
+                <div class="floor-title">
+                  Floor {{ floor.floor_id }} 
                 </div>
               </template>
               <template #content>
-                <p> Click on a room or desk to check time availability:</p>
+                <!-- <p> Click on a room or desk to check time availability:</p> -->
+                <p> Click on a space to check time availability:</p>
                 <hr> 
                 <div 
                   class="spaces-buttons"
                   v-for="(value, index) in spaces_data"
                   :key="index"
                 >
-                  <div v-if="val.floor_id == value.floor_id">
+                  <div v-if="floor.floor_id == value.floor_id" class="ind-floor">
                     <div>
-                      <button>{{value.spaces_name }}</button>  
-                      <p>Space Description: {{ value.description }}</p>
-                      <p>Max Occupancy: {{ value.max_occupancy }}</p>
-                      <hr> 
+                      <h2>{{ value.spaces_name }}</h2> 
+                      <p>Max Occupancy: {{ value.max_occupancy }} </p> 
+                      <p>Space Description: {{ value.description }} </p>
+                      <std-button :title="value.spaces_name" buttonType="primary-default"/>
                     </div>
                   </div>
                 </div>
@@ -41,6 +46,7 @@
   import '@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css'
   import http_helper from '@/services/http_helper'
   import "@/store/index.js"
+  import StdButton from "@/components/StdButton.vue"
 
   export default {
     name: 'floor-space',
@@ -51,6 +57,7 @@
     components: {
       VueCollapsiblePanelGroup,
       VueCollapsiblePanel,
+      'std-button':StdButton
     },
     data(){
       return{
@@ -60,24 +67,16 @@
       }
     },
     async mounted(){
-      const spacesPromise = http_helper.get('spaces') 
-      const floorsPromise = http_helper.get('spaces/get_floors')
-      const [spacesResponse,floorsResponse] = await Promise.all([spacesPromise, floorsPromise])
-
-      if(spacesResponse.error) {
-        throw Error
-      }
-      else {
+      try{
+        const spacesPromise = http_helper.get('spaces') 
+        const floorsPromise = http_helper.get('spaces/get_floors')
+        const [spacesResponse,floorsResponse] = await Promise.all([spacesPromise, floorsPromise])  
         this.spaces_data = spacesResponse.data
-      }
-      if(floorsResponse.error){
-        throw Error
-      }
-      else {
         this.floors_data = floorsResponse.data
       }
-    },
-    computed: {
+      catch(error){
+        console.error(error)
+      }
     },
     methods: {
       onGetInfo(){
@@ -91,27 +90,20 @@
   
   <!-- Add "scoped" attribute to limit CSS to this component only -->
   <style lang="scss" scoped>
-  #title, #content {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  .drop-down{
     text-align: left;
-    color: #2c3e50;
-  }
-  button {
-    background-color: white;
     color: black;
-    border-color: green;
-    border-radius: 5px;
-    transition-duration: 0.4s;
-    &::hover {
-      background-color: green;
-      color: white;
-    }
+    line-height: 32px;
+    padding-left: 1%;
+    padding-right: 1%;
   }
-
-  .hide {
-    visibility: hidden !important;
-}
+  .ind-floor{
+    padding-bottom: 1%;
+    background-color: $color-neutral--100;
+    padding-left: 1%;
+    outline: 1px $color-neutral--200 solid;
+    border-radius: 5px;
+    margin-top: 1%;
+  }
   </style>
   
