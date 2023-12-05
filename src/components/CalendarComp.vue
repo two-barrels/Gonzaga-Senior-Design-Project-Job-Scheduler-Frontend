@@ -50,6 +50,12 @@ export default {
             id: DayPilot.guid(),
             text: modal.result
           });
+          try {
+            await http.post('reservations', {space_id: 246, account_id: 101, start_time: args.start, end_time: args.end});
+            console.log('Reservation successfully created!');
+          } catch (error) {
+            console.error('Error creating reservation:', error.message);
+          }
         },
         eventDeleteHandling: "Disabled",
         onEventMoved: () => {

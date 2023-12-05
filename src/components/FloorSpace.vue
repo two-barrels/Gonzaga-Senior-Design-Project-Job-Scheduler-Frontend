@@ -24,7 +24,7 @@
                 >
                   <div v-if="floor.floor_id == value.floor_id" class="ind-floor">
                     <div>
-                      <h2>{{ value.spaces_name }}</h2> 
+                      <a href="/CalendarComp"><h2>{{ value.spaces_name }}</h2></a>
                       <p>Max Occupancy: {{ value.max_occupancy }} </p> 
                       <p>Space Description: {{ value.description }} </p>
                       <std-button :title="value.spaces_name" buttonType="primary-default"/>
@@ -73,9 +73,14 @@
         const [spacesResponse,floorsResponse] = await Promise.all([spacesPromise, floorsPromise])  
         this.spaces_data = spacesResponse.data
         this.floors_data = floorsResponse.data
-      }
-      catch(error){
+      } catch (error){
         console.error(error)
+      }
+    },
+    computed: {
+      currentComponent() {
+        console.log(window.location.pathname.substring(1))
+        return window.location.pathname.substring(1) != '' ? window.location.pathname.substring(1) : 'CalendarComp'
       }
     },
     methods: {

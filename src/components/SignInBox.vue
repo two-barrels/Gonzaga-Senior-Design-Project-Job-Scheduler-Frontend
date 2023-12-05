@@ -81,10 +81,10 @@ export default {
   margin-right: auto;
   margin-left: auto;
   margin-top: 10px;
-  &:hover {
+  /* &:hover {
     background-color: rgb(0, 160, 160);
     cursor: pointer;
-  }
+  } */
 }
 
 </style>
