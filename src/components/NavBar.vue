@@ -1,6 +1,6 @@
 <template>
     <div class="nav-bar">
-        <std-button title="More Shtuff" @click="toggleDropdown()" button-type="std-button"></std-button>
+        <std-button title="Options" @click="toggleDropdown()" button-type="std-button"></std-button>
         <div v-if="showDropdown" class="dropdown">
             <a href="/AvailableSpaces"><std-button title="Spaces" button-type="login-button"/></a>
             <a href="/EditSpaces"><std-button title="Admin Portal" button-type="login-button"/></a>
