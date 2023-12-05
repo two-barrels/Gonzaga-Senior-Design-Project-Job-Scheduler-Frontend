@@ -2,6 +2,7 @@
   <div v-if="isLoggedIn">
     <nav-bar>
       <component :is="currentComponent"></component>
+      <!-- <component :is="currentComponent" :props="propsToPass"></component> -->
     </nav-bar>
   </div>
   <SessionManager v-else/>
@@ -29,16 +30,21 @@ export default {
     currentComponent() {
       console.log(window.location.pathname.substring(1))
       return window.location.pathname.substring(1) != '' ? window.location.pathname.substring(1) : 'AvailableSpaces'
-    }
+    },
+    // propsToPass() {
+    //   return this.$route.query
+    // }
   },
 }
 </script>
 
-<style>
-
+<style lang="scss">
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);
 body {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
   margin: unset;
   padding: unset;
 }
-
 </style>
