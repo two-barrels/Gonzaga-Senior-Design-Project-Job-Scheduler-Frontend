@@ -24,10 +24,13 @@
                 >
                   <div v-if="floor.floor_id == value.floor_id" class="ind-floor">
                     <div>
-                      <a href="/CalendarComp"><h2>{{ value.spaces_name }}</h2></a>
+                      <h2>{{ value.spaces_name }}</h2>
                       <p>Max Occupancy: {{ value.max_occupancy }} </p> 
                       <p>Space Description: {{ value.description }} </p>
-                      <std-button :title="value.spaces_name" buttonType="primary-default"/>
+                      <a href="/CalendarComp"><std-button 
+                        title="Scheduler"
+                        buttonType="primary-default"
+                      /></a>
                     </div>
                   </div>
                 </div>
@@ -95,6 +98,10 @@
   
   <!-- Add "scoped" attribute to limit CSS to this component only -->
   <style lang="scss" scoped>
+  a {
+    all: unset;
+  }
+
   .drop-down{
     text-align: left;
     color: black;
