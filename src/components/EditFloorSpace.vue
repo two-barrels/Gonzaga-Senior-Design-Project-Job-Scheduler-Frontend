@@ -16,7 +16,7 @@
           <input type="text" class="sname" v-model="popupSpaceDataHold.spaces_name"><br>
           <label for="floor_num">Floor Name:</label><br>
           <select name="Floors">
-          <option v-for="(val, idx) in floors_data" :key="idx" @click="changeFloor(val.floor_name)"> {{val.floor_name}}</option> 
+          <option v-for="(val, idx) in floors_data" :key="idx" @click="changeFloor(val.floor_id)"> {{val.floor_id}}</option> 
           </select><br>
           <label for="max_num">Max Occupancy:</label><br>
           <input type="number" class="max_num" min="1" v-model="popupSpaceDataHold.max_occupancy"><br>
@@ -40,7 +40,7 @@
       <vue-collapsible-panel :expanded="false" @Click="onGetInfo" v-for="(val, idx) in floors_data" :key="idx">
       <template #title>
         <div class="displayFloors">
-          Floor {{ val.floor_name }}
+          Floor {{ val.floor_id }}
         </div>
         {{floorName}}
       </template>
@@ -51,7 +51,7 @@
           v-for="(value, index) in spaces_data"
           :key="index"
         >
-        <div v-if="val.floor_name == value.floor_name">
+        <div v-if="val.floor_id == value.floor_id">
           <div class = "space">
             <div class="edit">
                 <button @click="openPopup(value, index)"> Edit </button> 
@@ -88,7 +88,7 @@
     name: 'edit-floor-space',
     data() {
       return { 
-          dummySpace: { spaces_name: 'Room', floor_name: 1, max_occupancy: 1, description: "Description"},
+          dummySpace: { spaces_name: 'Room', floor_id: 1, max_occupancy: 1, description: "Description"},
           popupSpaceData: {},
           popupSpaceDataHold: {},
           spaces_data: [],
@@ -142,7 +142,7 @@
         },
         changeFloor(floorVal){
           console.log(floorVal)
-          this.popupSpaceDataHold.floor_name = floorVal
+          this.popupSpaceDataHold.floor_id = floorVal
         },
         createSpacePopUp(){
           this.check = false
