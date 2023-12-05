@@ -44,7 +44,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .signin-form {
   background-color: rgb(172, 172, 172);
   border: 1px black solid;

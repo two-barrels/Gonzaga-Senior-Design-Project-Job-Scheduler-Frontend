@@ -105,7 +105,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .spaceName {
   font-size: 43px
 }

@@ -11,5 +11,9 @@ export default {
     },
     put(route, params) {
         return axios.put(BASE_URL + route, params)
+    },
+    delete(route, params) {
+        return axios.delete(BASE_URL + route, params)
     }
+
 }

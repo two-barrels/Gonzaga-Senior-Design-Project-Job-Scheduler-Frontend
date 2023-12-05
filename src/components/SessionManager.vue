@@ -86,7 +86,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .sm-title {
   font-size: 2.5rem;
   font-weight: bold;
