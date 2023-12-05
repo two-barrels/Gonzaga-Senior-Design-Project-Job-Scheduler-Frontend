@@ -47,7 +47,7 @@
     VueCollapsiblePanel,
   } from '@dafcoe/vue-collapsible-panel'
   import '@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css'
-  import http_helper from '@/services/http_helper'
+  import http_helper from '@/services/http-helper'
   import "@/store/index.js"
   import StdButton from "@/components/StdButton.vue"
 

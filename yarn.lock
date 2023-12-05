@@ -1019,7 +1019,7 @@
 
 "@daypilot/daypilot-lite-vue@^3.18.0":
   version "3.18.0"
-  resolved "https://registry.yarnpkg.com/@daypilot/daypilot-lite-vue/-/daypilot-lite-vue-3.18.0.tgz#16bfeeab037566bb370059d2e1069b62550a92d3"
+  resolved "https://registry.npmjs.org/@daypilot/daypilot-lite-vue/-/daypilot-lite-vue-3.18.0.tgz"
   integrity sha512-OTILe5xgCNqoceNYp1Vjzt2JMJy8CtwTTU/jbrr358gA7OLF77sQKa17RDwlIZVXQx9JgjW8Ga7HCkvuUyEk0w==
 
 "@discoveryjs/json-ext@0.5.7":
@@ -2157,10 +2157,10 @@ autoprefixer@^10.2.4:
     picocolors "^1.0.0"
     postcss-value-parser "^4.2.0"
 
-axios@^1.5.1:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-1.5.1.tgz#11fbaa11fc35f431193a9564109c88c1f27b585f"
-  integrity sha512-Q28iYCWzNHjAm+yEAot5QaAMxhMghWLFVf7rRdwhUI+c2jix2DUXjAHXVi+s1ibs3mjPO/cCgbA++3BjD0vP/A==
+axios@^1.5.0:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.6.2.tgz#de67d42c755b571d3e698df1b6504cde9b0ee9f2"
+  integrity sha512-7i24Ri4pmDRfJTR7LDBhsOTtcm+9kjX5WiY1X3wIisx6G9So3pfMkEiU7emUBe46oceVImccTEM3k6C5dbVW8A==
   dependencies:
     follow-redirects "^1.15.0"
     form-data "^4.0.0"
@@ -5693,6 +5693,16 @@ pretty-error@^4.0.0:
     lodash "^4.17.20"
     renderkid "^3.0.0"
 
+primeicons@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.npmjs.org/primeicons/-/primeicons-6.0.1.tgz"
+  integrity sha512-KDeO94CbWI4pKsPnYpA1FPjo79EsY9I+M8ywoPBSf9XMXoe/0crjbUK7jcQEDHuc0ZMRIZsxH3TYLv4TUtHmAA==
+
+primevue@^3.38.1:
+  version "3.38.1"
+  resolved "https://registry.npmjs.org/primevue/-/primevue-3.38.1.tgz"
+  integrity sha512-mRzRIF1EXGD0uxh8jitQaHDqgSt157OUhPTwfn2I/+96ljNtyXbNqo8oeFVNSzCiH9Zt1ECUziSh1PfFxJqK5A==
+
 process-nextick-args@~2.0.0:
   version "2.0.1"
   resolved "https://registry.npmjs.org/process-nextick-args/-/process-nextick-args-2.0.1.tgz"
@@ -6817,9 +6827,9 @@ vue-loader@^17.0.0:
     watchpack "^2.4.0"
 
 vue-router@4:
-  version "4.2.5"
-  resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-4.2.5.tgz#b9e3e08f1bd9ea363fdd173032620bc50cf0e98a"
-  integrity sha512-DIUpKcyg4+PTQKfFPX88UWhlagBEBEfJ5A8XDXRJLUnZOvcpMF8o/dnL90vpVkGaPbjvXazV/rC1qBKrZlFugw==
+  version "4.2.4"
+  resolved "https://registry.npmjs.org/vue-router/-/vue-router-4.2.4.tgz"
+  integrity sha512-9PISkmaCO02OzPVOMq2w82ilty6+xJmQrarYZDkjZBfl4RvYAlt4PKnEX21oW4KTtWfa9OuO/b3qk1Od3AEdCQ==
   dependencies:
     "@vue/devtools-api" "^6.5.0"
 
