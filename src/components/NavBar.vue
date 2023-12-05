@@ -50,6 +50,7 @@ export default {
     min-height: 30px;
     width: 100px;
     position: absolute;
+    z-index: 4;
 }
 
 .nav-bar {
