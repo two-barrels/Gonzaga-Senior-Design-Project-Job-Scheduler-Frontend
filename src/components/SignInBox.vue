@@ -44,7 +44,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .signin-form {
   background-color: rgb(172, 172, 172);
   border: 1px black solid;
@@ -81,10 +81,10 @@ export default {
   margin-right: auto;
   margin-left: auto;
   margin-top: 10px;
-  &:hover {
+  /* &:hover {
     background-color: rgb(0, 160, 160);
     cursor: pointer;
-  }
+  } */
 }
 
 </style>

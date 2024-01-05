@@ -44,7 +44,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .dropdown {
     background-color: grey;
     min-height: 30px;
@@ -53,7 +53,7 @@ export default {
 }
 
 .nav-bar {
-    background-color: lightblue;
+    background-color: $color-primary--50;
     width: 100%;
     height: 60px;
     padding: 5px;
