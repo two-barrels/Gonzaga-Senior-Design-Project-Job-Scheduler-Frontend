@@ -10,7 +10,8 @@
   </Toast>
   <Toast position="top-center" group="tc"></Toast>
     <div v-if="showPopup" class="popup"> 
-        <h3> Edit Space </h3>
+        <SpacePopup :spaceData="popupSpaceDataHold" :floorData="floors_data" :check="check"> </SpacePopup>
+        <!-- <h3> Edit Space </h3>
         <form>
           <label for="sname">Space Name:</label><br>
           <input type="text" class="sname" v-model="popupSpaceDataHold.spaces_name"><br>
@@ -30,14 +31,14 @@
             <Button @click="createSpace();createSpacePopUp()" class ="exitbuttsave" label = "Create Space" ></Button>
             <button @click="createSpacePopUp()"> Exit </button> 
           </div>
-        </form>
+        </form> -->
     </div>
     <div class ="createSpace">
       <button @click="createSpacePopUp()"> Create Space </button>
     </div>
     <div class = "floor">
       <vue-collapsible-panel-group>
-      <vue-collapsible-panel :expanded="false" @Click="onGetInfo" v-for="(val, idx) in floors_data" :key="idx">
+      <vue-collapsible-panel :expanded="false" v-for="(val, idx) in floors_data" :key="idx">
       <template #title>
         <div class="displayFloors">
           Floor {{ val.floor_id }}
@@ -83,7 +84,8 @@
   import Toast from 'primevue/toast'
   import vClickOutside from 'v-click-outside'
   import http from '@/services/http-helper'
-  
+  import SpacePopup from '@/components/EditSpacePopUp.vue'
+
   export default {
     name: 'edit-floor-space',
     data() {
@@ -112,6 +114,7 @@
       VueCollapsiblePanel,
       Button,
       Toast,
+      SpacePopup,
     },
     async mounted(){
         try{
@@ -139,10 +142,6 @@
           catch(error){
             console.error(error)
           }
-        },
-        changeFloor(floorVal){
-          console.log(floorVal)
-          this.popupSpaceDataHold.floor_id = floorVal
         },
         createSpacePopUp(){
           this.check = false
