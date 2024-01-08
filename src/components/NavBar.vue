@@ -12,9 +12,14 @@
         <div class="icon" @click="toggleDropdown()">
             <img :src="`chevron-down.svg`">
         </div>
-        <div class="account"> 
+        <div class="account-box"> 
         <span class="acc">Hello, Test</span>
-        <std-button title="Account Settings" @click="toggleDropdown()" button-type="account-button"></std-button>
+        <std-button 
+            title="Account Settings" 
+            @click="toggleDropdown()" 
+            button-type="account-button"
+        >
+        </std-button>
             <div v-if="showDropdown" class="dropdown">
                 <std-button title="Settings" @click="settings()" button-type="drop-down"/>
                 <std-button title="Logout" @click="logoutUser()" button-type="drop-down"/>
@@ -61,7 +66,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@600&display=swap');
 .nav-bar {
     background-color: $color-primary--700;
     width: 100%;
@@ -76,7 +80,7 @@ export default {
     float: left;
     text-decoration: none;
 }
-.account{
+.account-box{
     float: right;
 }
 .acc{
