@@ -10,28 +10,12 @@
   </Toast>
   <Toast position="top-center" group="tc"></Toast>
     <div v-if="showPopup" class="popup"> 
-        <SpacePopup :spaceData="popupSpaceDataHold" :floorData="floors_data" :check="check"> </SpacePopup>
-        <!-- <h3> Edit Space </h3>
-        <form>
-          <label for="sname">Space Name:</label><br>
-          <input type="text" class="sname" v-model="popupSpaceDataHold.spaces_name"><br>
-          <label for="floor_num">Floor Name:</label><br>
-          <select name="Floors">
-          <option v-for="(val, idx) in floors_data" :key="idx" @click="changeFloor(val.floor_id)"> {{val.floor_id}}</option> 
-          </select><br>
-          <label for="max_num">Max Occupancy:</label><br>
-          <input type="number" class="max_num" min="1" v-model="popupSpaceDataHold.max_occupancy"><br>
-          <label>Space Details:</label><br>
-          <textarea class="descript" rows="7" cols="50" v-model="popupSpaceDataHold.description"></textarea><bbr></bbr>
-          <div v-if="check">
-            <Button @click="saveChanges()" class ="editbuttsave" label = "Save" > Save </Button>
-            <button @click="closePopup()"> Exit </button> 
-          </div>
-          <div v-else>
-            <Button @click="createSpace();createSpacePopUp()" class ="exitbuttsave" label = "Create Space" ></Button>
-            <button @click="createSpacePopUp()"> Exit </button> 
-          </div>
-        </form> -->
+        <SpacePopup :spaceData="popupSpaceDataHold" :floorData="floors_data" :check="check" 
+          @save-changes="saveChanges" 
+          @create-space="createSpace" 
+          @close-popup="closePopup" 
+          @create-space-pop-up="createSpacePopUp"> 
+        </SpacePopup>
     </div>
     <div class ="createSpace">
       <button @click="createSpacePopUp()"> Create Space </button>
@@ -129,8 +113,8 @@
         }
     },
     methods: {  
-        async createSpace(){
-          this.popupSpaceData = this.popupSpaceDataHold
+        async createSpace(retSpaceData){
+          this.popupSpaceData = retSpaceData
           try{
             const response = await http.post('spaces/', this.popupSpaceData)
             console.log(response)
@@ -161,7 +145,8 @@
           this.popupSpaceDataHold = JSON.parse(JSON.stringify(spaceData))
           this.showPopup = !this.showPopup
         },
-        saveChanges(){
+        saveChanges(retSpaceData){
+          this.popupSpaceDataHold = retSpaceData
           http.put(`spaces/${this.popupSpaceDataHold.id}`, this.popupSpaceDataHold)
             .then(response => {
                 console.log(response.data)

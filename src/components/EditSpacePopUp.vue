@@ -54,20 +54,14 @@ export default {
         this.spaceDataHold.floor_id = floorVal
       },
       saveChanges() {
-      // Emit an event to notify the parent component about the changes
-      this.$emit('save-changes', this.spaceDataHold);
-      // Close the popup or perform other actions as needed
-      this.closePopup();
+        this.$emit('save-changes', this.spaceDataHold)
       },
       createSpace() {
-      // Emit an event to notify the parent component about the new space creation
-      this.$emit('create-space', this.spaceDataHold);
-      // Close the popup or perform other actions as needed
-      this.createSpacePopUp();
+        this.$emit('create-space', this.spaceDataHold)
+        this.createSpacePopUp()
       },
       closePopup() {
-      // Close the popup or perform other actions as needed
-      this.$emit('close-popup');
+        this.$emit('close-popup')
       },
       createSpacePopUp(){
         this.$emit('create-space-pop-up')
