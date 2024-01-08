@@ -237,7 +237,7 @@
 .popup {
     width: 600px;
     height: 600px;
-    background-color: #d68e11;
+    background-color: rgb(125, 175, 175);
     color: #fff;
     text-align: center;
     border-radius: 10px;
