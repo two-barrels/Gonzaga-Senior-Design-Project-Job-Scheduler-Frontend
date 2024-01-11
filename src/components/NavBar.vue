@@ -8,7 +8,7 @@
             <std-button title="logout" @click="logoutUser()" button-type="login-button"/>
         </div>
     </div>
-    <slot></slot>
+    <router-view/>
 </template>
   
 <script>

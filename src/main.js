@@ -5,10 +5,9 @@ import vClickOutside from 'v-click-outside'
 
 
 import PrimeVue from 'primevue/config'
+import { createRouter, createWebHistory } from 'vue-router';
 import 'primevue/resources/themes/lara-light-indigo/theme.css'
 import 'primevue/resources/primevue.min.css'
-//import Button from 'primevue/button'
-//import Toast from 'primevue/toast'
 import ToastService from 'primevue/toastservice'
 /**
  * Load JWT from Local Storage on Refresh.
@@ -22,8 +21,41 @@ if (cookieExists) {
     store.dispatch("loginUserWithToken", { auth_token });
   }
 }
+
+const routes = [
+  { 
+    path: '/',
+    component: () => import('@/components/NavBar.vue'),
+    children: [
+      {
+        path: '',
+        component:  () => import('@/components/AvailableSpaces.vue')
+      },
+      {
+        path: 'calendar',
+        component: () => import('@/components/CalendarComp.vue')
+      },
+      {
+        path: 'edit-spaces',
+        component: () => import('@/components/EditSpaces.vue')
+      }
+    ]
+  },
+  {
+    path: '/login',
+    component: () => import('@/components/SessionManager.vue')
+  }
+]
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes
+})
+
+
 const app = createApp(App)
 
+app.use(router)
 app.use(PrimeVue)
 app.use(ToastService)
 app.use(store)
