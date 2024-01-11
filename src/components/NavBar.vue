@@ -4,10 +4,10 @@
             <std-button title="Home" button-type="nav-button"></std-button>
         </div>
         <div class="left-nav">
-            <a href="/AvailableSpaces"><std-button title="Available Spaces" button-type="nav-button"/></a>            
+            <router-link to="/"><std-button title="Available Spaces" button-type="nav-button"/></router-link>            
         </div>
         <div class="left-nav">
-            <a href="/EditSpaces"><std-button title="Admin Portal" button-type="nav-button"/></a>            
+            <router-link to="/edit-spaces"><std-button title="Admin Portal" button-type="nav-button"/></router-link>           
         </div>
         <div class="icon" @click="toggleDropdown()">
             <img :src="`chevron-down.svg`">
@@ -29,7 +29,7 @@
             <img :src="`user.svg`">  
         </div>
     </div>
-    <slot></slot>
+    <router-view/>
 </template>
   
 <script>
