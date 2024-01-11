@@ -16,6 +16,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);
 
 .std-button {
     min-height: 15px;
@@ -138,6 +139,50 @@ export default {
     border: 1px $color-danger--400 solid;
     &:hover {
         background-color: $color-danger--50;
+        cursor: pointer;
+    }
+}
+
+.nav-button {
+    width: fit-content;
+    padding: 10px 20px;
+    color: white;
+    background-color: $color-primary--700;
+    border: 1px $color-primary--700 solid;
+    border-right: 1px $color-neutral--400 solid;
+    &:hover {
+        border-radius: 5px;
+        border: 1px $color-primary--500 solid;
+        background-color: $color-primary--500;
+        cursor: pointer;
+    }
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+}
+.account-button{
+    width: fit-content;
+    color: white;
+    background-color: $color-primary--700;
+    border: 1px $color-primary--700 solid;
+    border-radius: 5px;    
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 600;    
+}
+
+.drop-down{
+    width: 100%;
+    color: white;
+    padding: 10px 20px;
+    background-color: $color-primary--700;
+    border: 1px $color-primary--700 solid;   
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 600; 
+    &:hover {
+        border: 1px $color-primary--500 solid;
+        background-color: $color-primary--500;
         cursor: pointer;
     }
 }
