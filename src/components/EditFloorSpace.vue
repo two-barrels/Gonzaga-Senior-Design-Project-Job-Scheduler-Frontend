@@ -3,8 +3,14 @@
     <template #message>
       <div class ="warning">
         <p> Are you sure you want to remove {{popupSpaceDataHold.spaces_name }}?</p><br>
-        <button @click="toggleWarnDelete()"> Confirm </button>
-        <button @click = "toggleWarnCancel()"> Cancel </button>
+        <std-button @click="toggleWarnDelete()" 
+          title = "Confirm" 
+          buttonType="primary-default"> 
+       </std-button>
+        <std-button @click = "toggleWarnCancel()"
+          title = "Cancel" 
+          buttonType="primary-default"> 
+       </std-button>
       </div>
     </template>
   </Toast>
@@ -18,7 +24,23 @@
         </SpacePopup>
     </div>
     <div class ="createSpace">
-      <button @click="createSpacePopUp()"> Create Space </button>
+      <std-button @click="createSpacePopUp()" 
+          class="createSpace"
+          title = "Create Space" 
+          buttonType="primary-default"> 
+      </std-button>
+    </div>
+    <div v-if="showPopupFloor" class="popup"> 
+      <FloorPopup
+          @close-popup="closePopupFloor"> 
+      </FloorPopup>
+    </div>
+    <div class ="createFloor">
+      <std-button @click="createFloorPopUp()" 
+        class="createFloor"
+        title = "Create Floor" 
+        buttonType="primary-default"> 
+      </std-button>
     </div>
     <div class = "floor">
       <vue-collapsible-panel-group>
@@ -39,10 +61,18 @@
         <div v-if="val.floor_id == value.floor_id">
           <div class = "space">
             <div class="edit">
-                <button @click="openPopup(value, index)"> Edit </button> 
+              <std-button @click="openPopup(value, index)" 
+                class="edit"
+                title = "Edit" 
+                buttonType="primary-default"> 
+              </std-button>
             </div> 
             <div class="delete">
-                <Button @click="createWarningToast(value)" label = "Delete" ></Button>
+              <std-button @click="createWarningToast(value)"  
+                class="delete"
+                title = "Delete" 
+                buttonType="primary-default"> 
+              </std-button>
             </div> 
             <h1> {{ value.spaces_name }}</h1>
             <p>Space Description: {{ value.description }}</p>
@@ -64,12 +94,12 @@
   } from '@dafcoe/vue-collapsible-panel'
   import '@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css'
   import { useToast } from 'primevue/usetoast'
-  import Button from 'primevue/button'
   import Toast from 'primevue/toast'
   import vClickOutside from 'v-click-outside'
   import http from '@/services/http-helper'
   import SpacePopup from '@/components/EditSpacePopUp.vue'
-
+  import FloorPopup from '@/components/EditFloorPopUp.vue'
+  import StdButton from "@/components/StdButton.vue"
   export default {
     name: 'edit-floor-space',
     data() {
@@ -81,6 +111,7 @@
           floors_data: [],
           floor_numbers:[],
           showPopup: false,
+          showPopupFloor: false,
           toast:useToast(),
           visible:false,
           check: true,
@@ -96,9 +127,10 @@
     components: {
       VueCollapsiblePanelGroup,
       VueCollapsiblePanel,
-      Button,
       Toast,
       SpacePopup,
+      FloorPopup,
+      'std-button':StdButton
     },
     async mounted(){
         try{
@@ -133,11 +165,21 @@
           console.log(this.popupSpaceDataHold)
           this.showPopup = !this.showPopup
         },   
+        createFloorPopUp(){
+          //this.check = false
+          //this.popupSpaceDataHold = JSON.parse(JSON.stringify(this.dummySpace))
+          //console.log(this.popupSpaceDataHold)
+          this.showPopupFloor = !this.showPopupFloor
+        }, 
         closePopup() {
           this.check = true
           this.idx = null
           this.popupSpaceDataHold = null
           this.showPopup = !this.showPopup
+        },
+        closePopupFloor() {
+          //this.check = true
+          this.showPopupFloor = !this.showPopupFloor
         },
         openPopup(spaceData, idex) {
           this.check = true
