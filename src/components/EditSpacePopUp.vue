@@ -16,10 +16,10 @@
             class="save"
             @click="saveChanges()" 
             title = "Save" 
-            buttonType="primary-default"> 
-          </std-button>
+            buttonType="primary-default"
+            />
           <std-button 
-            class="exit"
+            class="exit1"
             title="Exit"
             buttonType="primary-default"
             @click="closePopup()"
@@ -29,45 +29,44 @@
           <std-button @click="createSpace()" 
             class="save"
             title = "Create Space" 
-            buttonType="primary-default"> 
-          </std-button>
+            buttonType="primary-default"
+            />
           <std-button @click="createSpacePopUp()"
             class="exit"
             title="Exit"
-            buttonType="primary-default">
-          </std-button> 
-          
+            buttonType="primary-default"
+            /> 
         </div>
       </form>
 </template>
+
 <script>
 
-import StdButton from "@/components/StdButton.vue"
+  import StdButton from "@/components/StdButton.vue"
 
-export default {
-  name: 'space-popup',
-  props:{
-      spaceData: Object,
-      floorData:Array,
-      check: Boolean
-  },
-
-  components:{
-    'std-button':StdButton
-  },
-  data(){
+  export default {
+    name: 'space-popup',
+    props:{
+        spaceData: Object,
+        floorData:Array,
+        check: Boolean
+    },
+    components:{
+      'std-button':StdButton
+    },
+    data(){
       return{
-          spaceDataHold: {},
-          checkA: true,
-          floor: []
+        spaceDataHold: {},
+        checkA: true,
+        floor: []
       }
-  },
-  async mounted(){
-    this.spaceDataHold = this.spaceData
-    this.checkA = this.check
-    this.floor = this.floorData
-  },
-  methods:{
+    },
+    async mounted(){
+      this.spaceDataHold = this.spaceData
+      this.checkA = this.check
+      this.floor = this.floorData
+    },
+    methods:{
       changeFloor(floorVal){
         console.log(floorVal)
         this.spaceDataHold.floor_id = floorVal
@@ -85,13 +84,17 @@ export default {
       createSpacePopUp(){
         this.$emit('create-space-pop-up')
       }
+    }
   }
-}
 </script>
-<style lang="scss">
 
-.exit{
+<style lang="scss">
+.exit1{
   margin-left: 55%;
+  margin-top: -8.3%;
+}
+.exit{
+  margin-left: 60%;
   margin-top: -8.3%;
 }
 .save{
@@ -123,7 +126,6 @@ export default {
     border-radius: 8%;
   }
 }
-
 .in_flr{
   margin-left:-59%;
   &:focus{
@@ -150,7 +152,6 @@ export default {
     border-radius: 8%;
   }
 }
-
 .in_name{
   margin-left:-36.5%;
   &:focus{
@@ -164,5 +165,4 @@ export default {
     border-radius: 8%;
   }
 }
-
 </style>
