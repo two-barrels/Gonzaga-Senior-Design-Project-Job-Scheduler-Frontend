@@ -1,14 +1,35 @@
 <template>
     <div class="nav-bar">
-        <std-button title="More Shtuff" @click="toggleDropdown()" button-type="std-button"></std-button>
-        <div v-if="showDropdown" class="dropdown">
-            <a href="/AvailableSpaces"><std-button title="Spaces" button-type="login-button"/></a>
-            <a href="/EditSpaces"><std-button title="Admin Portal" button-type="login-button"/></a>
-            <std-button title="settings" @click="settings()" button-type="login-button"/>
-            <std-button title="logout" @click="logoutUser()" button-type="login-button"/>
+        <div class="left-nav">
+            <std-button title="Home" button-type="nav-button"></std-button>
+        </div>
+        <div class="left-nav">
+            <router-link to="/"><std-button title="Available Spaces" button-type="nav-button"/></router-link>            
+        </div>
+        <div class="left-nav">
+            <router-link to="/edit-spaces"><std-button title="Admin Portal" button-type="nav-button"/></router-link>           
+        </div>
+        <div class="icon" @click="toggleDropdown()">
+            <img :src="`chevron-down.svg`">
+        </div>
+        <div class="account-box"> 
+        <span class="acc">Hello, Test</span>
+        <std-button 
+            title="Account Settings" 
+            @click="toggleDropdown()" 
+            button-type="account-button"
+        >
+        </std-button>
+            <div v-if="showDropdown" class="dropdown">
+                <std-button title="Settings" @click="settings()" button-type="drop-down"/>
+                <std-button title="Logout" @click="logoutUser()" button-type="drop-down"/>
+            </div>
+        </div>
+        <div class="icon">
+            <img :src="`user.svg`">  
         </div>
     </div>
-    <slot></slot>
+    <router-view/>
 </template>
   
 <script>
@@ -45,19 +66,30 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.dropdown {
-    background-color: grey;
-    min-height: 30px;
-    width: 100px;
-    position: absolute;
-}
-
 .nav-bar {
-    background-color: $color-primary--50;
+    background-color: $color-primary--700;
     width: 100%;
-    height: 60px;
+    height: 65px;
+    padding: 10px;
+    font-family: 'Open Sans', sans-serif;
+}
+.nav-bar a{
+    text-decoration: none;
+}
+.left-nav{
+    float: left;
+    text-decoration: none;
+}
+.account-box{
+    float: right;
+}
+.acc{
+    color: $color-primary--100;
+    font-size: small;
+}
+.icon{
+    float: right;
     padding: 5px;
-    position: relative;
 }
 
 </style>

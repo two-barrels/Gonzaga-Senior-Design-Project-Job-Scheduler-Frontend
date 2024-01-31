@@ -5724,6 +5724,10 @@ primevue@^3.45.0:
   version "3.45.0"
   resolved "https://registry.npmjs.org/primevue/-/primevue-3.45.0.tgz"
   integrity sha512-qtA2YDi6SSBkGRb33lUXL2WnzMd7VZd4IC/YLXiUZLnxCGxqtB4iYj+jGqINNDcIFVqIYYMrc1UhiX+C68GQEQ==
+primevue@^3.42.0:
+  version "3.42.0"
+  resolved "https://registry.yarnpkg.com/primevue/-/primevue-3.42.0.tgz#17b44f6c85c48b44cacd43a76142a59ebf8bad4f"
+  integrity sha512-vY/nHBInl/k2MFfgx+5dGI3tH1P6OmO2Oj6eOLwtHk000yopPxLBUP/enALoElriy5EaPzfv02upOrsQqd+nJA==
 
 process-nextick-args@~2.0.0:
   version "2.0.1"
@@ -6817,6 +6821,11 @@ uuid@^8.3.2:
   version "8.3.2"
   resolved "https://registry.npmjs.org/uuid/-/uuid-8.3.2.tgz"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
+
+v-click-outside@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/v-click-outside/-/v-click-outside-3.2.0.tgz#850ac3f52d66d84b9f7e8002a1bcadcafec5534e"
+  integrity sha512-QD0bDy38SHJXQBjgnllmkI/rbdiwmq9RC+/+pvrFjYJKTn8dtp7Penf9q1lLBta280fYG2q53mgLhQ+3l3z74w==
 
 v8-compile-cache@^2.0.3:
   version "2.4.0"
