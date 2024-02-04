@@ -32,8 +32,9 @@ const routes = [
         component:  () => import('@/components/AvailableSpaces.vue')
       },
       {
-        path: 'calendar',
-        component: () => import('@/components/CalendarComp.vue')
+        path: 'calendar/:user_id/:space_id/:space_name',
+        component: () => import('@/components/CalendarComp.vue'),
+        props: true
       },
       {
         path: 'edit-spaces',

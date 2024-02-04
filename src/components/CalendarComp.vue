@@ -1,6 +1,6 @@
 <template>
   <div class="spaceName">
-    <b>Conference Room 1</b>
+    <b>{{ space_name }}</b>
   </div>
   <div class="wrap">
     <div class="months">
@@ -34,6 +34,20 @@ export default {
       },
       config: {
         viewType: "Week",
+        contextMenu: new DayPilot.Menu([
+        {
+          text: "Show event ID",
+          onClick: events => {
+            console.log(events.source.data["id"])
+          }
+        },
+        {
+          text: "Delete",
+          onClick: events => {
+            http.delete('reservations', {space_id: this.space_id, account_id: 101, start_time: events.start, end_time: events.end})
+          }
+        }
+        ]),
         startDate: date.currentDate(), // first week displayed
         durationBarVisible: false,
         timeRangeSelectedHandling: "Enabled",
@@ -51,13 +65,21 @@ export default {
             text: modal.result
           });
           try {
-            await http.post('reservations', {space_id: 246, account_id: 101, start_time: args.start, end_time: args.end});
+            await http.post('reservations', {space_id: this.space_id, account_id: 101, start_time: args.start, end_time: args.end});
             console.log('Reservation successfully created!');
           } catch (error) {
             console.error('Error creating reservation:', error.message);
           }
         },
         eventDeleteHandling: "Disabled",
+        // onEventDelete: () => {
+        //   if (events[0][id] == 0) {
+        //     console.log("id match")
+        //   }
+        //   console.log(events[0])
+        //   console.log("Event Deleted")
+        // },
+        eventRightClickHandling: "ContextMenu",
         onEventMoved: () => {
           console.log("Event moved");
         },
@@ -68,6 +90,9 @@ export default {
     }
   },
   props: {
+    user_id: String,
+    space_id: String,
+    space_name: String
   },
   components: {
     DayPilotCalendar,
@@ -84,14 +109,17 @@ export default {
         const events = []
         const response = await http.get('reservations')
         console.log(response.data)
+        console.log(this.space_id)
 
         response?.data?.forEach((item, index) => {
-          events.push({
-            id: index,
-            start: item?.start_time,
-            end: item?.end_time,
-            text: "Booked",
-          })
+          if (item?.space_id == this.space_id) {
+            events.push({
+              id: index,
+              start: item?.start_time,
+              end: item?.end_time,
+              text: "Booked",
+            })
+          }
         })
         this.calendar.update({events})
       } catch (error) {
