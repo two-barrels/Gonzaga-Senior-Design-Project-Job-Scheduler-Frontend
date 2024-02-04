@@ -1,31 +1,26 @@
 import axios from "axios"
+import { navigateToRoute } from '@/services/router-helper'
 
 const BASE_URL = 'http://127.0.0.1:3000/'
 
 const state = {
-  auth_token: null,
-  user: {
-    id: null,
-    username: null,
-    email: null,
-  },
+  isLoggedIn: false,
+  user: {}
 };
 
 const getters = {
-  getAuthToken(state) {
-    return state.auth_token;
-  },
   getUserEmail(state) {
     return state.user?.email;
   },
   getUserID(state) {
     return state.user?.id;
   },
-  isLoggedIn(state) {
-    const loggedOut =
-      state.auth_token == null || state.auth_token == JSON.stringify(null);
-    return !loggedOut;
+  getUserRoles(state) {
+    return state.user?.roles
   },
+  getIsLoggedIn(state) {
+    return state.isLoggedIn
+  }
 };
 const actions = {
   registerUser({ commit }, payload) {
@@ -42,15 +37,16 @@ const actions = {
     });
   },
   loginUser({ commit }, payload) {
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       axios
         .post(`${BASE_URL}users/sign_in`, payload)
         .then((response) => {
           commit("setUserInfo", response);
+          navigateToRoute('/')
           resolve(response);
         })
         .catch((error) => {
-          reject(error);
+          console.error(error)
         });
     });
   },
@@ -72,35 +68,30 @@ const actions = {
         });
     });
   },
-  loginUserWithToken({ commit }, payload) {
-    const config = {
-      headers: {
-        Authorization: payload.auth_token,
-      },
-    };
-    new Promise((resolve, reject) => {
-      axios
-        .get(`${BASE_URL}member-data`, config)
+  loginUserWithToken({ commit }) {
+    new Promise((resolve) => {
+      axios(BASE_URL + 'member-data', {
+        method: "get",
+        withCredentials: true
+      })
         .then((response) => {
-          commit("setUserInfoFromToken", response);
+          commit("setUserInfo", response);
+          navigateToRoute('/')
           resolve(response);
         })
         .catch((error) => {
-          reject(error);
+          console.error(error)
         });
     });
   },
 };
 const mutations = {
   setUserInfo(state, data) {
-    state.user = data.data.user;
-    state.auth_token = data.headers.authorization;
-    axios.defaults.headers.common["Authorization"] = data.headers.authorization;
-    localStorage.setItem("auth_token", data.headers.authorization);
-  },
-  setUserInfoFromToken(state, data) {
-    state.user = data.data.user;
-    state.auth_token = localStorage.getItem("auth_token");
+    console.log("setting user info")
+    console.log(data)
+    state.user = data.data.user
+    state.isLoggedIn = true
+    //axios.defaults.headers.common["Authorization"] = data.headers.authorization
   },
   resetUserInfo(state) {
     state.user = {
@@ -110,7 +101,7 @@ const mutations = {
     };
     state.auth_token = null;
     localStorage.removeItem("auth_token");
-    axios.defaults.headers.common["Authorization"] = null;
+    //axios.defaults.headers.common["Authorization"] = null;
   },
 };
 export default {

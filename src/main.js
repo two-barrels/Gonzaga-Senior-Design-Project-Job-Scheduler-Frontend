@@ -9,23 +9,17 @@ import { createRouter, createWebHistory } from 'vue-router';
 import 'primevue/resources/themes/lara-light-indigo/theme.css'
 import 'primevue/resources/primevue.min.css'
 import ToastService from 'primevue/toastservice'
+import { setRouterInstance } from '@/services/router-helper'
 /**
  * Load JWT from Local Storage on Refresh.
  */
-let localAuthToken = localStorage.auth_token;
-let cookieExists = localAuthToken !== "undefined" && localAuthToken !== null;
-if (cookieExists) {
-  const auth_token = localStorage.getItem("auth_token");
-  const authTokenExists = auth_token !== "undefined" && auth_token !== null;
-  if (authTokenExists) {
-    store.dispatch("loginUserWithToken", { auth_token });
-  }
-}
+
 
 const routes = [
   { 
     path: '/',
     component: () => import('@/components/NavBar.vue'),
+    meta: { requiresAuth: true },
     children: [
       {
         path: '',
@@ -51,6 +45,24 @@ const router = createRouter({
   history: createWebHistory(),
   routes
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth) {
+    if (!store.getters.getIsLoggedIn) {
+      console.log(store.getters.getIsLoggedIn)
+      store.dispatch("loginUserWithToken")
+      if (!store.getters.getIsLoggedIn) {
+        next('/login')
+      }
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+})
+
+setRouterInstance(router)
 
 
 const app = createApp(App)

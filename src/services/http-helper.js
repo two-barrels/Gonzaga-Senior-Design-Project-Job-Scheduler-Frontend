@@ -1,5 +1,6 @@
 import axios from 'axios'
 
+axios.defaults.withCredentials = true;
 const BASE_URL = 'http://127.0.0.1:3000/'
 
 export default {
