@@ -1,9 +1,18 @@
-import { test, expect } from '@playwright/experimental-ct-vue'
-import App from './App.vue'
+import { test, expect } from '@playwright/test';
 
-test.use({ viewport: { width: 500, height: 500 } })
+test('has title', async ({ page }) => {
+  await page.goto('https://playwright.dev/');
 
-test('should work', async ({ mount }) => {
-  const component = await mount(App)
-  await expect(component).toContainText('Vite + Vue')
+  // Expect a title "to contain" a substring.
+  await expect(page).toHaveTitle(/Playwright/);
+});
+
+test('get started link', async ({ page }) => {
+  await page.goto('https://playwright.dev/');
+
+  // Click the get started link.
+  await page.getByRole('link', { name: 'Get started' }).click();
+
+  // Expects page to have a heading with the name of Installation.
+  await expect(page.getByRole('heading', { name: 'Installation' })).toBeVisible();
 });
