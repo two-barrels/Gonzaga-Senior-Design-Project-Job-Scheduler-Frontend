@@ -15,8 +15,8 @@ jobs:
       with:
         node-version: 18
     - name: Install dependencies
-      run: npm ci
+      run: yarn install --frozen-lockfile
     - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
+      run: yarn add playwright --immutable
     - name: Run Playwright tests
-      run: npx playwright test
+      run: yarn run playwright test
