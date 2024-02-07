@@ -5,26 +5,18 @@ on:
     branches: [ "master", "epic/phase-one" ]
   pull_request:
     branches: [ "master", "epic/phase-one" ]
-
 jobs:
-  build:
+  test:
+    timeout-minutes: 60
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.13.0]
-
     steps:
     - uses: actions/checkout@v3
-
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+    - uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
-    - name: Install
-      run: |
-        yarn
-        yarn install
-    - name: Test
-      run: |
-        yarn run playwright test
+        node-version: 18
+    - name: Install dependencies
+      run: npm ci
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+    - name: Run Playwright tests
+      run: npx playwright test
