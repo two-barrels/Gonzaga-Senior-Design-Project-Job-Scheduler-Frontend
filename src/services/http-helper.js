@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 axios.defaults.withCredentials = true;
-const BASE_URL = 'http://127.0.0.1:3000/'
+const BASE_URL = process.env.VUE_APP_BASE_BACKEND_URL
 
 export default {
     get(route, params) {

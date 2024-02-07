@@ -5,14 +5,11 @@ import vClickOutside from 'v-click-outside'
 
 
 import PrimeVue from 'primevue/config'
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router'
 import 'primevue/resources/themes/lara-light-indigo/theme.css'
 import 'primevue/resources/primevue.min.css'
 import ToastService from 'primevue/toastservice'
 import { setRouterInstance } from '@/services/router-helper'
-/**
- * Load JWT from Local Storage on Refresh.
- */
 
 
 const routes = [

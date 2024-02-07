@@ -1,7 +1,7 @@
 import axios from "axios"
 import { navigateToRoute } from '@/services/router-helper'
 
-const BASE_URL = 'http://127.0.0.1:3000/'
+const BASE_URL = process.env.VUE_APP_BASE_BACKEND_URL
 
 const state = {
   isLoggedIn: false,
@@ -87,11 +87,8 @@ const actions = {
 };
 const mutations = {
   setUserInfo(state, data) {
-    console.log("setting user info")
-    console.log(data)
     state.user = data.data.user
     state.isLoggedIn = true
-    //axios.defaults.headers.common["Authorization"] = data.headers.authorization
   },
   resetUserInfo(state) {
     state.user = {
@@ -99,9 +96,7 @@ const mutations = {
       username: null,
       email: null,
     };
-    state.auth_token = null;
-    localStorage.removeItem("auth_token");
-    //axios.defaults.headers.common["Authorization"] = null;
+    state.isLoggedIn = false;
   },
 };
 export default {
