@@ -44,7 +44,8 @@ export default {
         {
           text: "Delete",
           onClick: events => {
-            http.delete('reservations', {space_id: this.space_id, account_id: 101, start_time: events.start, end_time: events.end})
+            http.delete(`reservations/${events.source.data["id"]}`, events.source.data["id"], {space_id: this.space_id, user_id: 101, start_time: events.source.data["start"], end_time: events.source.data["end"]})
+            location.reload()
           }
         }
         ]),
@@ -52,7 +53,7 @@ export default {
         durationBarVisible: false,
         timeRangeSelectedHandling: "Enabled",
         onTimeRangeSelected: async (args) => {
-          const modal = await DayPilot.Modal.prompt("Create a new event:", "Event 1");
+          const modal = await DayPilot.Modal.prompt("Create a new event:", "Booked");
           const dp = args.control;
           dp.clearSelection();
           if (modal.canceled) {
@@ -65,20 +66,13 @@ export default {
             text: modal.result
           });
           try {
-            await http.post('reservations', {space_id: this.space_id, account_id: 101, start_time: args.start, end_time: args.end});
+            await http.post('reservations', {space_id: this.space_id, user_id: 101, start_time: args.start, end_time: args.end});
             console.log('Reservation successfully created!');
           } catch (error) {
             console.error('Error creating reservation:', error.message);
           }
         },
         eventDeleteHandling: "Disabled",
-        // onEventDelete: () => {
-        //   if (events[0][id] == 0) {
-        //     console.log("id match")
-        //   }
-        //   console.log(events[0])
-        //   console.log("Event Deleted")
-        // },
         eventRightClickHandling: "ContextMenu",
         onEventMoved: () => {
           console.log("Event moved");
@@ -111,10 +105,10 @@ export default {
         console.log(response.data)
         console.log(this.space_id)
 
-        response?.data?.forEach((item, index) => {
+        response?.data?.forEach((item) => {
           if (item?.space_id == this.space_id) {
             events.push({
-              id: index,
+              id: item.id,
               start: item?.start_time,
               end: item?.end_time,
               text: "Booked",
