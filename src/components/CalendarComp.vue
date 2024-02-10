@@ -29,7 +29,7 @@ export default {
         startDate: date.currentDate(), //month first shown
         selectionDay: date.currentDate(), //week first highlighted
         onTimeRangeSelected: args => {
-          this.config.startDate = args.day;
+          this.config.startDate = args.day
         }
       },
       config: {
@@ -63,14 +63,14 @@ export default {
           const dp = args.control;
           dp.clearSelection();
           if (modal.canceled) {
-            return;
+            return
           }
           dp.events.add({
             start: args.start,
             end: args.end,
             id: DayPilot.guid(),
             text: modal.result
-          });
+          })
           try {
             await http.post(
               'reservations', {
@@ -87,10 +87,10 @@ export default {
         eventDeleteHandling: "Disabled",
         eventRightClickHandling: "ContextMenu",
         onEventMoved: () => {
-          console.log("Event moved");
+          console.log("Event moved")
         },
         onEventResized: () => {
-          console.log("Event resized");
+          console.log("Event resized")
         },
       },
     }
@@ -125,7 +125,7 @@ export default {
         })
         this.calendar.update({events})
       } catch (error) {
-        console.error('Error loading events:', error);
+        console.error('Error loading events:', error)
       }
     },
   },
@@ -148,7 +148,7 @@ export default {
 }
 
 .week {
-  flex-grow: 1
+  flex-grow: 1;
 }
 
 .calendar_default_event_inner {

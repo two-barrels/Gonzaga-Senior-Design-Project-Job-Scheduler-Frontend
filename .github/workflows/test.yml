@@ -1,0 +1,24 @@
+name: Testing with Playwright
+
+on:
+  push:
+    branches: [ "master", "epic/phase-one" ]
+  pull_request:
+    branches: [ "master", "epic/phase-one" ]
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 18
+    - name: Install dependencies
+      run: yarn install --frozen-lockfile
+    - name: Install Playwright Browsers
+      run: |
+        yarn add playwright --immutable
+        yarn playwright install
+    - name: Run Playwright tests
+      run: yarn run playwright test
