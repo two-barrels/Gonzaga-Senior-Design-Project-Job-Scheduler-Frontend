@@ -38,13 +38,13 @@ export default {
         {
           text: "Show event ID",
           onClick: events => {
-            console.log(events.source.data["id"])
+            console.log(events.source.data)
           }
         },
         {
           text: "Delete",
           onClick: events => {
-            http.delete(`reservations/${events.source.data["id"]}`, events.source.data["id"], {space_id: this.space_id, user_id: 101, start_time: events.source.data["start"], end_time: events.source.data["end"]})
+            http.delete(`reservations/${events.source.data["id"]}`, {space_id: this.space_id, user_id: 101, start_time: events.source.data["start"], end_time: events.source.data["end"]})
             location.reload()
           }
         }
@@ -101,20 +101,19 @@ export default {
     async loadEvents() {
       try {
         const events = []
-        const response = await http.get('reservations')
+        const response = await http.get(`reservations/space/${this.space_id}`)
         console.log(response.data)
         console.log(this.space_id)
 
         response?.data?.forEach((item) => {
-          if (item?.space_id == this.space_id) {
-            events.push({
-              id: item.id,
-              start: item?.start_time,
-              end: item?.end_time,
-              text: "Booked",
-            })
-          }
+          events.push({
+            id: item.id,
+            start: item?.start_time,
+            end: item?.end_time,
+            text: "Booked"
+          })
         })
+
         this.calendar.update({events})
       } catch (error) {
         console.error('Error loading events:', error);
