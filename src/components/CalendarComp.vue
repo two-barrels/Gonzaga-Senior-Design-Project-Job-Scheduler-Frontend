@@ -44,7 +44,13 @@ export default {
         {
           text: "Delete",
           onClick: events => {
-            http.delete(`reservations/${events.source.data["id"]}`, {space_id: this.space_id, user_id: 101, start_time: events.source.data["start"], end_time: events.source.data["end"]})
+            http.delete(
+              `reservations/${events.source.data["id"]}`, {
+                space_id: this.space_id, 
+                user_id: 101, 
+                start_time: events.source.data["start"], 
+                end_time: events.source.data["end"]
+              })
             location.reload()
           }
         }
@@ -66,10 +72,16 @@ export default {
             text: modal.result
           });
           try {
-            await http.post('reservations', {space_id: this.space_id, user_id: 101, start_time: args.start, end_time: args.end});
-            console.log('Reservation successfully created!');
+            await http.post(
+              'reservations', {
+                space_id: this.space_id, 
+                user_id: 101, 
+                start_time: args.start, 
+                end_time: args.end
+              })
+            console.log('Reservation successfully created!')
           } catch (error) {
-            console.error('Error creating reservation:', error.message);
+            console.error('Error creating reservation:', error.message)
           }
         },
         eventDeleteHandling: "Disabled",
@@ -102,9 +114,7 @@ export default {
       try {
         const events = []
         const response = await http.get(`reservations/space/${this.space_id}`)
-        console.log(response.data)
-        console.log(this.space_id)
-
+        
         response?.data?.forEach((item) => {
           events.push({
             id: item.id,
@@ -113,7 +123,6 @@ export default {
             text: "Booked"
           })
         })
-
         this.calendar.update({events})
       } catch (error) {
         console.error('Error loading events:', error);
