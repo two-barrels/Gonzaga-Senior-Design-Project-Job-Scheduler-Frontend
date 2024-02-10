@@ -45,7 +45,7 @@ export default {
     data() {
         return {
             showDropdown: false
-        };
+        }
     },
     computed: {
         currentComponent() {

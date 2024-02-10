@@ -7,13 +7,18 @@ const state = {
   isLoggedIn: false,
   user: {}
 };
+=======
+  isLoggedIn: false,
+  user: {}
+}
+>>>>>>> Stashed changes
 
 const getters = {
   getUserEmail(state) {
-    return state.user?.email;
+    return state.user?.email
   },
   getUserID(state) {
-    return state.user?.id;
+    return state.user?.id
   },
   getUserRoles(state) {
     return state.user?.roles
@@ -22,25 +27,32 @@ const getters = {
     return state.isLoggedIn
   }
 };
+=======
+  getIsLoggedIn(state) {
+    return state.isLoggedIn
+  }
+}
+>>>>>>> Stashed changes
 const actions = {
   registerUser({ commit }, payload) {
     return new Promise((resolve, reject) => {
       axios
         .post(`${BASE_URL}users`, payload)
         .then((response) => {
-          commit("setUserInfo", response);
-          resolve(response);
+          commit("setUserInfo", response)
+          resolve(response)
         })
         .catch((error) => {
-          reject(error);
-        });
-    });
+          reject(error)
+        })
+    })
   },
   loginUser({ commit }, payload) {
     new Promise((resolve) => {
       axios
         .post(`${BASE_URL}users/sign_in`, payload)
         .then((response) => {
+<<<<<<< Updated upstream
           commit("setUserInfo", response);
           navigateToRoute('/')
           resolve(response);
@@ -49,24 +61,34 @@ const actions = {
           console.error(error)
         });
     });
+=======
+          commit("setUserInfo", response)
+          navigateToRoute('/')
+          resolve(response)
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+    })
+>>>>>>> Stashed changes
   },
   logoutUser({ commit }) {
     const config = {
       headers: {
         authorization: state.auth_token,
       },
-    };
+    }
     new Promise((resolve, reject) => {
       axios
         .delete(`${BASE_URL}users/sign_out`, config)
         .then(() => {
-          commit("resetUserInfo");
-          resolve();
+          commit("resetUserInfo")
+          resolve()
         })
         .catch((error) => {
-          reject(error);
-        });
-    });
+          reject(error)
+        })
+    })
   },
   loginUserWithToken({ commit }) {
     new Promise((resolve) => {
@@ -83,8 +105,18 @@ const actions = {
           console.error(error)
         });
     });
+=======
+          commit("setUserInfo", response)
+          navigateToRoute('/')
+          resolve(response)
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+    })
+>>>>>>> Stashed changes
   },
-};
+}
 const mutations = {
   setUserInfo(state, data) {
     state.user = data.data.user
@@ -95,13 +127,14 @@ const mutations = {
       id: null,
       username: null,
       email: null,
+<<<<<<< Updated upstream
     };
     state.isLoggedIn = false;
   },
-};
+}
 export default {
   state,
   getters,
   actions,
   mutations,
-};
+}

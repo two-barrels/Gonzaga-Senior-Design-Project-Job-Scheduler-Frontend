@@ -50,37 +50,37 @@ export default {
           loginEmail: "",
           loginPassword: "",
           loaded: false
-        };
+        }
     },
     methods: {
         ...mapActions(["registerUser", "loginUser", "logoutUser"]),
         onSignUp(event) {
-            event.preventDefault();
+            event.preventDefault()
             let data = {
             user: {
             email: this.signUpEmail,
             password: this.signUpPassword,
             },
-        };
-        this.registerUser(data);
-        this.resetData();
+        }
+        this.registerUser(data)
+        this.resetData()
         },
         onLogin(event) {
-            event.preventDefault();
+            event.preventDefault()
             let data = {
                 user: {
                     email: this.loginEmail,
                     password: this.loginPassword,
                 },
             };
-            this.loginUser(data);
-            this.resetData();
+            this.loginUser(data)
+            this.resetData()
         },
         resetData() {
-            this.signUpEmail = "";
-            this.signUpPassword = "";
-            this.loginEmail = "";
-            this.loginPassword = "";
+            this.signUpEmail = ""
+            this.signUpPassword = ""
+            this.loginEmail = ""
+            this.loginPassword = ""
         },
     },
 }

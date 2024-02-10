@@ -29,7 +29,7 @@ export default {
         startDate: date.currentDate(), //month first shown
         selectionDay: date.currentDate(), //week first highlighted
         onTimeRangeSelected: args => {
-          this.config.startDate = args.day;
+          this.config.startDate = args.day
         }
       },
       config: {
@@ -38,31 +38,31 @@ export default {
         durationBarVisible: false,
         timeRangeSelectedHandling: "Enabled",
         onTimeRangeSelected: async (args) => {
-          const modal = await DayPilot.Modal.prompt("Create a new event:", "Event 1");
-          const dp = args.control;
-          dp.clearSelection();
+          const modal = await DayPilot.Modal.prompt("Create a new event:", "Event 1")
+          const dp = args.control
+          dp.clearSelection()
           if (modal.canceled) {
-            return;
+            return
           }
           dp.events.add({
             start: args.start,
             end: args.end,
             id: DayPilot.guid(),
             text: modal.result
-          });
+          })
           try {
-            await http.post('reservations', {space_id: 246, account_id: 101, start_time: args.start, end_time: args.end});
-            console.log('Reservation successfully created!');
+            await http.post('reservations', {space_id: 246, account_id: 101, start_time: args.start, end_time: args.end})
+            console.log('Reservation successfully created!')
           } catch (error) {
-            console.error('Error creating reservation:', error.message);
+            console.error('Error creating reservation:', error.message)
           }
         },
         eventDeleteHandling: "Disabled",
         onEventMoved: () => {
-          console.log("Event moved");
+          console.log("Event moved")
         },
         onEventResized: () => {
-          console.log("Event resized");
+          console.log("Event resized")
         },
       },
     }
@@ -95,7 +95,7 @@ export default {
         })
         this.calendar.update({events})
       } catch (error) {
-        console.error('Error loading events:', error);
+        console.error('Error loading events:', error)
       }
     },
   },
@@ -118,7 +118,7 @@ export default {
 }
 
 .week {
-  flex-grow: 1
+  flex-grow: 1;
 }
 
 .calendar_default_event_inner {

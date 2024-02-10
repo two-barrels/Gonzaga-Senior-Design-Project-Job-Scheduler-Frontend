@@ -27,7 +27,7 @@
             <button @click="closePopup()"> Exit </button> 
           </div>
           <div v-else>
-            <Button @click="createSpace();createSpacePopUp()" class ="exitbuttsave" label = "Create Space" ></Button>
+            <Button @click="createSpace(); createSpacePopUp()" class ="exitbuttsave" label = "Create Space" ></Button>
             <button @click="createSpacePopUp()"> Exit </button> 
           </div>
         </form>
@@ -176,7 +176,7 @@
             })
         },
         createWarningToast(spaceData) {
-          this.popupSpaceDataHold = spaceData;
+          this.popupSpaceDataHold = spaceData
           this.toast.add({ severity: 'warn', summary: 'Delete', group: 'bc'})
         },
         toggleWarnDelete(){
@@ -184,19 +184,19 @@
           console.log("Deleting space with id:", this.popupSpaceData.id)
           http.delete(`spaces/${this.popupSpaceData.id}`)
             .then(response => {
-                console.log(response.data);
+                console.log(response.data)
                 this.spaces_data = this.spaces_data.filter(item => item.id !== this.popupSpaceData.id)
                 this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'})
             })
             .catch(error => {
-                console.error(error);
+                console.error(error)
                 this.toast.add({severity:'error', summary:'Error saving changes', life:2000, group:'tc'})
             })
           this.toast.removeGroup('bc')
         },
         toggleWarnCancel(){
           this.toast.removeGroup('bc')
-          this.visible = false;
+          this.visible = false
         }
     }
   }

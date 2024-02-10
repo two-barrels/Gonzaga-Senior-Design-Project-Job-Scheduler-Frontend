@@ -52,15 +52,14 @@ router.beforeEach((to, from, next) => {
         next('/login')
       }
     } else {
-      next();
+      next()
     }
   } else {
-    next();
+    next()
   }
 })
 
 setRouterInstance(router)
-
 
 const app = createApp(App)
 
