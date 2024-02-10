@@ -1,6 +1,7 @@
 import axios from "axios"
 import { navigateToRoute } from '@/services/router-helper'
 
+axios.defaults.withCredentials = true
 const BASE_URL = process.env.VUE_APP_BASE_BACKEND_URL
 
 const state = {
@@ -61,6 +62,7 @@ const actions = {
         .delete(`${BASE_URL}users/sign_out`, config)
         .then(() => {
           commit("resetUserInfo")
+          navigateToRoute('/login')
           resolve()
         })
         .catch((error) => {
