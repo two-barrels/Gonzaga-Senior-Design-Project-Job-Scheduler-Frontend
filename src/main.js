@@ -29,6 +29,10 @@ const routes = [
       {
         path: 'edit-spaces',
         component: () => import('@/components/EditSpaces.vue')
+      },
+      {
+        path: 'home-page',
+        component: () => import('@/components/HomePage.vue')
       }
     ]
   },
