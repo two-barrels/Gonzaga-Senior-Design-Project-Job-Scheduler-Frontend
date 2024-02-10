@@ -6,12 +6,7 @@ const BASE_URL = process.env.VUE_APP_BASE_BACKEND_URL
 const state = {
   isLoggedIn: false,
   user: {}
-};
-=======
-  isLoggedIn: false,
-  user: {}
 }
->>>>>>> Stashed changes
 
 const getters = {
   getUserEmail(state) {
@@ -26,13 +21,7 @@ const getters = {
   getIsLoggedIn(state) {
     return state.isLoggedIn
   }
-};
-=======
-  getIsLoggedIn(state) {
-    return state.isLoggedIn
-  }
 }
->>>>>>> Stashed changes
 const actions = {
   registerUser({ commit }, payload) {
     return new Promise((resolve, reject) => {
@@ -52,16 +41,6 @@ const actions = {
       axios
         .post(`${BASE_URL}users/sign_in`, payload)
         .then((response) => {
-<<<<<<< Updated upstream
-          commit("setUserInfo", response);
-          navigateToRoute('/')
-          resolve(response);
-        })
-        .catch((error) => {
-          console.error(error)
-        });
-    });
-=======
           commit("setUserInfo", response)
           navigateToRoute('/')
           resolve(response)
@@ -70,7 +49,6 @@ const actions = {
           console.error(error)
         })
     })
->>>>>>> Stashed changes
   },
   logoutUser({ commit }) {
     const config = {
@@ -97,15 +75,6 @@ const actions = {
         withCredentials: true
       })
         .then((response) => {
-          commit("setUserInfo", response);
-          navigateToRoute('/')
-          resolve(response);
-        })
-        .catch((error) => {
-          console.error(error)
-        });
-    });
-=======
           commit("setUserInfo", response)
           navigateToRoute('/')
           resolve(response)
@@ -114,7 +83,6 @@ const actions = {
           console.error(error)
         })
     })
->>>>>>> Stashed changes
   },
 }
 const mutations = {
@@ -127,9 +95,8 @@ const mutations = {
       id: null,
       username: null,
       email: null,
-<<<<<<< Updated upstream
-    };
-    state.isLoggedIn = false;
+    }
+    state.isLoggedIn = false
   },
 }
 export default {
