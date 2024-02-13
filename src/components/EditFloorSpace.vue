@@ -21,7 +21,7 @@
   </Toast>
   <Toast position="top-center" group="tc"></Toast>
     <div v-if="showPopup" class="popup"> 
-        <SpacePopup :spaceData="popupSpaceDataHold" :floorData="floors_data" :check="check" 
+        <SpacePopup :spaceData="popupSpaceDataHold" :floorData="floors_data" :showEditPage="showEditPage" 
           @save-changes="saveChanges" 
           @create-space="createSpace" 
           @close-popup="closePopup" 
@@ -121,7 +121,7 @@
           showPopupFloor: false,
           toast:useToast(),
           visible:false,
-          check: true,
+          showEditPage: true,
           idx: null
       } 
     },
@@ -156,27 +156,24 @@
         this.popupSpaceData = retSpaceData
         try{
           const response = await http.post('spaces/', this.popupSpaceData)
-          console.log(response)
           this.popupSpaceData.id = response.data.id
           this.spaces_data.push(this.popupSpaceData)
           this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'})
-          console.log(response.data.id)
         }
         catch(error){
           console.error(error)
         }
       },
       createSpacePopUp(){
-        this.check = false
-        this.popupSpaceDataHold = JSON.parse(JSON.stringify(this.dummySpace))
-        console.log(this.popupSpaceDataHold)
+        this.showEditPage = false
+        this.popupSpaceDataHold = this.dummySpace
         this.showPopup = !this.showPopup
       },   
       createFloorPopUp(){
         this.showPopupFloor = !this.showPopupFloor
       }, 
       closePopup() {
-        this.check = true
+        this.showEditPage = true
         this.idx = null
         this.popupSpaceDataHold = null
         this.showPopup = !this.showPopup
@@ -185,9 +182,9 @@
         this.showPopupFloor = !this.showPopupFloor
       },
       openPopup(spaceData, idex) {
-        this.check = true
+        this.showEditPage = true
         this.idx = idex
-        this.popupSpaceDataHold = JSON.parse(JSON.stringify(spaceData))
+        this.popupSpaceDataHold = spaceData
         this.showPopup = !this.showPopup
       },
       saveChanges(retSpaceData){
@@ -210,7 +207,6 @@
       },
       toggleWarnDelete(){
         this.popupSpaceData = this.popupSpaceDataHold
-        console.log("Deleting space with id:", this.popupSpaceData.id)
         http.delete(`spaces/${this.popupSpaceData.id}`)
           .then(response => {
               console.log(response.data);
@@ -243,7 +239,6 @@
     text-align: center;
     border-radius: 15%;
     text-decoration: none;
-    /* display: inline-block; */
     font-size: 16px;
     transition-duration: 0.4s;
       &::hover {

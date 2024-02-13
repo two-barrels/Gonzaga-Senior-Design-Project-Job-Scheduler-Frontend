@@ -7,6 +7,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import 'primevue/resources/themes/lara-light-indigo/theme.css'
 import 'primevue/resources/primevue.min.css'
 import ToastService from 'primevue/toastservice'
+
 /**
  * Load JWT from Local Storage on Refresh.
  */

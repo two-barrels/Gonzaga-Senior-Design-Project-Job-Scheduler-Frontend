@@ -11,7 +11,7 @@
         <input type="number" class="in_max" min="1" v-model="spaceDataHold.max_occupancy"><br>
         <label class="det">Space Details:</label><br>
         <textarea class="in_det" rows="7" cols="50" v-model="spaceDataHold.description"></textarea><bbr></bbr>
-        <div v-if="checkA">
+        <div v-if="showEditPopup">
           <std-button 
             class="save"
             @click="saveChanges()" 
@@ -49,7 +49,7 @@
     props:{
         spaceData: Object,
         floorData:Array,
-        check: Boolean
+        showEditPage: Boolean
     },
     components:{
       'std-button':StdButton
@@ -57,18 +57,17 @@
     data(){
       return{
         spaceDataHold: {},
-        checkA: true,
+        showEditPopup: true,
         floor: []
       }
     },
     async mounted(){
       this.spaceDataHold = this.spaceData
-      this.checkA = this.check
+      this.showEditPopup = this.showEditPage
       this.floor = this.floorData
     },
     methods:{
       changeFloor(floorVal){
-        console.log(floorVal)
         this.spaceDataHold.floor_id = floorVal
       },
       saveChanges() {
