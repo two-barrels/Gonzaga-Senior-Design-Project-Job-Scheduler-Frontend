@@ -3,14 +3,19 @@
     <template #message>
       <div class ="warning">
         <p> Are you sure you want to remove {{popupSpaceDataHold.spaces_name }}?</p><br>
-        <std-button @click="toggleWarnDelete()" 
+        <div class="delbutt">
+          <std-button @click="toggleWarnDelete()" 
           title = "Confirm" 
           buttonType="primary-default"
-        />
-        <std-button @click = "toggleWarnCancel()"
+          />
+        </div>
+        <div class="cancelbutt">
+         <std-button @click = "toggleWarnCancel()"
           title = "Cancel" 
           buttonType="primary-default"
-        />
+         /> 
+        </div>
+        
       </div>
     </template>
   </Toast>
@@ -100,6 +105,7 @@
   import SpacePopup from '@/components/EditSpacePopUp.vue'
   import FloorPopup from '@/components/EditFloorPopUp.vue'
   import StdButton from "@/components/StdButton.vue"
+
 
   export default {
     name: 'edit-floor-space',
@@ -287,6 +293,17 @@
 .editbuttsave{
     margin-top: 20%;
   }
+.createFloor{
+  margin-left: 5%;
+  margin-top: -2.4%;
+}
+.createSpace{
+  margin-right: 0%;
+}
+.cancelbutt{
+  margin-left:50%;
+  margin-top: -14.4%;
+}
   </style>
 
   
