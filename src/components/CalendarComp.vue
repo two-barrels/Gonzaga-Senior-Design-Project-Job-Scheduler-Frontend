@@ -16,6 +16,7 @@
 import {DayPilot, DayPilotCalendar, DayPilotNavigator} from '@daypilot/daypilot-lite-vue'
 import http from '@/services/http-helper.js'
 import date from '@/services/curr-date-helper.js'
+// import session from'@/SessionManager.vue'
 
 export default {
   name: 'CalendarComp',
@@ -89,7 +90,15 @@ export default {
         onEventMoved: () => {
           console.log("Event moved")
         },
-        onEventResized: () => {
+        onEventResized: events => {
+          http.put(
+              `reservations/${events.source.data["id"]}`, {
+                space_id: this.space_id, 
+                user_id: 101, 
+                start_time: events.source.data["start"], 
+                end_time: events.source.data["end"]
+              })
+            location.reload()
           console.log("Event resized")
         },
       },
@@ -114,6 +123,7 @@ export default {
       try {
         const events = []
         const response = await http.get(`reservations/space/${this.space_id}`)
+        console.log(this.user_id)
         
         response?.data?.forEach((item) => {
           events.push({
