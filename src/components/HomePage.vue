@@ -1,5 +1,6 @@
 <template>
     <h1 class="page-name">Home Page</h1 >
+
   </template>
   
   <script>
