@@ -7,7 +7,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 import 'primevue/resources/themes/lara-light-indigo/theme.css'
 import 'primevue/resources/primevue.min.css'
 import ToastService from 'primevue/toastservice'
-
+import OpenLayersMap from "vue3-openlayers"
+import "vue3-openlayers/styles.css"
 /**
  * Load JWT from Local Storage on Refresh.
  */
@@ -37,6 +38,10 @@ const routes = [
       {
         path: 'edit-spaces',
         component: () => import('@/components/EditSpaces.vue')
+      },
+      {
+        path: 'FloorMap',
+        component: () => import('@/components/FloorMap.vue')
       }
     ]
   },
@@ -53,7 +58,7 @@ const router = createRouter({
 
 
 const app = createApp(App)
-
+app.use(OpenLayersMap);
 app.use(router)
 app.use(PrimeVue)
 app.use(ToastService)
