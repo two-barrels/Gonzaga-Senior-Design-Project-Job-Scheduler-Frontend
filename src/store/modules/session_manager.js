@@ -19,6 +19,9 @@ const getters = {
   getUserRoles(state) {
     return state.user?.roles
   },
+  getIfUserAdmin(state) {
+    return state.user?.roles?.some(role => role.name === "Admin")
+  },
   getIsLoggedIn(state) {
     return state.isLoggedIn
   }
@@ -89,7 +92,7 @@ const actions = {
 }
 const mutations = {
   setUserInfo(state, data) {
-    state.user = data.data.user
+    state.user = data.data
     state.isLoggedIn = true
   },
   resetUserInfo(state) {
