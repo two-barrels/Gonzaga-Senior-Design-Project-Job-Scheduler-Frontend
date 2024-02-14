@@ -6,7 +6,7 @@ const BASE_URL = process.env.VUE_APP_BASE_BACKEND_URL
 
 const state = {
   isLoggedIn: false,
-  user: {}
+  user: {} // get user ID by indexing into this
 }
 
 const getters = {
