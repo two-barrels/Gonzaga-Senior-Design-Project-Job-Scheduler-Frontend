@@ -10,6 +10,8 @@ import 'primevue/resources/themes/lara-light-indigo/theme.css'
 import 'primevue/resources/primevue.min.css'
 import ToastService from 'primevue/toastservice'
 import { setRouterInstance } from '@/services/router-helper'
+import "bootstrap/dist/css/bootstrap.min.css"
+import "bootstrap"
 
 
 const routes = [
@@ -28,7 +30,7 @@ const routes = [
       },
       {
         path: 'edit-spaces',
-        component: () => import('@/components/EditSpaces.vue')
+        component: () => import('@/components/AdminPortal.vue')
       }
     ]
   },
