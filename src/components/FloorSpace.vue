@@ -14,7 +14,6 @@
                 </div>
               </template>
               <template #content>
-                <!-- <p> Click on a room or desk to check time availability:</p> -->
                 <p> Click on a space to check time availability:</p>
                 <hr> 
                 <div 
@@ -88,18 +87,10 @@
         console.log(window.location.pathname.substring(1))
         return window.location.pathname.substring(1) != '' ? window.location.pathname.substring(1) : 'CalendarComp'
       }
-    },
-    methods: {
-      onGetInfo(){
-        console.log("drop-down clicked")
-        console.log(this.spaces_data)
-        console.log(this.floors_data)
-      }
     }
   }
   </script>
   
-  <!-- Add "scoped" attribute to limit CSS to this component only -->
   <style lang="scss" scoped>
   a {
     all: unset;

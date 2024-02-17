@@ -2,13 +2,13 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import store from "./store"
 import vClickOutside from 'v-click-outside'
-
-
 import PrimeVue from 'primevue/config'
 import { createRouter, createWebHistory } from 'vue-router'
 import 'primevue/resources/themes/lara-light-indigo/theme.css'
 import 'primevue/resources/primevue.min.css'
 import ToastService from 'primevue/toastservice'
+import OpenLayersMap from "vue3-openlayers"
+import "vue3-openlayers/styles.css"
 import { setRouterInstance, signInCheck, roleCheck } from '@/services/router-helper'
 
 
@@ -31,6 +31,10 @@ const routes = [
         path: 'edit-spaces',
         meta: { requiredRoles: ['Admin'] },
         component: () => import('@/components/EditSpaces.vue')
+      },
+      {
+        path: 'FloorMap',
+        component: () => import('@/components/FloorMap.vue')
       }
     ]
   },
@@ -59,7 +63,7 @@ router.beforeEach((to, from, next) => {
 setRouterInstance(router)
 
 const app = createApp(App)
-
+app.use(OpenLayersMap);
 app.use(router)
 app.use(PrimeVue)
 app.use(ToastService)
