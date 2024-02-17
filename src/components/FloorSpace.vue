@@ -25,11 +25,14 @@
                     <div>
                       <h2>{{ value.spaces_name }}</h2>
                       <p>Max Occupancy: {{ value.max_occupancy }} </p> 
-                      <p>Space Description: {{ value.description }} </p>
-                      <a href="/CalendarComp"><std-button 
-                        title="Scheduler"
-                        buttonType="primary-default"
-                      /></a>
+                      <p>Space Description: {{ value.floor_id }} </p>
+                      <router-link :to="`/calendar/${123}/${value.id}/${value.spaces_name}`">
+                      <calendar-comp space_name='Conference'/>
+                        <std-button 
+                          title="Scheduler"
+                          buttonType="primary-default"
+                        />
+                      </router-link>
                     </div>
                   </div>
                 </div>

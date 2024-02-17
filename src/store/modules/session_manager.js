@@ -6,7 +6,7 @@ const BASE_URL = process.env.VUE_APP_BASE_BACKEND_URL
 
 const state = {
   isLoggedIn: false,
-  user: {}
+  user: {} // get user ID by indexing into this
 }
 
 const getters = {
@@ -18,6 +18,9 @@ const getters = {
   },
   getUserRoles(state) {
     return state.user?.roles
+  },
+  getIfUserAdmin(state) {
+    return state.user?.roles?.some(role => role.name === "Admin")
   },
   getIsLoggedIn(state) {
     return state.isLoggedIn
@@ -89,7 +92,7 @@ const actions = {
 }
 const mutations = {
   setUserInfo(state, data) {
-    state.user = data.data.user
+    state.user = data.data
     state.isLoggedIn = true
   },
   resetUserInfo(state) {

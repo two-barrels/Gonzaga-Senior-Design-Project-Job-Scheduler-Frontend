@@ -7,9 +7,10 @@ import { createRouter, createWebHistory } from 'vue-router'
 import 'primevue/resources/themes/lara-light-indigo/theme.css'
 import 'primevue/resources/primevue.min.css'
 import ToastService from 'primevue/toastservice'
-import { setRouterInstance } from '@/services/router-helper'
 import OpenLayersMap from "vue3-openlayers"
 import "vue3-openlayers/styles.css"
+import { setRouterInstance, signInCheck, roleCheck } from '@/services/router-helper'
+
 
 const routes = [
   { 
@@ -22,11 +23,13 @@ const routes = [
         component:  () => import('@/components/AvailableSpaces.vue')
       },
       {
-        path: 'calendar',
-        component: () => import('@/components/CalendarComp.vue')
+        path: 'calendar/:user_id/:space_id/:space_name',
+        component: () => import('@/components/CalendarComp.vue'),
+        props: true
       },
       {
         path: 'edit-spaces',
+        meta: { requiredRoles: ['Admin'] },
         component: () => import('@/components/EditSpaces.vue')
       },
       {
@@ -48,16 +51,11 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth) {
-    if (!store.getters.getIsLoggedIn) {
-      console.log(store.getters.getIsLoggedIn)
-      store.dispatch("loginUserWithToken")
-      if (!store.getters.getIsLoggedIn) {
-        next('/login')
-      }
-    } else {
-      next()
-    }
-  } else {
+    next(signInCheck())
+  }
+  if(to.meta.requiredRoles?.length > 0) {
+    next(roleCheck(to.meta.requiredRoles))
+  }else {
     next()
   }
 })

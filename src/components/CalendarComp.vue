@@ -1,6 +1,6 @@
 <template>
   <div class="spaceName">
-    <b>Conference Room 1</b>
+    <b>{{ space_name }}</b>
   </div>
   <div class="wrap">
     <div class="months">
@@ -16,6 +16,7 @@
 import {DayPilot, DayPilotCalendar, DayPilotNavigator} from '@daypilot/daypilot-lite-vue'
 import http from '@/services/http-helper.js'
 import date from '@/services/curr-date-helper.js'
+// import session from'@/SessionManager.vue'
 
 export default {
   name: 'CalendarComp',
@@ -34,13 +35,34 @@ export default {
       },
       config: {
         viewType: "Week",
+        contextMenu: new DayPilot.Menu([
+        {
+          text: "Show event ID",
+          onClick: events => {
+            console.log(events.source.data)
+          }
+        },
+        {
+          text: "Delete",
+          onClick: events => {
+            http.delete(
+              `reservations/${events.source.data["id"]}`, {
+                space_id: this.space_id, 
+                user_id: 101, 
+                start_time: events.source.data["start"], 
+                end_time: events.source.data["end"]
+              })
+            location.reload()
+          }
+        }
+        ]),
         startDate: date.currentDate(), // first week displayed
         durationBarVisible: false,
         timeRangeSelectedHandling: "Enabled",
         onTimeRangeSelected: async (args) => {
-          const modal = await DayPilot.Modal.prompt("Create a new event:", "Event 1")
-          const dp = args.control
-          dp.clearSelection()
+          const modal = await DayPilot.Modal.prompt("Create a new event:", "Booked");
+          const dp = args.control;
+          dp.clearSelection();
           if (modal.canceled) {
             return
           }
@@ -51,23 +73,41 @@ export default {
             text: modal.result
           })
           try {
-            await http.post('reservations', {space_id: 246, account_id: 101, start_time: args.start, end_time: args.end})
+            await http.post(
+              'reservations', {
+                space_id: this.space_id, 
+                user_id: 101, 
+                start_time: args.start, 
+                end_time: args.end
+              })
             console.log('Reservation successfully created!')
           } catch (error) {
             console.error('Error creating reservation:', error.message)
           }
         },
         eventDeleteHandling: "Disabled",
+        eventRightClickHandling: "ContextMenu",
         onEventMoved: () => {
           console.log("Event moved")
         },
-        onEventResized: () => {
+        onEventResized: events => {
+          http.put(
+              `reservations/${events.source.data["id"]}`, {
+                space_id: this.space_id, 
+                user_id: 101, 
+                start_time: events.source.data["start"], 
+                end_time: events.source.data["end"]
+              })
+            location.reload()
           console.log("Event resized")
         },
       },
     }
   },
   props: {
+    user_id: String,
+    space_id: String,
+    space_name: String
   },
   components: {
     DayPilotCalendar,
@@ -82,15 +122,15 @@ export default {
     async loadEvents() {
       try {
         const events = []
-        const response = await http.get('reservations')
-        console.log(response.data)
-
-        response?.data?.forEach((item, index) => {
+        const response = await http.get(`reservations/space/${this.space_id}`)
+        console.log(this.user_id)
+        
+        response?.data?.forEach((item) => {
           events.push({
-            id: index,
+            id: item.id,
             start: item?.start_time,
             end: item?.end_time,
-            text: "Booked",
+            text: "Booked"
           })
         })
         this.calendar.update({events})
