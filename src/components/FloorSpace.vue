@@ -14,7 +14,6 @@
                 </div>
               </template>
               <template #content>
-                <!-- <p> Click on a room or desk to check time availability:</p> -->
                 <p> Click on a space to check time availability:</p>
                 <hr> 
                 <div 
@@ -26,11 +25,14 @@
                     <div>
                       <h2>{{ value.spaces_name }}</h2>
                       <p>Max Occupancy: {{ value.max_occupancy }} </p> 
-                      <p>Space Description: {{ value.description }} </p>
-                      <a href="/CalendarComp"><std-button 
-                        title="Scheduler"
-                        buttonType="primary-default"
-                      /></a>
+                      <p>Space Description: {{ value.floor_id }} </p>
+                      <router-link :to="`/calendar/${123}/${value.id}/${value.spaces_name}`">
+                      <calendar-comp space_name='Conference'/>
+                        <std-button 
+                          title="Scheduler"
+                          buttonType="primary-default"
+                        />
+                      </router-link>
                     </div>
                   </div>
                 </div>
@@ -85,18 +87,10 @@
         console.log(window.location.pathname.substring(1))
         return window.location.pathname.substring(1) != '' ? window.location.pathname.substring(1) : 'CalendarComp'
       }
-    },
-    methods: {
-      onGetInfo(){
-        console.log("drop-down clicked")
-        console.log(this.spaces_data)
-        console.log(this.floors_data)
-      }
     }
   }
   </script>
   
-  <!-- Add "scoped" attribute to limit CSS to this component only -->
   <style lang="scss" scoped>
   a {
     all: unset;
