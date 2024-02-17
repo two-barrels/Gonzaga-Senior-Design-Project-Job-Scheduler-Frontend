@@ -8,7 +8,8 @@ import 'primevue/resources/themes/lara-light-indigo/theme.css'
 import 'primevue/resources/primevue.min.css'
 import ToastService from 'primevue/toastservice'
 import { setRouterInstance } from '@/services/router-helper'
-
+import OpenLayersMap from "vue3-openlayers"
+import "vue3-openlayers/styles.css"
 
 const routes = [
   { 
