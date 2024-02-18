@@ -1,7 +1,7 @@
 <template>
 <ul class="nav nav-tabs" id="myTab" role="tablist">
   <li class="nav-item" role="presentation">
-    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="user-pane" aria-selected="true">User Management</button>
+    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="user-pane" aria-selected="true">User Permission Management</button>
   </li>
   <li class="nav-item" role="presentation">
     <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Individual Space Management</button>
@@ -17,8 +17,8 @@
 </div>
   </template>
   <script>
-  import EditSpaces from './EditSpaces.vue';
-  import UserManagement from './UserManagement.vue';
+  import EditSpaces from './EditSpaces.vue'
+  import UserManagement from './UserManagement.vue'
   
   export default {
     name: 'admin-portal',

@@ -7,7 +7,7 @@
   </div>
   <div class="col-8">
     <div class="tab-content" id="nav-tabContent" v-for="(user,idx) in users_data" :key="idx">
-      <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">...</div>
+      <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list"><user-permission :user-name="user.name"/></div>
     </div>
   </div>
 </div>
@@ -15,11 +15,12 @@
   
   <script>
   import Users from '@/services/users-service'
-  import "@/store/index.js"
+  import UserPermission from './UserPermission.vue'
 
   export default {
     name: 'user-management',
     components: {
+      'user-permission': UserPermission
     },
     data(){
       return{
