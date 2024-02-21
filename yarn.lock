@@ -1301,6 +1301,11 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
+"@petamoriken/float16@^3.4.7":
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/@petamoriken/float16/-/float16-3.8.4.tgz#cd3c02a7fe39f10ae3dd24ed33bd082053aadd66"
+  integrity sha512-kB+NJ5Br56ZhElKsf0pM7/PQfrDdDVMRz8f0JM6eVOGE+L89z9hwcst9QvWBBnazzuqGTGtPsJNZoQ1JdNiGSQ==
+
 "@playwright/experimental-ct-core@1.40.1":
   version "1.40.1"
   resolved "https://registry.yarnpkg.com/@playwright/experimental-ct-core/-/experimental-ct-core-1.40.1.tgz#4e3fb7d07872d3a6ee7c8a4fde21ed9bffc6de62"
@@ -1333,10 +1338,10 @@
   dependencies:
     playwright "1.40.1"
 
-"@polka/url@^1.0.0-next.20":
-  version "1.0.0-next.23"
-  resolved "https://registry.npmjs.org/@polka/url/-/url-1.0.0-next.23.tgz"
-  integrity sha512-C16M+IYz0rgRhWZdCmK+h58JMv8vijAA61gmz2rspCSwKwzBebpdcsiUmwrtJRdphuY30i6BSLEOP8ppbNLyLg==
+"@polka/url@^1.0.0-next.24":
+  version "1.0.0-next.24"
+  resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.24.tgz#58601079e11784d20f82d0585865bb42305c4df3"
+  integrity sha512-2LuNTFBIO0m7kKIQvvPHN6UE63VjpmL9rnEEaOOaiSPbZK+zUOYIzBAWcED+3XYzhYsd/0mD57VdxAEqqV52CQ==
 
 "@sideway/address@^4.1.5":
   version "4.1.5"
@@ -1561,13 +1566,6 @@
   version "20.11.17"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-20.11.17.tgz#cdd642d0e62ef3a861f88ddbc2b61e32578a9292"
   integrity sha512-QmgQZGWu1Yw9TDyAP9ZzpFJKynYNeOvwMJmaxABfieQoVoiVOS6MN1WSpqpRcbeA5+RW82kraAVxCCJg+780Qw==
-  dependencies:
-    undici-types "~5.26.4"
-
-"@types/node@^20.11.3":
-  version "20.11.3"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.11.3.tgz#ac29fba7aeadc74046b02e50758156f4850f1296"
-  integrity sha512-nrlmbvGPNGaj84IJZXMPhQuCMEVTT/hXZMJJG/aIqVL9fKxqk814sGGtJA4GI6hpJSLQjpi6cn0Qx9eOf9SDVg==
   dependencies:
     undici-types "~5.26.4"
 
@@ -3567,34 +3565,6 @@ esbuild@^0.18.10:
     "@esbuild/win32-ia32" "0.18.20"
     "@esbuild/win32-x64" "0.18.20"
 
-esbuild@^0.18.10:
-  version "0.18.20"
-  resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.18.20.tgz#4709f5a34801b43b799ab7d6d82f7284a9b7a7a6"
-  integrity sha512-ceqxoedUrcayh7Y7ZX6NdbbDzGROiyVBgC4PriJThBKSVPWnnFHZAkfI1lJT8QFkOwH4qOS2SJkS4wvpGl8BpA==
-  optionalDependencies:
-    "@esbuild/android-arm" "0.18.20"
-    "@esbuild/android-arm64" "0.18.20"
-    "@esbuild/android-x64" "0.18.20"
-    "@esbuild/darwin-arm64" "0.18.20"
-    "@esbuild/darwin-x64" "0.18.20"
-    "@esbuild/freebsd-arm64" "0.18.20"
-    "@esbuild/freebsd-x64" "0.18.20"
-    "@esbuild/linux-arm" "0.18.20"
-    "@esbuild/linux-arm64" "0.18.20"
-    "@esbuild/linux-ia32" "0.18.20"
-    "@esbuild/linux-loong64" "0.18.20"
-    "@esbuild/linux-mips64el" "0.18.20"
-    "@esbuild/linux-ppc64" "0.18.20"
-    "@esbuild/linux-riscv64" "0.18.20"
-    "@esbuild/linux-s390x" "0.18.20"
-    "@esbuild/linux-x64" "0.18.20"
-    "@esbuild/netbsd-x64" "0.18.20"
-    "@esbuild/openbsd-x64" "0.18.20"
-    "@esbuild/sunos-x64" "0.18.20"
-    "@esbuild/win32-arm64" "0.18.20"
-    "@esbuild/win32-ia32" "0.18.20"
-    "@esbuild/win32-x64" "0.18.20"
-
 escalade@^3.1.1:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/escalade/-/escalade-3.1.2.tgz#54076e9ab29ea5bf3d8f1ed62acffbb88272df27"
@@ -5419,16 +5389,6 @@ nanoid@^3.3.7:
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.7.tgz#d0c301a691bc8d54efa0a2226ccf3fe2fd656bd8"
   integrity sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==
 
-nanoid@^3.3.7:
-  version "3.3.7"
-  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.7.tgz#d0c301a691bc8d54efa0a2226ccf3fe2fd656bd8"
-  integrity sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==
-
-nanoid@^3.3.7:
-  version "3.3.7"
-  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.7.tgz#d0c301a691bc8d54efa0a2226ccf3fe2fd656bd8"
-  integrity sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==
-
 natural-compare@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
@@ -6172,15 +6132,6 @@ postcss@^8.2.6, postcss@^8.3.5, postcss@^8.4.33:
   version "8.4.35"
   resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.4.35.tgz#60997775689ce09011edf083a549cea44aabe2f7"
   integrity sha512-u5U8qYpBCpN13BsiEB0CbR1Hhh4Gc0zLFuedrHJKMctHCHAGrMdG0PRM/KErzAL3CU6/eckEtmHNB3x6e3c0vA==
-  dependencies:
-    nanoid "^3.3.7"
-    picocolors "^1.0.0"
-    source-map-js "^1.0.2"
-
-postcss@^8.4.27:
-  version "8.4.33"
-  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.4.33.tgz#1378e859c9f69bf6f638b990a0212f43e2aaa742"
-  integrity sha512-Kkpbhhdjw2qQs2O2DGX+8m5OVqEcbB9HRBvuYM9pgrjEFUg30A9LmXNlTAUj4S9kgtGyrMbTzVjH7E+s5Re2yg==
   dependencies:
     nanoid "^3.3.7"
     picocolors "^1.0.0"

@@ -1,15 +1,16 @@
   <template>
     <h1 class="floor-space-name">Available Spaces</h1 >
-    <floor-space/>
+    <building-space/>
   </template>
   
   <script>
-  import FloorSpace from "@/components/FloorSpace.vue"
-  
+  //import FloorSpace from "@/components/FloorSpace.vue"
+  import BuildingSpace from '@/components/BuildingSpace.vue'
+
   export default {
     name: 'available-spaces',
     components: {
-      'floor-space': FloorSpace
+      'building-space': BuildingSpace
     }
   }
   </script>
