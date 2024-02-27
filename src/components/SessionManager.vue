@@ -37,11 +37,7 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
     name: "SessionManager",
     computed: {
-        ...mapGetters(["getAuthToken", "getUserEmail", "getUserID", "isLoggedIn"]),
-      currentComponent() {
-        console.log(window.location.pathname.substring(1))
-        return window.location.pathname.substring(1) != '' ? window.location.pathname.substring(1) : 'AvailableSpaces'
-      }
+        ...mapGetters(["getAuthToken", "getUserEmail", "getUserID", "isLoggedIn"])
     },
     data() {
         return {

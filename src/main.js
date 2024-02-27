@@ -44,15 +44,15 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
+  let route = null
   if (to.meta.requiresAuth) {
-    next(signInCheck())
+    route = await signInCheck()
   }
-  if(to.meta.requiredRoles?.length > 0) {
-    next(roleCheck(to.meta.requiredRoles))
-  }else {
-    next()
+  if(to.meta.requiredRoles?.length > 0 && route === null) {
+    route = roleCheck(to.meta.requiredRoles)
   }
+  next(route)
 })
 
 setRouterInstance(router)

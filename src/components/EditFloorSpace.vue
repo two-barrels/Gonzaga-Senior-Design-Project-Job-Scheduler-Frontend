@@ -130,24 +130,20 @@
           this.popupSpaceData = this.popupSpaceDataHold
           try{
             const response = await http.post('spaces/', this.popupSpaceData)
-            console.log(response)
             this.popupSpaceData.id = response.data.id
             this.spaces_data.push(this.popupSpaceData)
             this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'})
-            console.log(response.data.id)
           }
           catch(error){
             console.error(error)
           }
         },
         changeFloor(floorVal){
-          console.log(floorVal)
           this.popupSpaceDataHold.floor_id = floorVal
         },
         createSpacePopUp(){
           this.check = false
           this.popupSpaceDataHold = JSON.parse(JSON.stringify(this.dummySpace))
-          console.log(this.popupSpaceDataHold)
           this.showPopup = !this.showPopup
         },   
         closePopup() {
@@ -164,8 +160,7 @@
         },
         saveChanges(){
           http.put(`spaces/${this.popupSpaceDataHold.id}`, this.popupSpaceDataHold)
-            .then(response => {
-                console.log(response.data)
+            .then(() => {
                 this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'})
                 this.spaces_data[this.idx] = this.popupSpaceDataHold
                 this.closePopup()
@@ -181,10 +176,8 @@
         },
         toggleWarnDelete(){
           this.popupSpaceData = this.popupSpaceDataHold
-          console.log("Deleting space with id:", this.popupSpaceData.id)
           http.delete(`spaces/${this.popupSpaceData.id}`)
-            .then(response => {
-                console.log(response.data)
+            .then(() => {
                 this.spaces_data = this.spaces_data.filter(item => item.id !== this.popupSpaceData.id)
                 this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'})
             })

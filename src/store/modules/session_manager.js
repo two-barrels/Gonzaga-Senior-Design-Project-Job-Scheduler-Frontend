@@ -1,5 +1,6 @@
 import axios from "axios"
 import { navigateToRoute } from '@/services/router-helper'
+import http from '@/services/http-helper'
 
 axios.defaults.withCredentials = true
 const BASE_URL = process.env.VUE_APP_BASE_BACKEND_URL
@@ -55,14 +56,9 @@ const actions = {
     })
   },
   logoutUser({ commit }) {
-    const config = {
-      headers: {
-        authorization: state.auth_token,
-      },
-    }
     new Promise((resolve, reject) => {
       axios
-        .delete(`${BASE_URL}users/sign_out`, config)
+        .delete(`${BASE_URL}users/sign_out`)
         .then(() => {
           commit("resetUserInfo")
           navigateToRoute('/login')
@@ -73,21 +69,13 @@ const actions = {
         })
     })
   },
-  loginUserWithToken({ commit }) {
-    new Promise((resolve) => {
-      axios(BASE_URL + 'member-data', {
-        method: "get",
-        withCredentials: true
-      })
-        .then((response) => {
-          commit("setUserInfo", response)
-          navigateToRoute('/')
-          resolve(response)
-        })
-        .catch((error) => {
-          console.error(error)
-        })
-    })
+  async loginUserWithToken({ commit }) {
+    try {
+      const response = await http.get('member-data')
+      commit("setUserInfo", response)
+    } catch (e) {
+      console.error(e)
+    }
   },
 }
 const mutations = {
@@ -102,6 +90,7 @@ const mutations = {
       email: null,
     }
     state.isLoggedIn = false
+
   },
 }
 export default {

@@ -52,17 +52,14 @@ export default {
           })
           try {
             await http.post('reservations', {space_id: 246, account_id: 101, start_time: args.start, end_time: args.end})
-            console.log('Reservation successfully created!')
           } catch (error) {
             console.error('Error creating reservation:', error.message)
           }
         },
         eventDeleteHandling: "Disabled",
         onEventMoved: () => {
-          console.log("Event moved")
         },
         onEventResized: () => {
-          console.log("Event resized")
         },
       },
     }
@@ -83,7 +80,6 @@ export default {
       try {
         const events = []
         const response = await http.get('reservations')
-        console.log(response.data)
 
         response?.data?.forEach((item, index) => {
           events.push({
