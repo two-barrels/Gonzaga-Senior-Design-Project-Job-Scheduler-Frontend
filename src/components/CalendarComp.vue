@@ -73,14 +73,7 @@ export default {
             text: modal.result
           })
           try {
-            await http.post(
-              'reservations', {
-                space_id: this.space_id, 
-                user_id: 101, 
-                start_time: args.start, 
-                end_time: args.end
-              })
-            console.log('Reservation successfully created!')
+            await http.post('reservations', {space_id: 246, account_id: 101, start_time: args.start, end_time: args.end})
           } catch (error) {
             console.error('Error creating reservation:', error.message)
           }
@@ -88,18 +81,8 @@ export default {
         eventDeleteHandling: "Disabled",
         eventRightClickHandling: "ContextMenu",
         onEventMoved: () => {
-          console.log("Event moved")
         },
-        onEventResized: events => {
-          http.put(
-              `reservations/${events.source.data["id"]}`, {
-                space_id: this.space_id, 
-                user_id: 101, 
-                start_time: events.source.data["start"], 
-                end_time: events.source.data["end"]
-              })
-            location.reload()
-          console.log("Event resized")
+        onEventResized: () => {
         },
       },
     }
@@ -122,10 +105,9 @@ export default {
     async loadEvents() {
       try {
         const events = []
-        const response = await http.get(`reservations/space/${this.space_id}`)
-        console.log(this.user_id)
-        
-        response?.data?.forEach((item) => {
+        const response = await http.get('reservations')
+
+        response?.data?.forEach((item, index) => {
           events.push({
             id: item.id,
             start: item?.start_time,

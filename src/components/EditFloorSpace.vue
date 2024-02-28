@@ -152,77 +152,71 @@
       }
     },
     methods: {  
-      async createSpace(retSpaceData){
-        this.popupSpaceData = retSpaceData
-        try{
-          const response = await http.post('spaces/', this.popupSpaceData)
-          this.popupSpaceData.id = response.data.id
-          this.spaces_data.push(this.popupSpaceData)
-          this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'})
+        async createSpace(){
+          this.popupSpaceData = this.popupSpaceDataHold
+          try{
+            const response = await http.post('spaces/', this.popupSpaceData)
+            this.popupSpaceData.id = response.data.id
+            this.spaces_data.push(this.popupSpaceData)
+            this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'})
+          }
+          catch(error){
+            console.error(error)
+          }
+        },
+        changeFloor(floorVal){
+          this.popupSpaceDataHold.floor_id = floorVal
+        },
+        createSpacePopUp(){
+          this.check = false
+          this.popupSpaceDataHold = JSON.parse(JSON.stringify(this.dummySpace))
+          this.showPopup = !this.showPopup
+        },   
+        closePopup() {
+          this.check = true
+          this.idx = null
+          this.popupSpaceDataHold = null
+          this.showPopup = !this.showPopup
+        },
+        openPopup(spaceData, idex) {
+          this.check = true
+          this.idx = idex
+          this.popupSpaceDataHold = JSON.parse(JSON.stringify(spaceData))
+          this.showPopup = !this.showPopup
+        },
+        saveChanges(){
+          http.put(`spaces/${this.popupSpaceDataHold.id}`, this.popupSpaceDataHold)
+            .then(() => {
+                this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'})
+                this.spaces_data[this.idx] = this.popupSpaceDataHold
+                this.closePopup()
+            })
+            .catch(error => {
+                console.error(error)
+                this.toast.add({severity:'error', summary:'Error saving changes', life:2000, group:'tc'})
+            })
+        },
+        createWarningToast(spaceData) {
+          this.popupSpaceDataHold = spaceData
+          this.toast.add({ severity: 'warn', summary: 'Delete', group: 'bc'})
+        },
+        toggleWarnDelete(){
+          this.popupSpaceData = this.popupSpaceDataHold
+          http.delete(`spaces/${this.popupSpaceData.id}`)
+            .then(() => {
+                this.spaces_data = this.spaces_data.filter(item => item.id !== this.popupSpaceData.id)
+                this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'})
+            })
+            .catch(error => {
+                console.error(error)
+                this.toast.add({severity:'error', summary:'Error saving changes', life:2000, group:'tc'})
+            })
+          this.toast.removeGroup('bc')
+        },
+        toggleWarnCancel(){
+          this.toast.removeGroup('bc')
+          this.visible = false
         }
-        catch(error){
-          console.error(error)
-        }
-      },
-      createSpacePopUp(){
-        this.showEditPage = false
-        this.popupSpaceDataHold = this.dummySpace
-        this.showPopup = !this.showPopup
-      },   
-      createFloorPopUp(){
-        this.showPopupFloor = !this.showPopupFloor
-      }, 
-      closePopup() {
-        this.showEditPage = true
-        this.idx = null
-        this.popupSpaceDataHold = null
-        this.showPopup = !this.showPopup
-      },
-      closePopupFloor() {
-        this.showPopupFloor = !this.showPopupFloor
-      },
-      openPopup(spaceData, idex) {
-        this.showEditPage = true
-        this.idx = idex
-        this.popupSpaceDataHold = spaceData
-        this.showPopup = !this.showPopup
-      },
-      saveChanges(retSpaceData){
-        this.popupSpaceDataHold = retSpaceData
-        http.put(`spaces/${this.popupSpaceDataHold.id}`, this.popupSpaceDataHold)
-          .then(response => {
-              console.log(response.data)
-              this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'})
-              this.spaces_data[this.idx] = this.popupSpaceDataHold
-              this.closePopup()
-          })
-          .catch(error => {
-              console.error(error)
-              this.toast.add({severity:'error', summary:'Error saving changes', life:2000, group:'tc'})
-          })
-      },
-      createWarningToast(spaceData) {
-        this.popupSpaceDataHold = spaceData;
-        this.toast.add({ severity: 'warn', summary: 'Delete', group: 'bc'})
-      },
-      toggleWarnDelete(){
-        this.popupSpaceData = this.popupSpaceDataHold
-        http.delete(`spaces/${this.popupSpaceData.id}`)
-          .then(response => {
-              console.log(response.data);
-              this.spaces_data = this.spaces_data.filter(item => item.id !== this.popupSpaceData.id)
-              this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'})
-          })
-          .catch(error => {
-              console.error(error);
-              this.toast.add({severity:'error', summary:'Error saving changes', life:2000, group:'tc'})
-          })
-        this.toast.removeGroup('bc')
-      },
-      toggleWarnCancel(){
-        this.toast.removeGroup('bc')
-        this.visible = false;
-      }
     }
   }
   </script>

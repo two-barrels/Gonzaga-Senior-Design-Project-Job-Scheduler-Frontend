@@ -82,10 +82,8 @@
         console.error(error)
       }
     },
-    computed: {
-      currentComponent() {
-        console.log(window.location.pathname.substring(1))
-        return window.location.pathname.substring(1) != '' ? window.location.pathname.substring(1) : 'CalendarComp'
+    methods: {
+      onGetInfo(){
       }
     }
   }
