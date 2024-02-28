@@ -34,6 +34,7 @@ const actions = {
         .post(`${BASE_URL}users`, payload)
         .then((response) => {
           commit("setUserInfo", response)
+          navigateToRoute('/')
           resolve(response)
         })
         .catch((error) => {

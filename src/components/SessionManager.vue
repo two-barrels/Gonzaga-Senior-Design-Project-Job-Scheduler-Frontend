@@ -4,12 +4,12 @@
         <div class="sm-card">
             <div>
                 <h3>Login or Sign Up!</h3>
-                <form @submit="onLogin" class="login-form">
+                <form @submit="loginOrSignup" class="login-form">
                     <input class="login-form-entry" type="text" v-model="email" placeholder="Email" />
                     <br />
                     <input class="login-form-entry" type="password" v-model="password" placeholder="Password" />
                     <br />
-                    <input type="submit" value="Login" class="form-submit" />
+                    <input @click="type = 'Login'" type="submit" value="Login" class="form-submit" />
                     <input type="submit" value="Sign up" class="form-submit" />
                 </form>
             </div>
@@ -28,36 +28,42 @@ export default {
     data() {
         return {
           email: "",
-          password: ""
+          password: "",
+          type: ""
         }
     },
     methods: {
         ...mapActions(["registerUser", "loginUser", "logoutUser"]),
-        onSignUp(event) {
-            event.preventDefault()
-            let data = {
-            user: {
-            email: this.email,
-            password: this.password,
-            },
-        }
-        this.registerUser(data)
-        this.resetData()
+        loginOrSignup(event) {
+          event.preventDefault()
+          if(this.type === "Login") {this.onLogin()}
+          else {this.onSignUp()}
         },
-        onLogin(event) {
-            event.preventDefault()
-            let data = {
-                user: {
-                    email: this.email,
-                    password: this.password,
-                },
-            };
-            this.loginUser(data)
-            this.resetData()
+        onSignUp() {
+          console.log("sign up")
+          let data = {
+            user: {
+              email: this.email,
+              password: this.password,
+            },
+          }
+          this.registerUser(data)
+          this.resetData()
+        },
+        onLogin() {
+          let data = {
+              user: {
+                  email: this.email,
+                  password: this.password,
+              },
+          };
+          this.loginUser(data)
+          this.resetData()
         },
         resetData() {
             this.email = ""
             this.password = ""
+            this.type = ""
         },
     },
 }
