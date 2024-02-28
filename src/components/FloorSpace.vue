@@ -83,17 +83,8 @@
         console.error(error)
       }
     },
-    computed: {
-      currentComponent() {
-        console.log(window.location.pathname.substring(1))
-        return window.location.pathname.substring(1) != '' ? window.location.pathname.substring(1) : 'CalendarComp'
-      }
-    },
     methods: {
       onGetInfo(){
-        console.log("drop-down clicked")
-        console.log(this.spaces_data)
-        console.log(this.floors_data)
       }
     }
   }
