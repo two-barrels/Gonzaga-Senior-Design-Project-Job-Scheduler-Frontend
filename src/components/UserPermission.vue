@@ -1,14 +1,16 @@
 <template>
   <div>
-    <h2>{{ userName }}'s Role: </h2> 
+    <h2>{{ user.name }}'s Role: {{ role }}</h2> 
     <std-button 
       title="Change Role"
       buttonType="primary-default"
+      @click="changeAssignment"
     />
+
   </div>
   <br>
   <h3>Current Access to buildings/floors</h3>
-  <p>Select building to view {{ userName }}'s access to floors and spaces</p>
+  <p>Select building to view {{ user.name }}'s access to floors and spaces</p>
 
   <vue-collapsible-panel-group class="drop-down">
     <vue-collapsible-panel
@@ -46,6 +48,7 @@
     VueCollapsiblePanel,
   } from '@dafcoe/vue-collapsible-panel'
   import '@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css'
+  import Assignments from '@/services/assignments-service'
 
   export default {
     name: 'user-permission',
@@ -55,15 +58,73 @@
       'std-button':StdButton
     },
     props: {
-      userName: String,
-      userId: String
+      user: Object,
     },
+    data() {
+      return {
+        hasClick: false,
+        isAdminVisible: false,
+        assignments_data: []
+      }
+    },
+    computed: {
+      isAdmin() {
+        return this.user.assignments.some(assignment => assignment.role.name === 'Admin')
+      },
+      role() {
+        return this.isAdminVisible ? "Admin" : "Standard"
+      },
+      adminRoleId() {
+        return this.user.assignments.find(assignment => assignment.role.name === 'Admin').role.id
+      },
+      adminAssignmentId() {
+        console.log(this.user.assignments.find(assignment => assignment.role.name === 'Admin').id)
+        return this.user.assignments.find(assignment => assignment.role.name === 'Admin').id
+      }
+
+    },
+    async mounted(){
+      try{
+        const assignmentsResponse = await Assignments.get(`assignments/${this.userId}`)
+        this.assignments_data = assignmentsResponse.data
+        this.isAdminVisible = this.isAdmin
+      } catch (error){
+          console.error(error)
+      }
+    },
+    methods: {
+      buttonClicked(){
+        this.hasClick = !this.hasClick
+        console.log("click")
+        console.log(this.assignments_data)
+      },
+      async changeAssignment(){
+        try {
+          Assignments.post('assignments/change_admin_status', { id: this.user.id})
+          this.isAdminVisible = !this.isAdminVisible
+        } catch(error){
+        console.error(error)
+        }
+      },
+      async changeAssign(){
+        try {
+          console.log(this.isAdminVisible)
+          await this.isAdminVisible ? 
+            Assignments.delete(this.adminAssignmentId) : 
+            Assignments.post('assignments', { user_id: this.user.id, role_id: this.adminRoleId })
+          this.isAdminVisible = !this.isAdminVisible
+        } catch(error){
+        console.error(error)
+        }
+      }
+    }
   }
+  
   </script>
   
 <style lang="scss" scoped>
 .drop-down{
-  width: 33%;
+  width: 45%;
 }
 </style>
       

@@ -1,5 +1,5 @@
 <template>
-  <div class="row">
+  <div class="row" @click="printArray">
       <div class="col-4">
         <div 
           class="list-group overflow-auto" 
@@ -16,6 +16,7 @@
             role="tab" 
             :aria-controls="'list-' + user.name" 
             :href="'#' + user.name">{{ user.name }}
+         
           </a>
         </div>
       </div>
@@ -28,7 +29,7 @@
             role="tabpanel" 
             :aria-labelledby="'list-' + user.name"
           >
-            <user-permission :user-name="user.name" :user-id="user.id"/>
+            <user-permission :user="user" />
           </div>
         </div>
       </div>
@@ -55,6 +56,11 @@
         this.users_data = usersResponse.data
       } catch (error){
           console.error(error)
+      }
+    },
+    methods: {
+      printArray(){
+        console.log(this.users_data)
       }
     }
   }

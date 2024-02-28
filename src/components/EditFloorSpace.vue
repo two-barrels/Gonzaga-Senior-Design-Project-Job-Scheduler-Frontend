@@ -28,28 +28,25 @@
           @create-space-pop-up="createSpacePopUp"> 
         </SpacePopup>
     </div>
-    <div class ="createSpace">
+    <div class="row-buttons">
       <std-button @click="createSpacePopUp()" 
-          class="createSpace"
-          title = "Create Space" 
-          buttonType="primary-default"
-        />
+        class="space-create-button"
+        title = "Create Space" 
+        buttonType="primary-default"
+      />
+      <std-button @click="createFloorPopUp()"
+        title = "Create Floor" 
+        buttonType="primary-default"
+      />
     </div>
     <div v-if="showPopupFloor" class="popup"> 
       <FloorPopup
           @close-popup="closePopupFloor"> 
       </FloorPopup>
     </div>
-    <div class ="createFloor">
-      <std-button @click="createFloorPopUp()" 
-        class="createFloor"
-        title = "Create Floor" 
-        buttonType="primary-default"
-        />
-    </div>
-    <div class = "floor">
+    <div class = "drop-down">
       <vue-collapsible-panel-group>
-      <vue-collapsible-panel :expanded="false" v-for="(val, idx) in floors_data" :key="idx">
+      <vue-collapsible-panel :expanded="false" v-for="(val, idx) in floors_data" :key="idx" >
       <template #title>
         <div class="displayFloors">
           Floor {{ val.floor_id }}
@@ -63,7 +60,7 @@
           v-for="(value, index) in spaces_data"
           :key="index"
         >
-        <div v-if="val.floor_id == value.floor_id">
+        <div v-if="val.floor_id == value.floor_id" class="ind-floor">
           <div class = "space">
             <div class="edit">
               <std-button @click="openPopup(value, index)" 
@@ -82,7 +79,6 @@
             <h1> {{ value.spaces_name }}</h1>
             <p>Space Description: {{ value.description }}</p>
             <p>Max Occupancy: {{ value.max_occupancy }}</p>
-            <hr> 
           </div>
         </div>
         </div>
@@ -227,7 +223,7 @@
   }
   </script>
 
-  <style scoped>
+  <style lang="scss" scoped>
   #title, #content {
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -299,6 +295,36 @@
   margin-left:50%;
   margin-top: -14.4%;
 }
+
+.drop-down{
+    text-align: left;
+    color: black;
+    line-height: 32px;
+    padding-left: 1%;
+    padding-right: 1%;
+  }
+  .ind-floor{
+    padding-bottom: 1%;
+    background-color: $color-neutral--100;
+    padding-left: 1%;
+    outline: 1px $color-neutral--200 solid;
+    border-radius: 5px;
+    margin-top: 1%;
+  }
+  .row-buttons{
+    width: fit-content;
+    height: fit-content;
+    display: flex;
+    margin: 15px;
+  }
+
+  .space-create-button {
+    margin-right: 15px;
+  }
+  .floor-space-name{
+      padding-left: 1%;
+      padding-right: 1%;
+    }
   </style>
 
   
