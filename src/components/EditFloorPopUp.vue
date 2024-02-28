@@ -1,5 +1,5 @@
 <template>
-    <h3> Edit Floor Space </h3>
+    <h3> Create Floor </h3>
     <std-button 
         class="exit2"
         title="Exit"

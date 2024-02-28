@@ -3,19 +3,17 @@
     <template #message>
       <div class ="warning">
         <p> Are you sure you want to remove {{popupSpaceDataHold.spaces_name }}?</p><br>
-        <div class="delbutt">
+        <div class="row-buttons">
           <std-button @click="toggleWarnDelete()" 
-          title = "Confirm" 
-          buttonType="primary-default"
+            class="space-create-button"
+            title = "Confirm" 
+            buttonType="primary-default"
           />
+          <std-button @click = "toggleWarnCancel()"
+            title = "Cancel" 
+            buttonType="primary-default"
+          /> 
         </div>
-        <div class="cancelbutt">
-         <std-button @click = "toggleWarnCancel()"
-          title = "Cancel" 
-          buttonType="primary-default"
-         /> 
-        </div>
-        
       </div>
     </template>
   </Toast>
@@ -62,20 +60,16 @@
         >
         <div v-if="val.floor_id == value.floor_id" class="ind-floor">
           <div class = "space">
-            <div class="edit">
-              <std-button @click="openPopup(value, index)" 
-                class="edit"
-                title = "Edit" 
-                buttonType="primary-default"
-              />
-            </div> 
-            <div class="delete">
-              <std-button @click="createWarningToast(value)"  
-                class="delete"
-                title = "Delete" 
-                buttonType="primary-default"
-              />
-            </div> 
+            <std-button @click="openPopup(value, index)" 
+              class="edit"
+              title = "Edit" 
+              buttonType="primary-default"
+            />
+            <std-button @click="createWarningToast(value)"
+              class="delete space-create-button"
+              title = "Delete" 
+              buttonType="primary-default"
+            />
             <h1> {{ value.spaces_name }}</h1>
             <p>Space Description: {{ value.description }}</p>
             <p>Max Occupancy: {{ value.max_occupancy }}</p>

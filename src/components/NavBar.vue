@@ -13,13 +13,14 @@
             <img :src="`chevron-down.svg`">
         </div>
         <div class="account-box"> 
-        <span class="acc">Hello, Test</span>
-        <std-button 
-            title="Account Settings" 
-            @click="toggleDropdown()" 
-            button-type="account-button"
-        >
-        </std-button>
+            <span class="acc">Hello, Test</span>
+            <std-button 
+                class="user-dropdown"
+                title="Account Settings" 
+                @click="toggleDropdown()" 
+                button-type="account-button"
+            >
+            </std-button>
             <div v-if="showDropdown" class="dropdown">
                 <std-button title="Settings" @click="settings()" button-type="drop-down"/>
                 <std-button title="Logout" @click="logoutUser()" button-type="drop-down"/>

@@ -7,7 +7,8 @@ const BASE_URL = process.env.VUE_APP_BASE_BACKEND_URL
 
 const state = {
   isLoggedIn: false,
-  user: {} // get user ID by indexing into this
+  user: {},
+  signInError: false
 }
 
 const getters = {
@@ -25,6 +26,9 @@ const getters = {
   },
   getIsLoggedIn(state) {
     return state.isLoggedIn
+  },
+  signInError(state) {
+    return state.signInError
   }
 }
 const actions = {
@@ -39,10 +43,11 @@ const actions = {
         })
         .catch((error) => {
           reject(error)
+
         })
     })
   },
-  loginUser({ commit }, payload) {
+  loginUser({ commit, state }, payload) {
     new Promise((resolve) => {
       axios
         .post(`${BASE_URL}users/sign_in`, payload)
@@ -52,6 +57,7 @@ const actions = {
           resolve(response)
         })
         .catch((error) => {
+          state.signInError = true
           console.error(error)
         })
     })

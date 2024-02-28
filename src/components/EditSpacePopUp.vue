@@ -1,5 +1,10 @@
 <template>
-  <h3> Edit Space </h3>
+    <div v-if="showEditPopup">
+      <h3> Edit Space </h3>
+    </div>
+    <div v-else>
+      <h3> Create Space </h3>
+    </div>
       <form>
         <label class="name" for="sname">Space Name:</label><br>
         <input type="text" class="in_name" v-model="spaceDataHold.spaces_name"><br>

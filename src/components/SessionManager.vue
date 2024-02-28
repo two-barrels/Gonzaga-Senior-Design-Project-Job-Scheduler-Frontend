@@ -9,6 +9,7 @@
                     <br />
                     <input class="login-form-entry" type="password" v-model="password" placeholder="Password" />
                     <br />
+                    <span v-if="signInError" class="warning-message">Invalid Username or Password</span>
                     <input @click="type = 'Login'" type="submit" value="Login" class="form-submit" />
                     <input type="submit" value="Sign up" class="form-submit" />
                 </form>
@@ -23,13 +24,13 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
     name: "SessionManager",
     computed: {
-        ...mapGetters(["getAuthToken", "getUserEmail", "getUserID", "isLoggedIn"])
+        ...mapGetters(["getAuthToken", "getUserEmail", "getUserID", "isLoggedIn", "signInError"])
     },
     data() {
         return {
           email: "",
           password: "",
-          type: ""
+          type: "",
         }
     },
     methods: {
@@ -149,5 +150,9 @@ export default {
 }
 .table-row-username {
   width: 30%;
+}
+
+.warning-message {
+  color: $color-danger--500
 }
 </style>

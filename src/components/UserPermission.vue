@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>{{ user.name }}'s Role: {{ role }}</h2> 
+    <h2>{{ user.email }}'s Role: {{ role }}</h2> 
     <std-button 
       title="Change Role"
       buttonType="primary-default"
@@ -10,7 +10,7 @@
   </div>
   <br>
   <h3>Current Access to buildings/floors</h3>
-  <p>Select building to view {{ user.name }}'s access to floors and spaces</p>
+  <p>Select building to view {{ user.email }}'s access to floors and spaces</p>
 
   <vue-collapsible-panel-group class="drop-down">
     <vue-collapsible-panel

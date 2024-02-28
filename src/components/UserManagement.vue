@@ -11,23 +11,23 @@
             v-for="(user, idx) in users_data" 
             :key="idx" 
             class="list-group-item list-group-item-action" 
-            :id="'list-' + user.name" 
+            :id="'list-' + user.email" 
             data-bs-toggle="list" 
             role="tab" 
-            :aria-controls="'list-' + user.name" 
-            :href="'#' + user.name">{{ user.name }}
+            :aria-controls="'list-' + user.email" 
+            :href="'#' + user.email">{{ user.email }}
          
           </a>
         </div>
       </div>
       <div class="col-8">
-        <div class="tab-content" id="nav-tabContent">
+        <div class="tab-content tab-details" id="nav-tabContent">
           <div 
             v-for="(user, idx) in users_data" 
             :key="idx" class="tab-pane fade" 
-            :id="user.name" 
+            :id="user.email" 
             role="tabpanel" 
-            :aria-labelledby="'list-' + user.name"
+            :aria-labelledby="'list-' + user.email"
           >
             <user-permission :user="user" />
           </div>
@@ -67,9 +67,13 @@
   </script>
   
   <style lang="scss" scoped>
-    .floor-space-name{
+    .floor-space-name {
       padding-left: 1%;
       padding-right: 1%;
+    }
+
+    .tab-details {
+      min-height: 100vh;
     }
   </style>
   
