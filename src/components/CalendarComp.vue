@@ -56,7 +56,7 @@ export default {
               this.events = this.events.filter(event => event.id !== events.source.data["id"]);
               this.calendar.update({ events: this.events });
             } catch (error) {
-              console.log("Error deleting reservation:", error.message)
+              console.error("Error deleting reservation:", error.message)
             }
           }
         }
