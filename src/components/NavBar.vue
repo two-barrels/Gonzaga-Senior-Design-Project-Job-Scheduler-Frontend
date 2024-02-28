@@ -7,7 +7,7 @@
             <router-link to="/"><std-button title="Available Spaces" button-type="nav-button"/></router-link>            
         </div>
         <div class="left-nav">
-            <router-link to="/edit-spaces"><std-button title="Admin Portal" button-type="nav-button"/></router-link>           
+            <router-link v-if="getIfUserAdmin" to="/edit-spaces"><std-button title="Admin Portal" button-type="nav-button"/></router-link>           
         </div>
         <div class="icon" @click="toggleDropdown()">
             <img :src="`chevron-down.svg`">
@@ -34,7 +34,7 @@
   
 <script>
 import StdButton from '@/components/StdButton.vue'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 
 export default {
@@ -48,10 +48,7 @@ export default {
         }
     },
     computed: {
-        currentComponent() {
-        console.log(window.location.pathname.substring(1))
-        return window.location.pathname.substring(1) != '' ? window.location.pathname.substring(1) : 'AvailableSpaces'
-        }
+        ...mapGetters(["getIfUserAdmin"])
     },
     methods: {
         ...mapActions(["logoutUser"]),

@@ -2,14 +2,14 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import store from "./store"
 import vClickOutside from 'v-click-outside'
-
-
 import PrimeVue from 'primevue/config'
 import { createRouter, createWebHistory } from 'vue-router'
 import 'primevue/resources/themes/lara-light-indigo/theme.css'
 import 'primevue/resources/primevue.min.css'
 import ToastService from 'primevue/toastservice'
-import { setRouterInstance } from '@/services/router-helper'
+import OpenLayersMap from "vue3-openlayers"
+import "vue3-openlayers/styles.css"
+import { setRouterInstance, signInCheck, roleCheck } from '@/services/router-helper'
 
 
 const routes = [
@@ -23,16 +23,21 @@ const routes = [
         component:  () => import('@/components/AvailableSpaces.vue')
       },
       {
-        path: 'calendar',
-        component: () => import('@/components/CalendarComp.vue')
+        path: 'calendar/:user_id/:space_id/:space_name',
+        component: () => import('@/components/CalendarComp.vue'),
+        props: true
       },
       {
         path: 'edit-spaces',
+        meta: { requiredRoles: ['Admin'] },
         component: () => import('@/components/EditSpaces.vue')
       },
       {
         path: 'home-page',
         component: () => import('@/components/HomePage.vue')
+      },
+        path: 'FloorMap',
+        component: () => import('@/components/FloorMap.vue')
       }
     ]
   },
@@ -47,26 +52,21 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
+  let route = null
   if (to.meta.requiresAuth) {
-    if (!store.getters.getIsLoggedIn) {
-      console.log(store.getters.getIsLoggedIn)
-      store.dispatch("loginUserWithToken")
-      if (!store.getters.getIsLoggedIn) {
-        next('/login')
-      }
-    } else {
-      next()
-    }
-  } else {
-    next()
+    route = await signInCheck()
   }
+  if(to.meta.requiredRoles?.length > 0 && route === null) {
+    route = roleCheck(to.meta.requiredRoles)
+  }
+  next(route)
 })
 
 setRouterInstance(router)
 
 const app = createApp(App)
-
+app.use(OpenLayersMap);
 app.use(router)
 app.use(PrimeVue)
 app.use(ToastService)
