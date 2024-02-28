@@ -12,9 +12,9 @@ export function navigateToRoute(route) {
   }
 }
 
-export function signInCheck() {
+export async function signInCheck() {
   if (!store.getters.getIsLoggedIn) {
-    store.dispatch("loginUserWithToken")
+    await store.dispatch("loginUserWithToken")
     if (!store.getters.getIsLoggedIn) {
       return '/login'
     }
@@ -24,7 +24,7 @@ export function signInCheck() {
 
 export function roleCheck(roles) {
   if(!store.getters.getUserRoles.some(desiredRole => {
-    roles.some(role => role === desiredRole)
+    return roles.some(role => role === desiredRole.name)
   })) {
     return '/'
   }

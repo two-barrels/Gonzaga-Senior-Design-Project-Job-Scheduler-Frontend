@@ -30,15 +30,12 @@ export default {
     try {
       const response = await http.get('users') 
       this.test = response.data
-
-      console.log(this.test)
     } catch(err) {
-      console.log(err)
+      console.error(err)
     }
   },
   methods: {
     signin() {
-      console.log(this.test)
     }
   }
 }

@@ -48,11 +48,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(["getIfUserAdmin"]),
-        currentComponent() {
-        console.log(window.location.pathname.substring(1))
-        return window.location.pathname.substring(1) != '' ? window.location.pathname.substring(1) : 'AvailableSpaces'
-        }
+        ...mapGetters(["getIfUserAdmin"])
     },
     methods: {
         ...mapActions(["logoutUser"]),
