@@ -22,7 +22,12 @@ const routes = [
     children: [
       {
         path: '',
-        component:  () => import('@/components/AvailableSpaces.vue')
+        component:  () => import('@/components/HomePage.vue')
+      },
+      {
+        path: 'available-spaces',
+        component: () => import('@/components/AvailableSpaces.vue')
+
       },
       {
         path: 'calendar/:user_id/:space_id/:space_name',

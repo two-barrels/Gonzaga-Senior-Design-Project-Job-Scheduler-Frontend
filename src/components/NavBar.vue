@@ -1,10 +1,10 @@
 <template>
     <div class="nav-bar">
         <div class="left-nav">
-            <std-button title="Home" button-type="nav-button"></std-button>
+            <router-link to="/"><std-button title="Home" button-type="nav-button"></std-button></router-link>
         </div>
         <div class="left-nav">
-            <router-link to="/"><std-button title="Available Spaces" button-type="nav-button"/></router-link>            
+            <router-link to="available-spaces"><std-button title="Available Spaces" button-type="nav-button"/></router-link>            
         </div>
         <div class="left-nav">
             <router-link v-if="getIfUserAdmin" to="/edit-spaces"><std-button title="Admin Portal" button-type="nav-button"/></router-link>           
