@@ -14,7 +14,6 @@
                 </div>
               </template>
               <template #content>
-                <!-- <p> Click on a room or desk to check time availability:</p> -->
                 <p> Click on a space to check time availability:</p>
                 <hr> 
                 <div 
@@ -90,7 +89,6 @@
   }
   </script>
   
-  <!-- Add "scoped" attribute to limit CSS to this component only -->
   <style lang="scss" scoped>
   a {
     all: unset;

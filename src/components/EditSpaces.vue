@@ -1,5 +1,5 @@
 <template>
-    <h1>Edit Available Spaces</h1>
+    <h1 class="floor-space-name">Edit Available Spaces</h1>
     <edit-floor-space/>
   </template>
   
@@ -30,5 +30,10 @@
     text-align: left;
     color: #2c3e50;
   }
+
+  .floor-space-name{
+      padding-left: 1%;
+      padding-right: 1%;
+    }
   </style>
   
