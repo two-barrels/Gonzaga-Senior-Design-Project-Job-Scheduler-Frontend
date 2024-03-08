@@ -9,9 +9,6 @@
         <div class="left-nav">
             <router-link v-if="getIfUserAdmin" to="/edit-spaces"><std-button title="Admin Portal" button-type="nav-button"/></router-link>           
         </div>
-        <div class="left-nav">
-            <router-link to="/floor-map"><std-button title="Map" button-type="nav-button"/></router-link>            
-        </div>
         <div class="icon" @click="toggleDropdown()">
             <img :src="`chevron-down.svg`">
         </div>

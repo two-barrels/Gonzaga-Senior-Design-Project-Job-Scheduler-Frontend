@@ -17,14 +17,13 @@
             >
               <div v-if="building.id == floor.building_id">
                 <div>
-                  <router-link to="/floor-map">
+                  <router-link :to="`/floor-map/${floor.id}`">
                     <std-button
-                    title="Explore"
+                    :title="floor.floor_name"
                     buttonType="primary-default"
                     >
                     </std-button>
                   </router-link>
-                  {{ floor.floor_name }}
                 </div>
               </div>
             </div>

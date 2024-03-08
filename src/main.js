@@ -33,7 +33,7 @@ const routes = [
         component: () => import('@/components/EditSpaces.vue')
       },
       {
-        path: 'floor-map',
+        path: 'floor-map/:floor_id',
         component: () => import('@/components/FloorMap.vue')
       }
     ]

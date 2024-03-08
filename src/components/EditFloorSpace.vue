@@ -290,7 +290,7 @@
   }
 .createFloor{
   margin-left: 5%;
-  margin-top: -2.4%;
+  margin-top: -2.58%;
 }
 .createSpace{
   margin-right: 0%;

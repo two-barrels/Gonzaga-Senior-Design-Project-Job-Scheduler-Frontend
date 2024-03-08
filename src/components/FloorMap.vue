@@ -2,7 +2,7 @@
   <ol-map
     :loadTilesWhileAnimating="true"
     :loadTilesWhileInteracting="true"
-    style="height: 400px"
+    style="height: 600px; border: 30px solid black;"
   >
     <ol-view
       ref="view"
@@ -11,61 +11,26 @@
       :zoom="zoom"
       :projection="projection"
     />
-    <ol-overlay
-      :position="[37.9, 40.1]"
-    >                                     
-      <div class="overlay-content">
-        {{ item }}
-      </div>
-    </ol-overlay>
-
-    <ol-vector-layer>
+    <ol-vector-layer v-for="(spaces, index) in spaces_data" :key="index">
       <ol-source-vector>
-        <ol-feature>
+        <ol-feature v-if="spaces.space_geometry">
           <ol-geom-polygon
-            
-            :coordinates="[
-              [
-                [10, 30],
-                [30, 30],
-                [30, 20],
-                [10, 20]
-              ]
-            ]"
+            :coordinates="parseWKT(spaces.space_geometry.shape)"
           ></ol-geom-polygon>
           <ol-style>
-            <ol-style-stroke color="red" :width="2"></ol-style-stroke>
-            <ol-style-fill color="rgba(255,0,0,0.2)"></ol-style-fill>
+            <ol-style-stroke color="black" :width="2"></ol-style-stroke>
+            <ol-style-fill color="rgba(237, 231, 225)"></ol-style-fill>
           </ol-style>
         </ol-feature>
       </ol-source-vector>
     </ol-vector-layer>
-    <ol-vector-layer>
-      <ol-source-vector>
-        <ol-feature>
-          <ol-geom-polygon
-            :coordinates="[
-              [
-                [30, 60],
-                [50, 60],
-                [50, 40],
-                [30, 40]
-              ]
-            ]"
-          ></ol-geom-polygon>
-          <ol-style>
-            <ol-style-stroke color="red" :width="2"></ol-style-stroke>
-            <ol-style-fill color="rgba(255,0,0,0.2)"></ol-style-fill>
-          </ol-style>
-        </ol-feature>
-      </ol-source-vector>
-    </ol-vector-layer>
-
   </ol-map>
 </template>
 
 <script>
 import { ref, reactive } from "vue"
+import http_helper from '@/services/http-helper'
+import WKT from 'ol/format/WKT'
 export default{
   name: 'floor-map',
   data(){
@@ -74,8 +39,12 @@ export default{
       rotation:0,
       center:0,
       item:"logo",
-      projection:{}
+      projection:{},
+      spaces_data: []
     }
+  },
+  props:{
+      floor_id: String
   },
   async mounted(){
     try{
@@ -90,9 +59,21 @@ export default{
         units: "pixels",
         extent: extent,
       })
+      const spacesResponse= await http_helper.get(`spaces/get_floor/${this.floor_id}`)
+      this.spaces_data = spacesResponse.data
+      //console.log(this.spaces_data[0].space_geometry.shape)
+      console.log(this.floor_id)
+      console.log(this.spaces_data)
     }
     catch (error){
         console.error(error)
+      }
+    },
+    methods:{
+      parseWKT(wktString){
+        const wktFormat = new WKT()
+        const feature = wktFormat.readFeature(wktString)
+        return feature.getGeometry().getCoordinates()
       }
     }
 }
