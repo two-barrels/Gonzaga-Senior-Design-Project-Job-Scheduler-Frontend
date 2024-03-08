@@ -65,51 +65,50 @@ export default {
         durationBarVisible: false,
         timeRangeSelectedHandling: "Enabled",
         onTimeRangeSelected: async (args) => {
-          //console.log(this.events)
-          //DayPilot.Modal.alert("Cannot do this")
-          // const start_time = parseInt(args.start["value"][11] + args.start["value"][12])
-          // const end_time = parseInt(args.end["value"][11] + args.end["value"][12])
+          let overlap = false
+          const start_time = args.start.getTime()
+          const end_time = args.end.getTime()
 
-          // let existing_start = 0
-          // let existing_end = 0
-          // this.events.forEach(async (item) => {
-          //   existing_start = parseInt(item.start["value"][11] + item.start["value"][12])
-          //   existing_end = parseInt(item.end["value"][11] + item.end["value"][12])
-          //   if (start_time >= existing_start && end_time <= existing_end) {
-          //     args.preventDefault()
-          //     await DayPilot.Modal.alert("Cannot do this")
-          //     return
-          //   }
-          // })
+          // checking for overlaps
+          this.events.forEach(async (item) => {
+            const existing_start = item.start.getTime()
+            const existing_end = item.end.getTime()
+            if ((start_time >= existing_start && start_time <= existing_end) ||
+                (end_time >= existing_start && end_time <= existing_end)) {
+              overlap = true
+            }
+          })
 
-
-
-
-          const modal = await DayPilot.Modal.prompt("Create a new event:", "Booked");
-          const dp = args.control;
-          dp.clearSelection();
-          if (modal.canceled) {
+          if (overlap) {
+            args.preventDefault()
+            await DayPilot.Modal.alert("Cannot do this")
             return
           }
-          //if (parseInt(args.start["value"][11] + args.start["value"][12]))
-          //const start_time = 
-          dp.events.add({
-            start: args.start,
-            end: args.end,
-            id: DayPilot.guid(),
-            text: modal.result
-          })
-          try {
-            await http.post(
-              'reservations', {
-                space_id: this.space_id, 
-                user_id: 101, 
-                start_time: args.start, 
-                end_time: args.end
-              })
-            console.log('Reservation successfully created!')
-          } catch (error) {
-            console.error('Error creating reservation:', error.message)
+          else {
+            const modal = await DayPilot.Modal.prompt("Create a new event:", "Booked");
+            const dp = args.control;
+            dp.clearSelection();
+            if (modal.canceled) {
+              return
+            } 
+            dp.events.add({
+              start: args.start,
+              end: args.end,
+              id: DayPilot.guid(),
+              text: modal.result
+            })
+            try {
+              await http.post(
+                'reservations', {
+                  space_id: this.space_id, 
+                  user_id: 101, 
+                  start_time: args.start, 
+                  end_time: args.end
+                })
+              console.log('Reservation successfully created!')
+            } catch (error) {
+              console.error('Error creating reservation:', error.message)
+            }
           }
         },
         eventDeleteHandling: "Disabled",
