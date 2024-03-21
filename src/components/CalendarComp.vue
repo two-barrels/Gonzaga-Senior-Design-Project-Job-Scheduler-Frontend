@@ -70,7 +70,7 @@ export default {
           const endTime = args.end.getTime()
           if (this.overlapCheck(startTime, endTime)) {
             args.preventDefault()
-            await DayPilot.Modal.alert("Cannot do this. Your reservation overlaps with an exisiting reservation.")
+            await DayPilot.Modal.alert("Error: Your reservation overlaps with an exisiting reservation")
             return
           }
           else {
@@ -262,7 +262,7 @@ export default {
             user_id: 101, 
             start_time: blockRange.result["start"]["value"], 
             end_time: blockRange.result["end"]["value"],
-            text: "Booked"
+            text: "Blocked off by admin"
           })
       } catch (error) {
         console.error('Error creating reservation:', error.message)
