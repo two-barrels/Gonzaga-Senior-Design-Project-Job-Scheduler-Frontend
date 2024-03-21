@@ -5,6 +5,7 @@
   <div class="wrap">
     <div class="months">
       <DayPilotNavigator id="nav" :config="navigatorConfig" />
+      <button type="button" @click=blockTimes>Block Times</button>
     </div>
     <div class="week">
       <DayPilotCalendar id="weekCal" :config="config" ref="calendar" />
@@ -38,7 +39,7 @@ export default {
         {
           text: "Show event ID",
           onClick: events => {
-            console.log(events.source.data["start"]["value"][11] + events.source.data["start"]["value"][12])
+            console.log(events.source.data)
           }
         },
         {
@@ -78,7 +79,6 @@ export default {
               overlap = true
             }
           })
-
           if (overlap) {
             args.preventDefault()
             await DayPilot.Modal.alert("Cannot do this")
@@ -103,7 +103,8 @@ export default {
                   space_id: this.space_id, 
                   user_id: 101, 
                   start_time: args.start, 
-                  end_time: args.end
+                  end_time: args.end,
+                  text: modal.result // not working
                 })
               console.log('Reservation successfully created!')
             } catch (error) {
@@ -126,7 +127,8 @@ export default {
                     space_id: this.space_id, 
                     user_id: 101, 
                     start_time: events.source.data["start"], 
-                    end_time: events.source.data["end"]
+                    end_time: events.source.data["end"],
+                    text: events.source.data["text"]
                   }
                 )
               } catch (error) {
@@ -149,7 +151,8 @@ export default {
                         space_id: this.space_id, 
                         user_id: 101, 
                         start_time: events.source.data["start"], 
-                        end_time: events.source.data["end"]
+                        end_time: events.source.data["end"],
+                        text: events.source.data["text"]
                       }
                     )
                     this.events = this.events.filter(event => event.id !== events.source.data["id"]);
@@ -176,7 +179,8 @@ export default {
                     space_id: this.space_id, 
                     user_id: 101, 
                     start_time: events.source.data["start"], 
-                    end_time: events.source.data["end"]
+                    end_time: events.source.data["end"],
+                    text: events.source.data["text"]
                   }
                 )
               } catch(error) {
@@ -199,7 +203,8 @@ export default {
                         space_id: this.space_id, 
                         user_id: 101, 
                         start_time: events.source.data["start"], 
-                        end_time: events.source.data["end"]
+                        end_time: events.source.data["end"],
+                        text: events.source.data["text"]
                       }
                     )
                     this.events = this.events.filter(event => event.id !== events.source.data["id"]);
@@ -243,7 +248,7 @@ export default {
             id: item.id,
             start: item?.start_time,
             end: item?.end_time,
-            text: "Booked"
+            text: item?.text
           })
         })
         this.calendar.update({events: this.events})
@@ -251,6 +256,35 @@ export default {
         console.error('Error loading events:', error)
       }
     },
+    async blockTimes() {
+      const form = [
+        {name: "Start Date/Time", id: "start", dateFormat: "M/d/yyyy", timeInterval: 30, type: "datetime"},
+        {name: "End Date/Time", id: "end", dateFormat: "M/d/yyyy", timeInterval: 30, type: "datetime"}
+      ]
+      const blockRange = await DayPilot.Modal.form(form)
+      console.log(blockRange.result["start"])
+
+      this.events.push({
+        start: blockRange.result["start"]["value"],
+        end: blockRange.result["end"]["value"],
+        id: DayPilot.guid(),
+        text: "Blocked off by admin"
+      })
+      try {
+        await http.post(
+          'reservations', {
+            space_id: this.space_id, 
+            user_id: 101, 
+            start_time: blockRange.result["start"]["value"], 
+            end_time: blockRange.result["end"]["value"],
+            text: "Booked"
+          })
+        console.log('Reservation successfully created!')
+      } catch (error) {
+        console.error('Error creating reservation:', error.message)
+      }
+      this.calendar.update({events: this.events})
+    }
   },
   async mounted() {
     await this.loadEvents()
@@ -276,7 +310,8 @@ export default {
 
 .calendar_default_event_inner {
   background: #f16d01;
-  color: white;
+  //color: white;
+  color: red;
   border-radius: 5px;
   opacity: 0.9;
 }
