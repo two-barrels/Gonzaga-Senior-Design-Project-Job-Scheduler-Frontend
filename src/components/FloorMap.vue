@@ -61,9 +61,6 @@ export default{
       })
       const spacesResponse= await http_helper.get(`spaces/get_floor/${this.floor_id}`)
       this.spaces_data = spacesResponse.data
-      //console.log(this.spaces_data[0].space_geometry.shape)
-      console.log(this.floor_id)
-      console.log(this.spaces_data)
     }
     catch (error){
         console.error(error)

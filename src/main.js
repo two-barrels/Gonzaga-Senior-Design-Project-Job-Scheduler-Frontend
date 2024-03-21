@@ -34,7 +34,8 @@ const routes = [
       },
       {
         path: 'floor-map/:floor_id',
-        component: () => import('@/components/FloorMap.vue')
+        component: () => import('@/components/FloorMap.vue'),
+        props: true
       }
     ]
   },
