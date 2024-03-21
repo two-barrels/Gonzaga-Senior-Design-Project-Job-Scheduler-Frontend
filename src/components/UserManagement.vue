@@ -16,7 +16,6 @@
             role="tab" 
             :aria-controls="'list-' + user.email" 
             :href="'#' + user.email">{{ user.email }}
-         
           </a>
         </div>
       </div>
