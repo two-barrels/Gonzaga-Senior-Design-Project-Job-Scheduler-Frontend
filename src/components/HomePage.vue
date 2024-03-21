@@ -1,14 +1,15 @@
 <template>
     <h1 class="floor-space-name">Welcome to the 2Barrels Scheduling Space Application</h1>
-
-    <iframe class="video-placement" id = "rick" width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+  <dash-board/>
   </template>
   
   <script>
+  import DashBoard from '@/components/DashBoard.vue';
   
   export default {
     name: 'home-page',
     components: {
+      'dash-board': DashBoard
     }
   }
   </script>
