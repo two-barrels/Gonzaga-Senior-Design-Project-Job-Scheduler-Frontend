@@ -81,21 +81,21 @@ export default {
           })
           if (overlap) {
             args.preventDefault()
-            await DayPilot.Modal.alert("Cannot do this")
+            await DayPilot.Modal.alert("Cannot do this. Your reservation overlaps with an exisiting reservation.")
             return
           }
           else {
-            const modal = await DayPilot.Modal.prompt("Create a new event:", "Booked");
-            const dp = args.control;
-            dp.clearSelection();
-            if (modal.canceled) {
+            const resName = await DayPilot.Modal.prompt("Create a new reservation:", "Booked");
+            const calendar = args.control;
+            calendar.clearSelection();
+            if (resName.canceled) {
               return
             } 
-            dp.events.add({
+            calendar.events.add({
               start: args.start,
               end: args.end,
               id: DayPilot.guid(),
-              text: modal.result
+              text: resName.result
             })
             try {
               await http.post(
@@ -104,9 +104,8 @@ export default {
                   user_id: 101, 
                   start_time: args.start, 
                   end_time: args.end,
-                  text: modal.result // not working
+                  text: resName.result
                 })
-              console.log('Reservation successfully created!')
             } catch (error) {
               console.error('Error creating reservation:', error.message)
             }
@@ -132,7 +131,7 @@ export default {
                   }
                 )
               } catch (error) {
-                console.log("Error moving reservation:", error.message)
+                console.error("Error moving reservation:", error.message)
               }
               //reset context menu
               this.config.contextMenu = new DayPilot.Menu([
@@ -158,7 +157,7 @@ export default {
                     this.events = this.events.filter(event => event.id !== events.source.data["id"]);
                     this.calendar.update({ events: this.events });
                   } catch (error) {
-                    console.log("Error deleting reservation:", error.message)
+                    console.error("Error deleting reservation:", error.message)
                   }
                 }
               }
@@ -210,7 +209,7 @@ export default {
                     this.events = this.events.filter(event => event.id !== events.source.data["id"]);
                     this.calendar.update({ events: this.events });
                   } catch (error) {
-                    console.log("Error deleting reservation:", error.message)
+                    console.error("Error deleting reservation:", error.message)
                   }
                 }
               }
@@ -239,9 +238,7 @@ export default {
   methods: {
     async loadEvents() {
       try {
-        //const events = []
         const response = await http.get(`reservations/space/${this.space_id}`)
-        console.log(this.user_id)
         
         response?.data?.forEach((item) => {
           this.events.push({
@@ -262,7 +259,6 @@ export default {
         {name: "End Date/Time", id: "end", dateFormat: "M/d/yyyy", timeInterval: 30, type: "datetime"}
       ]
       const blockRange = await DayPilot.Modal.form(form)
-      console.log(blockRange.result["start"])
 
       this.events.push({
         start: blockRange.result["start"]["value"],
@@ -279,7 +275,6 @@ export default {
             end_time: blockRange.result["end"]["value"],
             text: "Booked"
           })
-        console.log('Reservation successfully created!')
       } catch (error) {
         console.error('Error creating reservation:', error.message)
       }
