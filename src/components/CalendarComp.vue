@@ -66,20 +66,9 @@ export default {
         durationBarVisible: false,
         timeRangeSelectedHandling: "Enabled",
         onTimeRangeSelected: async (args) => {
-          let overlap = false
-          const start_time = args.start.getTime()
-          const end_time = args.end.getTime()
-
-          // checking for overlaps
-          this.events.forEach(async (item) => {
-            const existing_start = item.start.getTime()
-            const existing_end = item.end.getTime()
-            if ((start_time >= existing_start && start_time <= existing_end) ||
-                (end_time >= existing_start && end_time <= existing_end)) {
-              overlap = true
-            }
-          })
-          if (overlap) {
+          const startTime = args.start.getTime()
+          const endTime = args.end.getTime()
+          if (this.overlapCheck(startTime, endTime)) {
             args.preventDefault()
             await DayPilot.Modal.alert("Cannot do this. Your reservation overlaps with an exisiting reservation.")
             return
@@ -279,6 +268,14 @@ export default {
         console.error('Error creating reservation:', error.message)
       }
       this.calendar.update({events: this.events})
+    },
+    overlapCheck(start, end) {
+      return this.events.some((item) => {
+        const existingStart = item.start.getTime()
+        const existingEnd = item.end.getTime()
+        return (start >= existingStart && start <= existingEnd) ||
+            (end >= existingStart && end <= existingEnd)
+      })
     }
   },
   async mounted() {
