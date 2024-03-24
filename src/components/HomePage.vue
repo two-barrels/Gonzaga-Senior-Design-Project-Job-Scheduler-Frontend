@@ -1,5 +1,7 @@
 <template>
-    <h1 class="floor-space-name">Welcome to the 2Barrels Scheduling Space Application</h1>
+    <h1 class="floor-space-title">
+      Welcome to the 2Barrels Scheduling Space Application
+    </h1>
   <dash-board/>
   </template>
   
@@ -15,12 +17,12 @@
   </script>
   
   <style lang="scss" scoped>
-    .floor-space-name{
+    .floor-space-title {
       margin-top: 15px;
       padding-left: 1%;
       padding-right: 1%;
     }
-    .video-placement{
+    .video-placement {
         margin-left: 15px
     }
   </style>

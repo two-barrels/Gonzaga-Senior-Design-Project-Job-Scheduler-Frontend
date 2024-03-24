@@ -15,6 +15,10 @@ const getters = {
   getUserEmail(state) {
     return state.user?.email
   },
+  getUserName(state) {
+    console.log(state.user)
+    return state.user?.name
+  },
   getUserID(state) {
     return state.user?.id
   },
