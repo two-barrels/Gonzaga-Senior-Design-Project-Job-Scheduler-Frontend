@@ -57,7 +57,6 @@ export default {
         const response = await http.get(`reservations/space/${this.space_id}`)
         
         response?.data?.forEach((item) => {
-          console.log(item.admin_block)
           this.events.push({
             id: item.id,
             start: item?.start_time,
