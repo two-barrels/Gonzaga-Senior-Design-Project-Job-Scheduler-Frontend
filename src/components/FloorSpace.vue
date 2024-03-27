@@ -75,15 +75,11 @@
       try{
         const spacesPromise = http_helper.get('spaces') 
         const floorsPromise = http_helper.get('spaces/get_floors')
-        const [spacesResponse,floorsResponse] = await Promise.all([spacesPromise, floorsPromise])  
+        const [ spacesResponse, floorsResponse ] = await Promise.all([ spacesPromise, floorsPromise ])  
         this.spaces_data = spacesResponse.data
         this.floors_data = floorsResponse.data
       } catch (error){
         console.error(error)
-      }
-    },
-    methods: {
-      onGetInfo(){
       }
     }
   }

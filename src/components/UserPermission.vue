@@ -78,7 +78,6 @@
         return this.user.assignments.find(assignment => assignment.role.name === 'Admin').role.id
       },
       adminAssignmentId() {
-        console.log(this.user.assignments.find(assignment => assignment.role.name === 'Admin').id)
         return this.user.assignments.find(assignment => assignment.role.name === 'Admin').id
       }
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="row" @click="printArray">
+  <div class="row">
       <div class="col-4">
         <div 
           class="list-group overflow-auto" 
@@ -55,11 +55,6 @@
         this.users_data = usersResponse.data
       } catch (error){
           console.error(error)
-      }
-    },
-    methods: {
-      printArray(){
-        console.log(this.users_data)
       }
     }
   }
