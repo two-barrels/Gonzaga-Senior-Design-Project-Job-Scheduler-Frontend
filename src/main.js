@@ -38,6 +38,10 @@ const routes = [
         path: 'edit-spaces',
         meta: {requiredRoles: ['Admin']},
         component: () => import('@/components/AdminPortal.vue')
+      },
+      {
+        path: 'settings',
+        component: () => import('@/components/SettingsPage.vue')
       }
     ]
   },

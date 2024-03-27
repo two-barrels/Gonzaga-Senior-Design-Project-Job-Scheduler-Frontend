@@ -19,7 +19,7 @@
             <img :src="userIcon"> {{ username }}
             </button>
             <ul class="dropdown-menu">
-                <li><std-button title="Settings" @click="settings()" button-type="drop-down"/></li>
+                <li><router-link to='/settings'><std-button title="Settings" button-type="drop-down"/></router-link></li>
                 <li><std-button title="Logout" @click="logoutUser()" button-type="drop-down"/></li>
             </ul>
         </div>
