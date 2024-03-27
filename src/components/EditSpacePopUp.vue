@@ -10,7 +10,7 @@
         <input type="text" class="in_name" v-model="spaceDataHold.spaces_name"><br>
         <label class="flr" for="floor_num">Floor Name:</label><br>
         <select name="Floors" class="in_flr">
-        <option v-for="(val, idx) in floor" :key="idx" @click="changeFloor(val.floor_id)"> {{val.floor_id}}</option> 
+        <option v-for="(val, idx) in floor" :key="idx" @click="changeFloor(val.id)"> {{val.floor_name}}</option> 
         </select><br>
         <label class="labels" for="max_num">Max Occupancy:</label><br>
         <input type="number" class="in_max" min="1" v-model="spaceDataHold.max_occupancy"><br>
