@@ -176,7 +176,7 @@
         const [spacesResponse, floorResponse] = await Promise.all([spacesPromise, floorPromise])
         this.floor_data = floorResponse.data
         this.spaces_data = spacesResponse.data
-        console.log(this.floor_data[0].spaces)
+    
       }
       catch(error){
         console.error(error)
@@ -275,12 +275,20 @@
         this.popupSpaceDataHold = spaceData;
         this.toast.add({ severity: 'warn', summary: 'Delete', group: 'bc'})
       },
+      checkSpacesinFloors(){
+        for (let i =0; i < this.floor_data.length; i++){
+          for (let j=0; j<this.floor_data[i].spaces.length; j++){
+            return this.floor_data[i].spaces[j] !== this.popupSpaceData.id
+          }
+        }
+      },
       toggleWarnDelete(){
         this.popupSpaceData = this.popupSpaceDataHold
         http.delete(`spaces/${this.popupSpaceData.id}`)
           .then(response => {
-              console.log(response.data);
-              this.spaces_data = this.spaces_data.filter(item => item.id !== this.popupSpaceData.id)
+              console.log(response.data)
+              // this.floor_data = this.floor_data.filter(checkSpacesinFloors())
+              this.floor_data = this.floor_data.filter(item => item.spaces.id !== this.popupSpaceData.id)
               this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'})
           })
           .catch(error => {
@@ -289,6 +297,7 @@
           })
         this.toast.removeGroup('bc')
       },
+      
       toggleWarnCancel(){
         this.toast.removeGroup('bc')
         this.visible = false;
