@@ -3,14 +3,15 @@
         <h1 class="sm-title">Two Barrels Space Scheduler</h1>
         <div class="sm-card">
             <div>
-                <h3>Login!</h3>
+                <h3>Sign Up!</h3>
                 <form @submit="loginOrSignup" class="login-form">
                     <input class="login-form-entry" type="text" v-model="email" placeholder="Email" />
                     <br />
                     <input class="login-form-entry" type="password" v-model="password" placeholder="Password" />
                     <br />
-                    <span v-if="signInError" class="warning-message">Invalid Username or Password</span>
-                    <input @click="type = 'Login'" type="submit" value="Login" class="form-submit" />
+                    <input class="login-form-entry" type="password" v-model="rePassword" placeholder="Re-enter Password" />
+                    <br />
+                    <span v-if="signInError" class="warning-message">Passwords must match</span>
                     <input type="submit" value="Sign up" class="form-submit" />
                 </form>
             </div>
@@ -19,47 +20,40 @@
 </template>
 
 <script>
-import { navigateToRoute } from "@/services/router-helper"
 import "@/store/index.js"
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
 export default {
-    name: "SessionManager",
-    computed: {
-        ...mapGetters(["getAuthToken", "getUserEmail", "getUserID", "isLoggedIn", "signInError"])
-    },
-    data() {
-        return {
-          email: "",
-          password: "",
-          type: "",
+  name: "SignUp",
+  data() {
+      return {
+        email: "",
+        password: "",
+        rePassword: "",
+        signInError: false
+      }
+  },
+  methods: {
+    ...mapActions(["registerUser"]),
+    onSignUp() {
+      if (this.password === this.rePassword) {
+        let data = {
+          user: {
+            email: this.email,
+            password: this.password,
+          },
         }
+        this.registerUser(data)
+        this.resetData()
+      } else {
+        this.signInError = true
+      }
     },
-    methods: {
-        ...mapActions(["registerUser", "loginUser", "logoutUser"]),
-        loginOrSignup(event) {
-          event.preventDefault()
-          if(this.type === "Login") {this.onLogin()}
-          else {this.onSignUp()}
-        },
-        onSignUp() {
-          navigateToRoute('sign-up')
-        },
-        onLogin() {
-          let data = {
-              user: {
-                  email: this.email,
-                  password: this.password,
-              },
-          };
-          this.loginUser(data)
-          this.resetData()
-        },
-        resetData() {
-            this.email = ""
-            this.password = ""
-            this.type = ""
-        },
+    resetData() {
+      this.email = ""
+      this.password = ""
+      this.type = ""
     },
+  }
 }
 </script>
 

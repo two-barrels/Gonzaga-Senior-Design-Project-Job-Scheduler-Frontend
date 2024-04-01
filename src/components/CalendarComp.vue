@@ -94,8 +94,7 @@ export default {
       try {
         await http.post(
           'reservations', {
-            space_id: this.space_id, 
-            user_id: 101, 
+            space_id: this.space_id,
             start_time: blockRange.result["start"]["value"], 
             end_time: blockRange.result["end"]["value"],
             text: "Blocked off by admin",
@@ -162,7 +161,6 @@ export default {
         http.delete(
           `reservations/${events.source.data["id"]}`, {
             space_id: this.space_id, 
-            user_id: 101, 
             start_time: events.source.data["start"], 
             end_time: events.source.data["end"]
           }
@@ -198,8 +196,7 @@ export default {
         try {
           await http.post(
             'reservations', {
-              space_id: this.space_id, 
-              user_id: 101, 
+              space_id: this.space_id,
               start_time: args.start, 
               end_time: args.end,
               text: resName.result,
@@ -229,9 +226,8 @@ export default {
       try {
         await http.put(
           `reservations/${events.source.data["id"]}`, {
-            space_id: this.space_id, 
-            user_id: 101, 
-            start_time: blockRange.result["start"]["value"], 
+            space_id: this.space_id,
+            start_time: blockRange.result["start"]["value"],
             end_time: blockRange.result["end"]["value"],
             text: events.source.data["text"],
             admin_block: false

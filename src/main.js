@@ -48,6 +48,10 @@ const routes = [
   {
     path: '/login',
     component: () => import('@/components/SessionManager.vue')
+  },
+  {
+    path: '/sign-up',
+    component: () => import('@/components/SignUp.vue')
   }
 ]
 
