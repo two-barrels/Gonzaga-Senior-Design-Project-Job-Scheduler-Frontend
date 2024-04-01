@@ -287,8 +287,7 @@
         http.delete(`spaces/${this.popupSpaceData.id}`)
           .then(response => {
               console.log(response.data)
-              // this.floor_data = this.floor_data.filter(checkSpacesinFloors())
-              this.floor_data = this.floor_data.filter(item => item.spaces.id !== this.popupSpaceData.id)
+              this.floor_data = this.floor_data.filter(item => item.spaces !== this.popupSpaceData.id)
               this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'})
           })
           .catch(error => {

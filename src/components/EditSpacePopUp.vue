@@ -1,10 +1,12 @@
 <template>
+  <div class="scroll">
     <div v-if="showEditPopup">
       <h3> Edit Space </h3>
     </div>
     <div v-else>
       <h3> Create Space </h3>
     </div>
+    
       <form>
         <label class="name" for="sname">Space Name:</label><br>
         <input type="text" class="in_name" v-model="spaceDataHold.spaces_name"><br>
@@ -43,6 +45,7 @@
             /> 
         </div>
       </form>
+    </div>
 </template>
 
 <script>
@@ -93,6 +96,10 @@
 </script>
 
 <style lang="scss">
+.scroll{
+  overflow-x: hidden;
+  overflow-y: auto;
+}
 .exit1{
   margin-left: 55%;
   margin-top: -8.3%;
