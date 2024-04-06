@@ -4,16 +4,20 @@
         <div class="sm-card">
             <div>
                 <h3>Sign Up!</h3>
-                <form @submit="loginOrSignup" class="login-form">
+                <div @submit="loginOrSignup" class="login-form">
                     <input class="login-form-entry" type="text" v-model="email" placeholder="Email" />
-                    <br />
                     <input class="login-form-entry" type="password" v-model="password" placeholder="Password" />
                     <br />
                     <input class="login-form-entry" type="password" v-model="rePassword" placeholder="Re-enter Password" />
                     <br />
-                    <span v-if="signInError" class="warning-message">Passwords must match</span>
-                    <input type="submit" value="Sign up" class="form-submit" />
-                </form>
+                    <span v-if="isError" class="warning-message">Error ensure passwords match</span>
+                    <span v-if="isError" class="warning-message">Invalid User Data</span>
+                    <std-button 
+                      title="Create Account"
+                      buttonType="primary-default"
+                      @click="signUp()"
+                    />
+                </div>
             </div>
         </div>
     </div>
@@ -21,25 +25,32 @@
 
 <script>
 import "@/store/index.js"
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
+import StdButton from '@/components/StdButton.vue'
 export default {
   name: "SignUp",
+  components: {
+    StdButton
+  },
   data() {
       return {
-        email: "",
-        password: "",
-        rePassword: "",
-        signInError: false
+        email: '',
+        password: '',
+        rePassword: '',
+        isError: false
       }
+  },
+  computed: {
+      ...mapGetters(["signInError"])
   },
   methods: {
     ...mapActions(["registerUser"]),
-    onSignUp() {
-      if (this.password === this.rePassword) {
+    signUp() {
+      if (this.validateInfo) {
         let data = {
           user: {
             email: this.email,
-            password: this.password,
+            password: this.password
           },
         }
         this.registerUser(data)
@@ -53,6 +64,11 @@ export default {
       this.password = ""
       this.type = ""
     },
+    validateInfo() {
+      return this.password === this.rePassword &&
+        this.password &&
+        this.email
+    }
   }
 }
 </script>

@@ -28,11 +28,11 @@ export default {
         ...mapGetters(["getAuthToken", "getUserEmail", "getUserID", "isLoggedIn", "signInError"])
     },
     data() {
-        return {
-          email: "",
-          password: "",
-          type: "",
-        }
+      return {
+        email: "",
+        password: "",
+        type: "",
+      }
     },
     methods: {
         ...mapActions(["registerUser", "loginUser", "logoutUser"]),
