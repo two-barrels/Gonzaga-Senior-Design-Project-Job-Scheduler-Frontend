@@ -1,19 +1,19 @@
 <template>
   <h3 class="floor-space-name">
-      Dashboard
+      Home Page
   </h3>
   <div v-if="reservations_data.length == 0">
     <p>No events to display</p>
   </div>
   <div v-else class="reservation-div overflow-auto">
-    <button @click="printReservations">Click me</button>
+    <!-- <button @click="printReservations">Click me</button> -->
     <div 
       v-for="(reservation, idx) in reservations_data"
       :key="idx"
       class="card"
     >
       <div class="card-header">
-        {{printDate(reservation.start_time)}}
+        <span>{{ reservation.text }}, {{printDate(reservation.start_time)}}</span>
       </div>
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
@@ -70,8 +70,7 @@ export default {
       return new Date(dateString).toLocaleTimeString()
     },
     printReservations(){
-      console.log(this.floors_data)
-      console.log(this.floors_hash)
+      console.log(this.reservations_data)
     }
   }
 }
@@ -86,11 +85,13 @@ export default {
 
 .reservation-div  {
   max-height: 75vh;
+  // display: flex;
 }
 
 .card {
-  width: 50%;
-  margin-left: 1%;
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>
   
