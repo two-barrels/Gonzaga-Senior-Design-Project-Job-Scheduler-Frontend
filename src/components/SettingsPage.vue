@@ -2,18 +2,19 @@
     <h1 class="floor-space-title">
       Settings
     </h1>
-    <div>
-      <h3>Change Account Name</h3>
-        <input class="login-form-entry" type="text" v-model="name" placeholder="New Name" />
+    <div class="change-name">
+      <h4>Change Account Name</h4>
+        <input class="login-form-entry text-box" type="text" v-model="name" placeholder="New Name" />
         <br />
         <std-button 
           title="Save"
           buttonType="primary-default"
           @click="changeName()"
         />
-
     </div>
-  <dash-board/>
+    <div>
+      <h4>Change Password</h4>
+    </div>
   </template>
   
   <script>
@@ -45,6 +46,7 @@
       async changeName() {
         try {
           Users.put(`users/${this.id}`, { name: this.name })
+          window.location.reload();
         } catch (error) {
           console.error(error)
         }
@@ -54,14 +56,16 @@
   </script>
   
   <style lang="scss" scoped>
-    .floor-space-title {
+    .floor-space-title {  
       margin-top: 15px;
       padding-left: 1%;
       padding-right: 1%;
     }
-    .form-format {
+    .change-name{
       margin-left: 1%;
-      margin-right: 55%;
+    }
+    .text-box{
+      margin-bottom: 1%;
     }
   </style>
   
