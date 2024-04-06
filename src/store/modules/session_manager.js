@@ -37,7 +37,7 @@ const getters = {
 }
 const actions = {
   registerUser({ commit }, payload) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       axios
         .post(`${BASE_URL}users`, payload)
         .then((response) => {
@@ -46,8 +46,8 @@ const actions = {
           resolve(response)
         })
         .catch((error) => {
-          reject(error)
-
+          state.signInError = true
+          console.error(error)
         })
     })
   },
@@ -67,7 +67,7 @@ const actions = {
     })
   },
   logoutUser({ commit }) {
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       axios
         .delete(`${BASE_URL}users/sign_out`)
         .then(() => {
@@ -76,7 +76,7 @@ const actions = {
           resolve()
         })
         .catch((error) => {
-          reject(error)
+          console.error(error)
         })
     })
   },
