@@ -67,7 +67,6 @@ export default {
     validateInfo() {
       return this.password === this.rePassword &&
         this.password &&
-        this.name &&
         this.email
     }
   }
