@@ -7,12 +7,17 @@ const BASE_URL = process.env.VUE_APP_BASE_BACKEND_URL
 
 const state = {
   isLoggedIn: false,
-  user: {} // get user ID by indexing into this
+  user: {},
+  signInError: false
 }
 
 const getters = {
   getUserEmail(state) {
     return state.user?.email
+  },
+  getUserName(state) {
+    console.log(state.user)
+    return state.user?.name
   },
   getUserID(state) {
     return state.user?.id
@@ -25,11 +30,14 @@ const getters = {
   },
   getIsLoggedIn(state) {
     return state.isLoggedIn
+  },
+  signInError(state) {
+    return state.signInError
   }
 }
 const actions = {
   registerUser({ commit }, payload) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       axios
         .post(`${BASE_URL}users`, payload)
         .then((response) => {
@@ -38,11 +46,12 @@ const actions = {
           resolve(response)
         })
         .catch((error) => {
-          reject(error)
+          state.signInError = true
+          console.error(error)
         })
     })
   },
-  loginUser({ commit }, payload) {
+  loginUser({ commit, state }, payload) {
     new Promise((resolve) => {
       axios
         .post(`${BASE_URL}users/sign_in`, payload)
@@ -52,12 +61,13 @@ const actions = {
           resolve(response)
         })
         .catch((error) => {
+          state.signInError = true
           console.error(error)
         })
     })
   },
   logoutUser({ commit }) {
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       axios
         .delete(`${BASE_URL}users/sign_out`)
         .then(() => {
@@ -66,7 +76,7 @@ const actions = {
           resolve()
         })
         .catch((error) => {
-          reject(error)
+          console.error(error)
         })
     })
   },

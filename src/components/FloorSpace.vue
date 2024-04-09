@@ -14,7 +14,6 @@
                 </div>
               </template>
               <template #content>
-                <!-- <p> Click on a room or desk to check time availability:</p> -->
                 <p> Click on a space to check time availability:</p>
                 <hr> 
                 <div 
@@ -76,21 +75,16 @@
       try{
         const spacesPromise = http_helper.get('spaces') 
         const floorsPromise = http_helper.get('spaces/get_floors')
-        const [spacesResponse,floorsResponse] = await Promise.all([spacesPromise, floorsPromise])  
+        const [ spacesResponse, floorsResponse ] = await Promise.all([ spacesPromise, floorsPromise ])  
         this.spaces_data = spacesResponse.data
         this.floors_data = floorsResponse.data
       } catch (error){
         console.error(error)
       }
-    },
-    methods: {
-      onGetInfo(){
-      }
     }
   }
   </script>
   
-  <!-- Add "scoped" attribute to limit CSS to this component only -->
   <style lang="scss" scoped>
   a {
     all: unset;

@@ -1,32 +1,27 @@
 <template>
     <div class="nav-bar">
-        <div class="left-nav">
-            <std-button title="Home" button-type="nav-button"></std-button>
+        <div>
+            <router-link to="/"><std-button title="Home" button-type="nav-button"></std-button></router-link>
         </div>
-        <div class="left-nav">
-            <router-link to="/"><std-button title="Available Spaces" button-type="nav-button"/></router-link>            
+        <div>
+            <router-link to="/available-spaces"><std-button title="Available Spaces" button-type="nav-button"/></router-link>            
         </div>
-        <div class="left-nav">
+        <div>
             <router-link v-if="getIfUserAdmin" to="/edit-spaces"><std-button title="Admin Portal" button-type="nav-button"/></router-link>           
         </div>
-        <div class="icon" @click="toggleDropdown()">
-            <img :src="`chevron-down.svg`">
-        </div>
-        <div class="account-box"> 
-        <span class="acc">Hello, Test</span>
-        <std-button 
-            title="Account Settings" 
-            @click="toggleDropdown()" 
-            button-type="account-button"
-        >
-        </std-button>
-            <div v-if="showDropdown" class="dropdown">
-                <std-button title="Settings" @click="settings()" button-type="drop-down"/>
-                <std-button title="Logout" @click="logoutUser()" button-type="drop-down"/>
-            </div>
-        </div>
-        <div class="icon">
-            <img :src="`user.svg`">  
+        <div class="dropdown">
+            <button 
+                class="btn btn-secondary dropdown-toggle" 
+                type="button" 
+                data-bs-toggle="dropdown" 
+                aria-expanded="false" 
+            >
+            <img :src="userIcon"> {{ username }}
+            </button>
+            <ul class="dropdown-menu">
+                <li><router-link to='/settings'><std-button title="Settings" button-type="drop-down"/></router-link></li>
+                <li><std-button title="Logout" @click="logoutUser()" button-type="drop-down"/></li>
+            </ul>
         </div>
     </div>
     <router-view/>
@@ -44,20 +39,17 @@ export default {
     },
     data() {
         return {
-            showDropdown: false
+            userIcon: require('@/assets/user.svg'),
         }
     },
     computed: {
-        ...mapGetters(["getIfUserAdmin"])
+        ...mapGetters(["getIfUserAdmin", "getUserName"]),
+        username() {
+          return this.getUserName
+        }
     },
     methods: {
         ...mapActions(["logoutUser"]),
-        toggleDropdown() {
-            this.showDropdown = !this.showDropdown
-        },
-        goToAdminPortal(){
-
-        }
     }
 }
 </script>
@@ -69,24 +61,29 @@ export default {
     height: 65px;
     padding: 10px;
     font-family: 'Open Sans', sans-serif;
+    display: flex;
+    align-items: center;
 }
-.nav-bar a{
+.nav-bar a {
     text-decoration: none;
 }
-.left-nav{
-    float: left;
-    text-decoration: none;
+
+.btn {
+  background-color: $color-primary--700 !important;
+  color: white !important;
+  border-width: 0;
+  font-family: 'Open Sans', sans-serif !important;
+  font-weight: 900;
 }
-.account-box{
-    float: right;
+.dropdown-item{
+  background-color: $color-primary--700;
+  color: white !important;
 }
-.acc{
-    color: $color-primary--100;
-    font-size: small;
+.dropdown-menu{
+  background-color: $color-primary--700;
 }
-.icon{
-    float: right;
-    padding: 5px;
+.dropdown{
+  margin-left: auto !important;
 }
 
 </style>

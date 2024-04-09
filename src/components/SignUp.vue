@@ -3,63 +3,73 @@
         <h1 class="sm-title">Two Barrels Space Scheduler</h1>
         <div class="sm-card">
             <div>
-                <h3>Login!</h3>
-                <form @submit="loginOrSignup" class="login-form">
+                <h3>Sign Up!</h3>
+                <div @submit="loginOrSignup" class="login-form">
                     <input class="login-form-entry" type="text" v-model="email" placeholder="Email" />
-                    <br />
                     <input class="login-form-entry" type="password" v-model="password" placeholder="Password" />
                     <br />
-                    <span v-if="signInError" class="warning-message">Invalid Username or Password</span>
-                    <input @click="type = 'Login'" type="submit" value="Login" class="form-submit" />
-                    <input type="submit" value="Sign up" class="form-submit" />
-                </form>
+                    <input class="login-form-entry" type="password" v-model="rePassword" placeholder="Re-enter Password" />
+                    <br />
+                    <span v-if="isError" class="warning-message">Error ensure passwords match</span>
+                    <span v-if="isError" class="warning-message">Invalid User Data</span>
+                    <std-button 
+                      title="Create Account"
+                      buttonType="primary-default"
+                      @click="signUp()"
+                    />
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import { navigateToRoute } from "@/services/router-helper"
 import "@/store/index.js"
 import { mapActions, mapGetters } from 'vuex'
+import StdButton from '@/components/StdButton.vue'
 export default {
-    name: "SessionManager",
-    computed: {
-        ...mapGetters(["getAuthToken", "getUserEmail", "getUserID", "isLoggedIn", "signInError"])
-    },
-    data() {
+  name: "SignUp",
+  components: {
+    StdButton
+  },
+  data() {
       return {
-        email: "",
-        password: "",
-        type: "",
+        email: '',
+        password: '',
+        rePassword: '',
+        isError: false
+      }
+  },
+  computed: {
+      ...mapGetters(["signInError"])
+  },
+  methods: {
+    ...mapActions(["registerUser"]),
+    signUp() {
+      if (this.validateInfo) {
+        let data = {
+          user: {
+            email: this.email,
+            password: this.password
+          },
+        }
+        this.registerUser(data)
+        this.resetData()
+      } else {
+        this.signInError = true
       }
     },
-    methods: {
-        ...mapActions(["registerUser", "loginUser", "logoutUser"]),
-        loginOrSignup(event) {
-          event.preventDefault()
-          if(this.type === "Login") {this.onLogin()}
-          else {this.onSignUp()}
-        },
-        onSignUp() {
-          navigateToRoute('sign-up')
-        },
-        onLogin() {
-          let data = {
-              user: {
-                  email: this.email,
-                  password: this.password,
-              },
-          };
-          this.loginUser(data)
-          this.resetData()
-        },
-        resetData() {
-            this.email = ""
-            this.password = ""
-            this.type = ""
-        },
+    resetData() {
+      this.email = ""
+      this.password = ""
+      this.type = ""
     },
+    validateInfo() {
+      return this.password === this.rePassword &&
+        this.password &&
+        this.email
+    }
+  }
 }
 </script>
 
