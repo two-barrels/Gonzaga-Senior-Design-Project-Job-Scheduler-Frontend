@@ -17,6 +17,7 @@
 import { DayPilot, DayPilotCalendar, DayPilotNavigator } from '@daypilot/daypilot-lite-vue'
 import http from '@/services/http-helper.js'
 import date from '@/services/curr-date-helper.js'
+//import wh from '@/services/working-hrs-helper.js'
 
 export default {
   name: 'CalendarComp',
@@ -95,7 +96,7 @@ export default {
         await http.post(
           'reservations', {
             space_id: this.space_id, 
-            user_id: 101, 
+            user_id: this.user_id, 
             start_time: blockRange.result["start"]["value"], 
             end_time: blockRange.result["end"]["value"],
             text: "Blocked off by admin",
@@ -114,6 +115,33 @@ export default {
         return (start >= existingStart && start <= existingEnd) ||
             (end >= existingStart && end <= existingEnd)
       })
+    },
+
+    workingHrsCheck(start, end) {
+      const startTime = start.charAt(11) + start.charAt(12)
+      const endTime = end.charAt(11) + end.charAt(12)
+      const startDay = new Date(start)
+      const endDay = new Date(end)
+      const workHrs = ['09', '10', '11', '12', '13', '14', '15', '16', '17']
+      const workDays = [1, 2, 3, 4, 5]
+
+      if ((workHrs.includes(startTime) && workHrs.includes(endTime)) &&
+          (workDays.includes(startDay.getDay()) && workDays.includes(endDay.getDay()))) {
+        return true
+      }
+      else {
+        return false
+      }
+    },
+
+    pastCheck(start, end) {
+      const currDateTime = new Date()
+      if (start < currDateTime.getTime() || end < currDateTime.getTime()) {
+        return true
+      }
+      else {
+        return false
+      }
     },
 
     initCalendar() {
@@ -135,11 +163,11 @@ export default {
 
     initContextMenu() {
       return new DayPilot.Menu([
-        // dev purposes
+        // //dev purposes
         // {
         //   text: "Show event ID",
         //   onClick: events => {
-        //     console.log(events.source.data["id"])
+        //     console.log(events.source.data["start"])
         //   }
         // },
         {
@@ -162,7 +190,7 @@ export default {
         http.delete(
           `reservations/${events.source.data["id"]}`, {
             space_id: this.space_id, 
-            user_id: 101, 
+            user_id: this.user_id, 
             start_time: events.source.data["start"], 
             end_time: events.source.data["end"]
           }
@@ -177,6 +205,17 @@ export default {
     async handleTimeRangeSelected(args) {
       const startTime = args.start.getTime()
       const endTime = args.end.getTime()
+
+      if ((this.pastCheck(startTime, endTime))) {
+        args.preventDefault()
+        await DayPilot.Modal.alert("Error: Reservations cannot be made in the past.")
+        return
+      }
+      if (!(this.workingHrsCheck(args.start['value'], args.end['value']))) {
+        args.preventDefault()
+        await DayPilot.Modal.alert("Error: Reservations cannot be made outside of working hours.")
+        return
+      }
       if (this.overlapCheck(startTime, endTime)) {
         args.preventDefault()
         await DayPilot.Modal.alert("Error: Your reservation overlaps with an exisiting reservation")
@@ -199,7 +238,7 @@ export default {
           await http.post(
             'reservations', {
               space_id: this.space_id, 
-              user_id: 101, 
+              user_id: this.user_id, 
               start_time: args.start, 
               end_time: args.end,
               text: resName.result,
@@ -216,7 +255,15 @@ export default {
         {name: "Start Date/Time", id: "start", dateFormat: "M/d/yyyy", timeInterval: 30, type: "datetime"},
         {name: "End Date/Time", id: "end", dateFormat: "M/d/yyyy", timeInterval: 30, type: "datetime"}
       ]
-      const blockRange = await DayPilot.Modal.form(form)
+
+      const startTime = events.source.data['start']['value']
+      const endTime = events.source.data['end']['value']
+
+      const data = {
+        start: startTime,
+        end: endTime
+      }
+      const blockRange = await DayPilot.Modal.form(form, data)
 
       this.events = this.events.filter(event => event.id !== events.source.data["id"]);
       this.events.push({
@@ -226,11 +273,14 @@ export default {
         text: events.source.data["text"]
       })
 
+      console.log(blockRange.result["start"]["value"])
+      console.log(blockRange.result["end"]["value"])
+
       try {
         await http.put(
           `reservations/${events.source.data["id"]}`, {
             space_id: this.space_id, 
-            user_id: 101, 
+            user_id: this.user_id, 
             start_time: blockRange.result["start"]["value"], 
             end_time: blockRange.result["end"]["value"],
             text: events.source.data["text"],
