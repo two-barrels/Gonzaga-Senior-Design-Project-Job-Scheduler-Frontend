@@ -7,7 +7,7 @@
           <std-button @click="toggleWarnDelete()" 
             class="space-create-button"
             title = "Confirm" 
-            buttonType="primary-default"
+            buttonType="alert-default"
           />
           <std-button @click = "toggleWarnCancel()"
             title = "Cancel" 
@@ -17,205 +17,326 @@
       </div>
     </template>
   </Toast>
-  <Toast position="top-center" group="tc"></Toast>
-    <div v-if="showPopup" class="popup"> 
-        <SpacePopup :spaceData="popupSpaceDataHold" :floorData="floors_data" :showEditPage="showEditPage" 
-          @save-changes="saveChanges" 
-          @create-space="createSpace" 
-          @close-popup="closePopup" 
-          @create-space-pop-up="createSpacePopUp"> 
-        </SpacePopup>
-    </div>
-    <div class="row-buttons">
-      <std-button @click="createSpacePopUp()" 
-        class="space-create-button"
-        title = "Create Space" 
-        buttonType="primary-default"
-      />
-      <std-button @click="createFloorPopUp()"
-        title = "Create Floor" 
-        buttonType="primary-default"
-      />
-    </div>
-    <div v-if="showPopupFloor" class="popup"> 
-      <FloorPopup
-          @close-popup="closePopupFloor"> 
-      </FloorPopup>
-    </div>
-    <div class = "drop-down">
-      <vue-collapsible-panel-group>
-      <vue-collapsible-panel :expanded="false" v-for="(val, idx) in floors_data" :key="idx" >
-      <template #title>
-        <div class="displayFloors">
-          Floor {{ val.floor_id }}
+  <Toast position="top-center" group="ac">
+    <template #message>
+      <div class ="warning">
+        <p> Are you sure you want to remove {{popupFloorDataHold.floor_name }}?</p><br>
+        <div class="row-buttons">
+          <std-button @click="toggleWarnDeleteFloor()" 
+            class="space-create-button"
+            title = "Confirm" 
+            buttonType="alert-default"
+          />
+          <std-button @click = "toggleWarnCancelFloor()"
+            title = "Cancel" 
+            buttonType="primary-default"
+          /> 
         </div>
-        {{floorName}}
-      </template>
-      <template #content>
-        <p> Click on a room or desk to edit </p>
-        <div 
-          class="spaces-buttons"
-          v-for="(value, index) in spaces_data"
-          :key="index"
-        >
-        <div v-if="val.floor_id == value.floor_id" class="ind-floor">
-          <div class = "space">
-            <std-button @click="openPopup(value, index)" 
-              class="edit"
-              title = "Edit" 
-              buttonType="primary-default"
-            />
-            <std-button @click="createWarningToast(value)"
-              class="delete space-create-button"
-              title = "Delete" 
-              buttonType="primary-default"
-            />
-            <h1> {{ value.spaces_name }}</h1>
-            <p>Space Description: {{ value.description }}</p>
-            <p>Max Occupancy: {{ value.max_occupancy }}</p>
+      </div>
+    </template>
+  </Toast>
+  <Toast position="top-center" group="tc" />
+  <div v-if="showPopup" class="popup"> 
+      <space-popup
+        :space-data="popupSpaceDataHold"
+        :floor-data="floor_data"
+        :show-edit-page="showEditPage"
+        @save-changes="saveChanges"
+        @create-space="createSpace"
+        @close-popup="closePopup"
+        @create-space-pop-up="createSpacePopUp"
+      />
+  </div>
+  <div class="row-buttons">
+    <std-button
+      @click="createSpacePopUp()" 
+      class="space-create-button"
+      title = "Create Space" 
+      buttonType="primary-default"
+    />
+    <std-button
+      @click="createFloorPopUp()"
+      title = "Create Floor" 
+      buttonType="primary-default"
+    />
+  </div>
+  <div v-if="showPopupFloor" class="popup"> 
+    <FloorPopup
+      :floorData="popupFloorDataHold"
+      :showEditPage="showEditPage"
+      :buildingsData="buildings"
+      @save-floor-changes="saveFloorChanges"
+      @create-floor="createFloor"
+      @close-popup-floor="closePopupFloor"
+    />
+  </div>
+  <div class="drop-down">
+    <vue-collapsible-panel-group>
+      <vue-collapsible-panel :expanded="false" v-for="(val, idx) in floor_data" :key="idx" >
+        <template #title>
+          <div class="displayFloors">
+            {{ val.floor_name }}
           </div>
-        </div>
-        </div>
-      </template>
+          {{floorName}}
+        </template>
+        <template #content>
+          <div class="row-buttons">
+            <std-button @click="openFloorPopup(val, idx)"
+              class="space-create-button"
+              title="Edit Floor"
+              buttonType="primary-default"
+            />
+            <std-button @click="createWarningToastFloor(val)"
+              class="delete space-create-button"
+              title="Delete Floor"
+              buttonType="alert-default"
+            />
+          </div>
+          <p> Click on a room or desk to edit </p>
+          <div 
+            class="spaces-buttons"
+            v-for="(value, index) in val.spaces"
+            :key="index"
+          >
+            <div
+              v-if="val.id == value.floor_id"
+              class="ind-floor"
+            >
+              <div class = "space">
+                <std-button
+                  @click="openPopup(value, index, idx)" 
+                  class="edit"
+                  title = "Edit" 
+                  buttonType="primary-default"
+                />
+                <std-button
+                  @click="createWarningToast(value)"
+                  class="delete space-create-button"
+                  title = "Delete" 
+                  buttonType="alert-default"
+                />
+                <h1>{{ value.spaces_name }}</h1>
+                <p>Space Description: {{ value.description }}</p>
+                <p>Max Occupancy: {{ value.max_occupancy }}</p>
+              </div>
+            </div>
+          </div>
+        </template>
       </vue-collapsible-panel>
-      </vue-collapsible-panel-group>
-    </div>
+    </vue-collapsible-panel-group>
+  </div>
 </template>
   
 <script>
-  import {
+import {
+  VueCollapsiblePanelGroup,
+  VueCollapsiblePanel,
+} from '@dafcoe/vue-collapsible-panel'
+import '@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css'
+import { useToast } from 'primevue/usetoast'
+import Toast from 'primevue/toast'
+import vClickOutside from 'v-click-outside'
+import SpacePopup from '@/components/EditSpacePopUp.vue'
+import FloorPopup from '@/components/EditFloorPopUp.vue'
+import StdButton from "@/components/StdButton.vue"
+import _ from 'lodash'
+import SpaceService from '@/services/space-service'
+import FloorService from '@/services/floor-service'
+import BuildingService from '@/services/building-service'
+
+export default {
+  name: 'EditFloorSpace',
+  data() {
+    return { 
+        dummySpace: { spaces_name: 'Room', floor_id: 1, max_occupancy: 1, description: "Description"},
+        popupSpaceData: {},
+        popupSpaceDataHold: {},
+        spaces_data: [],
+        floor_data: [],
+        popupFloorData: {},
+        popupFloorDataHold:{},
+        dummyFloor: {floor_name: 'Floor', building_id: 1},
+        buildings: [],
+        floor_numbers:[],
+        showPopup: false,
+        showPopupFloor: false,
+        toast:useToast(),
+        visible:false,
+        showEditPage: true,
+        spaceIdx: null,
+        floorIdx: null,
+        loaded: false
+    } 
+  },
+  directives: {
+    clickOutside: vClickOutside.directive
+  },
+  props: {
+    floorName: String
+  }, 
+  components: {
     VueCollapsiblePanelGroup,
     VueCollapsiblePanel,
-  } from '@dafcoe/vue-collapsible-panel'
-  import '@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css'
-  import { useToast } from 'primevue/usetoast'
-  import Toast from 'primevue/toast'
-  import vClickOutside from 'v-click-outside'
-  import http from '@/services/http-helper'
-  import SpacePopup from '@/components/EditSpacePopUp.vue'
-  import FloorPopup from '@/components/EditFloorPopUp.vue'
-  import StdButton from "@/components/StdButton.vue"
-
-
-  export default {
-    name: 'edit-floor-space',
-    data() {
-      return { 
-          dummySpace: { spaces_name: 'Room', floor_id: 1, max_occupancy: 1, description: "Description"},
-          popupSpaceData: {},
-          popupSpaceDataHold: {},
-          spaces_data: [],
-          floors_data: [],
-          floor_numbers:[],
-          showPopup: false,
-          showPopupFloor: false,
-          toast:useToast(),
-          visible:false,
-          showEditPage: true,
-          idx: null
-      } 
-    },
-    directives: {
-      clickOutside: vClickOutside.directive
-    },
-    props: {
-      floorName: String
-    }, 
-    components: {
-      VueCollapsiblePanelGroup,
-      VueCollapsiblePanel,
-      Toast,
-      SpacePopup,
-      FloorPopup,
-      'std-button':StdButton
-    },
-    async mounted(){
+    Toast,
+    SpacePopup,
+    FloorPopup,
+    StdButton
+  },
+  async mounted(){
+    try{
+      const spacesResponse = await SpaceService.getAll()
+      const floorResponse = await FloorService.getAll()
+      const buildingsResponse = await BuildingService.getAll()
+      this.buildings = buildingsResponse.data
+      this.floor_data = floorResponse.data
+      this.spaces_data = spacesResponse.data
+      this.loaded = true
+    }
+    catch(error){
+      console.error(error)
+    }
+  },
+  methods: {
+    async createSpace(spaceOutline){
+      console.log(this.floor_data)
+      this.popupSpaceData = _.cloneDeep(spaceOutline)
       try{
-        const spacesPromise = http.get('spaces')
-        const floorsPromise = http.get('spaces/get_floors')
-        const [spacesResponse, floorsResponse] = await Promise.all([spacesPromise, floorsPromise])
-        this.spaces_data = spacesResponse.data
-        this.floors_data = floorsResponse.data
+        const response = await SpaceService.create(this.popupSpaceData)
+        this.popupSpaceData.id = response.data.id
+        this.floor_data.find((floor) => floor.id === this.popupSpaceData.floor_id).spaces.push(this.popupSpaceData)
+        console.log(this.floor_data)
+        this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'})
       }
       catch(error){
         console.error(error)
       }
     },
-    methods: {  
-      async createSpace(retSpaceData){
-        this.popupSpaceData = retSpaceData
-        try{
-          const response = await http.post('spaces/', this.popupSpaceData)
-          this.popupSpaceData.id = response.data.id
-          this.spaces_data.push(this.popupSpaceData)
-          this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'})
-        }
-        catch(error){
-          console.error(error)
-        }
-      },
-      createSpacePopUp(){
-        this.showEditPage = false
-        this.popupSpaceDataHold = this.dummySpace
-        this.showPopup = !this.showPopup
-      },   
-      createFloorPopUp(){
-        this.showPopupFloor = !this.showPopupFloor
-      }, 
-      closePopup() {
-        this.showEditPage = true
-        this.idx = null
-        this.popupSpaceDataHold = null
-        this.showPopup = !this.showPopup
-      },
-      closePopupFloor() {
-        this.showPopupFloor = !this.showPopupFloor
-      },
-      openPopup(spaceData, idex) {
-        this.showEditPage = true
-        this.idx = idex
-        this.popupSpaceDataHold = spaceData
-        this.showPopup = !this.showPopup
-      },
-      saveChanges(retSpaceData){
-        this.popupSpaceDataHold = retSpaceData
-        http.put(`spaces/${this.popupSpaceDataHold.id}`, this.popupSpaceDataHold)
-          .then(response => {
-              console.log(response.data)
-              this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'})
-              this.spaces_data[this.idx] = this.popupSpaceDataHold
-              this.closePopup()
-          })
-          .catch(error => {
-              console.error(error)
-              this.toast.add({severity:'error', summary:'Error saving changes', life:2000, group:'tc'})
-          })
-      },
-      createWarningToast(spaceData) {
-        this.popupSpaceDataHold = spaceData;
-        this.toast.add({ severity: 'warn', summary: 'Delete', group: 'bc'})
-      },
-      toggleWarnDelete(){
-        this.popupSpaceData = this.popupSpaceDataHold
-        http.delete(`spaces/${this.popupSpaceData.id}`)
-          .then(response => {
-              console.log(response.data);
-              this.spaces_data = this.spaces_data.filter(item => item.id !== this.popupSpaceData.id)
-              this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'})
-          })
-          .catch(error => {
-              console.error(error);
-              this.toast.add({severity:'error', summary:'Error saving changes', life:2000, group:'tc'})
-          })
-        this.toast.removeGroup('bc')
-      },
-      toggleWarnCancel(){
-        this.toast.removeGroup('bc')
-        this.visible = false;
+    async createFloor(floorOutline){
+      this.popupFloorData = _.cloneDeep(floorOutline)
+      try{
+        const response = await FloorService.create(this.popupFloorData)
+        this.popupFloorData.id = response.data.id
+        this.floor_data.push(this.popupFloorData)
+        this.toast.add({severity:'success', summary: 'Changes saved successfully', life: 2000, group:'tc'})
+        this.closePopupFloor()
       }
+      catch(error){
+        console.error(error)
+      }
+    },
+    createSpacePopUp(){
+      this.showEditPage = false
+      this.popupSpaceDataHold = _.cloneDeep(this.dummySpace)
+      this.showPopup = !this.showPopup
+    },   
+    createFloorPopUp(){
+      this.showEditPage =false
+      this.popupFloorDataHold = _.cloneDeep(this.dummyFloor)
+      this.showPopupFloor = !this.showPopupFloor
+    }, 
+    closePopup() {
+      this.showEditPage = true
+      this.spaceIdx = null
+      this.popupSpaceDataHold = null
+      this.showPopup = !this.showPopup
+    },
+    closePopupFloor() {
+      this.showEditPage = true
+      this.floorIdx = null
+      this.popupFloorDataHold = null
+      this.showPopupFloor = !this.showPopupFloor
+    },
+    openPopup(spaceData, idex, floorIdx) {
+      this.showEditPage = true
+      this.spaceIdx = idex
+      this.floorIdx = floorIdx
+      this.popupSpaceDataHold = _.cloneDeep(spaceData)
+      this.showPopup = !this.showPopup
+    },
+    openFloorPopup(floorData, idx) {
+      this.showEditPage = true
+      this.floorIdx = idx
+      this.popupFloorDataHold = _.cloneDeep(floorData)
+      this.showPopupFloor = !this.showPopupFloor
+    },
+    async saveChanges(spaceOutline){
+      this.popupSpaceDataHold = spaceOutline
+      try {
+        await SpaceService.save(this.popupSpaceDataHold.id, this.popupSpaceDataHold)
+        this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'})
+        this.floor_data.forEach((floor) => floor.spaces = floor.spaces.filter(space => space.id !== this.popupSpaceDataHold.id))
+        const floorOfSavedSpace = this.floor_data.find((floor) => floor.id === this.popupSpaceDataHold.floor_id)
+        floorOfSavedSpace.spaces[this.spaceIdx] = this.popupSpaceDataHold
+        this.closePopup()
+      } catch (e) {
+        console.error(e)
+        this.toast.add({severity:'error', summary:'Error saving changes', life:2000, group:'tc'})
+      }
+    },
+    async saveFloorChanges(floorOutline){
+      this.popupFloorDataHold = floorOutline
+      try {
+        await FloorService.save(this.popupFloorDataHold.id, this.popupFloorDataHold)
+        this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'})
+        this.floor_data[this.floorIdx] = this.popupFloorDataHold
+        this.closePopupFloor()
+      } catch (e) {
+        console.error(e)
+        this.toast.add({severity:'error', summary:'Error saving changes', life:2000, group:'tc'})
+      }
+    },
+    createWarningToast(spaceData) {
+      this.popupSpaceDataHold = spaceData;
+      this.toast.add({ severity: 'warn', summary: 'Delete', group: 'bc'})
+    },
+    checkSpacesinFloors(){
+      for (let i =0; i < this.floor_data.length; i++){
+        for (let j=0; j<this.floor_data[i].spaces.length; j++){
+          return this.floor_data[i].spaces[j] !== this.popupSpaceData.id
+        }
+      }
+    },
+    async toggleWarnDelete(){
+      this.popupSpaceData = this.popupSpaceDataHold
+      try {
+        await SpaceService.delete(this.popupSpaceData.id)
+        const floorOfDeletedSpace = this.floor_data.find((floor) => floor.id === this.popupSpaceData.floor_id)
+        floorOfDeletedSpace.spaces = floorOfDeletedSpace.spaces.filter(spaces => spaces.id !== this.popupSpaceData.id)
+        this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'})
+      } catch (e) {
+        console.error(e)
+        this.toast.add({severity:'error', summary:'Error saving changes', life:2000, group:'tc'})
+      }
+      this.toast.removeGroup('bc')
+    },
+    
+    toggleWarnCancel(){
+      this.toast.removeGroup('bc')
+      this.visible = false;
+    },
+    createWarningToastFloor(floorData) {
+      this.popupFloorDataHold = floorData
+      this.toast.add({ severity: 'warn', summary: 'Delete', group: 'ac'})
+    },
+    async toggleWarnDeleteFloor(){
+      this.popupFloorData = _.cloneDeep(this.popupFloorDataHold)
+      try {
+        await FloorService.delete(this.popupFloorData.id)
+        this.floor_data = this.floor_data.filter(item => item.id !== this.popupFloorData.id)
+        this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'})
+      } catch (e) {
+        console.log(e)
+        this.toast.add({severity:'error', summary:'Error saving changes. Remove spaces within first.', life:2000, group:'tc'})
+      }
+      this.toast.removeGroup('ac')
+    },
+    toggleWarnCancelFloor(){
+      this.toast.removeGroup('ac')
+      this.visible = false;
     }
   }
-  </script>
+}
+</script>
 
   <style lang="scss" scoped>
   #title, #content {
@@ -263,14 +384,15 @@
     user-select: none;
   }
 .popup {
-    width: 600px;
-    height: 600px;
+    width: 450px;
+    height: fit-content;
     background-color: rgb(125, 175, 175);
     color: #fff;
-    text-align: center;
+    text-align: left;
     border-radius: 10px;
-    padding: 8px 0;
+    padding: 10px;
     position: fixed;
+    top: 0;
     z-index: 100;
     margin-right: 50%;
     margin-left: 37%;

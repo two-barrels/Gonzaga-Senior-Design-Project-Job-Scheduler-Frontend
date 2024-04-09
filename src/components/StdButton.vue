@@ -117,7 +117,7 @@ export default {
         cursor: pointer;
     }
 }
-.upsell-default {
+.upsell-previous {
     width: fit-content;
     padding: 14px 40px;
     background-color: white;
@@ -130,7 +130,7 @@ export default {
     }
 }
 
-.alert-default {
+.alert- {
     width: fit-content;
     padding: 14px 40px;
     background-color: white;
