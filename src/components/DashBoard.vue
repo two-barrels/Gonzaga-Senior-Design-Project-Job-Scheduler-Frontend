@@ -1,6 +1,6 @@
 <template>
   <h3 class="floor-space-name">
-      Dashboard
+      Home Page
   </h3>
   <div v-if="reservations_data.length == 0">
     <p>No events to display</p>
@@ -13,12 +13,12 @@
       class="card"
     >
       <div class="card-header">
-        {{printDate(reservation.start_time)}}
+        <span>{{ reservation.text }}, {{printDate(reservation.start_time)}}</span>
       </div>
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
         <p><b>Space Name:</b> {{ reservation.space.spaces_name }} </p>
-        <p><b>Location:</b> {{ reservation.space.floor.floor_name}}</p>
+        <p><b>Location:</b> {{ this.floors_hash[reservation.space.floor_id] }}</p>
         <p><b>Start Time: </b> {{ printTime(reservation.start_time) }}</p>
         <p><b>End Time:</b> {{ printTime(reservation.end_time) }}</p>
         </li>
@@ -34,9 +34,17 @@ export default {
   name: 'dash-board',
   components: {
   },
+  computed: {
+    floors_hash() {
+      const hash = {};
+      this.floors_data.forEach(floor => { hash[floor.id] = floor.floor_name })
+      return hash
+    }
+  },
   data(){
     return {
-      reservations_data: []
+      reservations_data: [],
+      floors_data: []
     }
   },
   async mounted(){
@@ -46,6 +54,13 @@ export default {
     } catch (error){
       console.error(error)
     }
+    try{
+      const floorsResponse = await Reservations.get('floors')
+      this.floors_data = floorsResponse.data
+    } catch (error){
+      console.error(error)
+    }
+    
   },
   methods: {
     printDate(dateString){
@@ -53,6 +68,9 @@ export default {
     },
     printTime(dateString){
       return new Date(dateString).toLocaleTimeString()
+    },
+    printReservations(){
+      console.log(this.reservations_data)
     }
   }
 }
@@ -67,11 +85,13 @@ export default {
 
 .reservation-div  {
   max-height: 75vh;
+  // display: flex;
 }
 
 .card {
-  width: 50%;
-  margin-left: 1%;
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>
   

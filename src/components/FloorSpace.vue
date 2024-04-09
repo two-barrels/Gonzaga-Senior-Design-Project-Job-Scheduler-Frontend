@@ -1,5 +1,5 @@
 <template>
-    <div class="drop-down" >
+    <div class="drop-down">
       <vue-collapsible-panel-group>
         <div>
           <vue-collapsible-panel 
@@ -10,18 +10,22 @@
           >
               <template #title> 
                 <div class="floor-title">
-                  Floor {{ floor.floor_id }} 
+                  {{ floor.floor_name }} 
                 </div>
               </template>
               <template #content>
-                <p> Click on a space to check time availability:</p>
-                <hr> 
+                <div v-if="!checkForSpaces(floor.id)">
+                  <p> No Spaces Available to Reserve</p>   
+                </div>
+                <div v-else>
+                  <p>Click on a Space to check time availability: </p>
+                  <hr>
                 <div 
                   class="spaces-buttons"
                   v-for="(value, index) in spaces_data"
                   :key="index"
                 >
-                  <div v-if="floor.floor_id == value.floor_id" class="ind-floor">
+                  <div v-if="floor.id == value.floor_id" class="ind-floor">
                     <div>
                       <h2>{{ value.spaces_name }}</h2>
                       <p>Max Occupancy: {{ value.max_occupancy }} </p> 
@@ -35,6 +39,7 @@
                       </router-link>
                     </div>
                   </div>
+                 </div>
                 </div>
               </template>
           </vue-collapsible-panel>             
@@ -64,6 +69,13 @@
       VueCollapsiblePanel,
       'std-button':StdButton
     },
+    computed: {
+      floors_hash() {
+        const hash = {};
+        this.floors_data.forEach(floor => { hash[floor.id] = floor.floor_name })
+        return hash
+      }
+    },
     data(){
       return{
         spaces_data: [],
@@ -74,12 +86,21 @@
     async mounted(){
       try{
         const spacesPromise = http_helper.get('spaces') 
-        const floorsPromise = http_helper.get('spaces/get_floors')
+        const floorsPromise = http_helper.get('floors')
         const [ spacesResponse, floorsResponse ] = await Promise.all([ spacesPromise, floorsPromise ])  
         this.spaces_data = spacesResponse.data
         this.floors_data = floorsResponse.data
       } catch (error){
         console.error(error)
+      }
+    },
+    methods: {
+      printFloors(){
+        console.log(this.spaces_data)
+        console.log(this.floors_data)
+      },
+      checkForSpaces(floorId){
+        return this.spaces_data.some(space => space.floor_id == floorId)
       }
     }
   }
