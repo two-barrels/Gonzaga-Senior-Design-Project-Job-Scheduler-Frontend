@@ -384,13 +384,13 @@ export default {
     user-select: none;
   }
 .popup {
-    width: 600px;
+    width: 450px;
     height: fit-content;
     background-color: rgb(125, 175, 175);
     color: #fff;
-    text-align: center;
+    text-align: left;
     border-radius: 10px;
-    padding: 8px 0;
+    padding: 10px;
     position: fixed;
     top: 0;
     z-index: 100;

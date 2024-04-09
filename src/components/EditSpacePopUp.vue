@@ -95,80 +95,32 @@ export default {
   overflow-x: hidden;
   overflow-y: auto;
 }
-.exit1{
-  margin-left: 55%;
-  margin-top: -8.3%;
-}
-.exit{
-  margin-left: 60%;
-  margin-top: -8.3%;
-}
-.save{
-  margin-left: 23%;
-  margin-top: 5%;
-}
-.labels{
-  margin-left:-45%;
-}
-.name{
-  margin-left:-49%;
-}
-.flr{
-  margin-left:-49.5%;
-}
-.det{
-  margin-left:-48.5%;
-}
 .in_det{
-  margin-left:2%;
   &:focus{
     padding: 2px;
     border: 4px solid rgb(0, 160, 160);
-    border-radius: 8%;
-  }
-  &:hover{
-    padding: 2px;
-    border: 4px solid rgb(0, 160, 160);
-    border-radius: 8%;
+    border-radius: 2%;
   }
 }
 .in_flr{
-  margin-left:-59%;
   &:focus{
     padding: 2px;
     border: 4px solid rgb(0, 160, 160);
-    border-radius: 8%;
-  }
-  &:hover {
-    padding: 2px;
-    border: 4px solid rgb(0, 160, 160);
-    border-radius: 8%;
+    border-radius: 2%;
   }
 }
 .in_max{
-  margin-left:-35%;
   &:focus{
     padding: 2px;
     border: 4px solid rgb(0, 160, 160);
-    border-radius: 8%;
-  }
-  &:hover {
-    padding: 2px;
-    border: 4px solid rgb(0, 160, 160);
-    border-radius: 8%;
+    border-radius: 2%;
   }
 }
 .in_name{
-  margin-left:-36.5%;
   &:focus{
     padding: 2px;
     border: 4px solid rgb(0, 160, 160);
-    border-radius: 8%;
-  }
-  &:hover {
-    padding: 2px;
-    border: 4px solid rgb(0, 160, 160);
-    border-radius: 8%;
+    border-radius: 2%;
   }
 }
 </style>

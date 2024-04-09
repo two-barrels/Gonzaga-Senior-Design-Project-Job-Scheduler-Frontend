@@ -85,28 +85,51 @@
   
 </script>
 <style lang="scss">
-  .exit2{
-    margin-left:40%;
-    margin-top: 20.3%;
-  }  
-  .exit{
-  margin-left: 60%;
-  margin-top: -8.3%;
+.scroll{
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.h3{
+  text-align:center;
+}
+.std-button{
+  display: inline;
+}
+.save{
+  display: inline-block;
+}
+.exit{
+  display: inline;
+}
+.exit1{
+  display: inline;
+}
+.in_det{
+  &:focus{
+    padding: 2px;
+    border: 4px solid rgb(0, 160, 160);
+    border-radius: 2%;
   }
-  .save{
-    margin-left: 23%;
-    margin-top: 5%;
+}
+.in_flr{
+  &:focus{
+    padding: 4px;
+    border: 4px solid rgb(0, 160, 160);
+    border-radius: 2%;
   }
-  .labels{
-    margin-left:5%;
+}
+.in_max{
+  &:focus{
+    padding: 2px;
+    border: 4px solid rgb(0, 160, 160);
+    border-radius: 2%;
   }
-  .name{
-    margin-left:9%;
+}
+.in_name{
+  &:focus{
+    padding: 2px;
+    border: 4px solid rgb(0, 160, 160);
+    border-radius: 2%;
   }
-  .flr{
-    margin-left:9.5%;
-  }
-  .det{
-    margin-left:5%;
-  }
+}
 </style>
