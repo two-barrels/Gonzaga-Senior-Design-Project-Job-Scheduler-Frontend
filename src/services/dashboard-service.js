@@ -11,7 +11,7 @@ export default {
     put(route, params) {
         return http.put(route, params)
     },
-    delete(id,params) {
-        return http.delete(`reservations/${id} }`, params)
+    delete(id) {
+        return http.delete(`reservations/${id}`)
     }
 }

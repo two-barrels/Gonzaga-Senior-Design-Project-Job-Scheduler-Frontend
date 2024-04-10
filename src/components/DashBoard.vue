@@ -1,28 +1,30 @@
 <template>
-  <h3 class="floor-space-name">
-      Home Page
-  </h3>
-  <div v-if="reservations_data.length == 0">
-    <p>No events to display</p>
-  </div>
-  <div v-else class="reservation-div overflow-auto">
-    <!-- <button @click="printReservations">Click me</button> -->
-    <div 
-      v-for="(reservation, idx) in reservations_data"
-      :key="idx"
-      class="card"
-    >
-      <div class="card-header">
-        <span>{{ reservation.text }}, {{printDate(reservation.start_time)}}</span>
+  <div v-if="loaded">
+    <h3 class="floor-space-name">
+        Home Page
+    </h3>
+    <div v-if="!areReservations">
+      <p>No events to display</p>
+    </div>
+    <div v-else class="reservation-div overflow-auto">
+      <!-- <button @click="printReservations">Click me</button> -->
+      <div 
+        v-for="(reservation, idx) in reservations_data"
+        :key="idx"
+        class="card"
+      >
+        <div class="card-header">
+          <span>{{ reservation.text }}, {{printDate(reservation.start_time)}}</span>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+          <p><b>Space Name:</b> {{ reservation.space.spaces_name }} </p>
+          <p><b>Location:</b> {{ this.floors_hash[reservation.space.floor_id] }}</p>
+          <p><b>Start Time: </b> {{ printTime(reservation.start_time) }}</p>
+          <p><b>End Time:</b> {{ printTime(reservation.end_time) }}</p>
+          </li>
+        </ul>
       </div>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item">
-        <p><b>Space Name:</b> {{ reservation.space.spaces_name }} </p>
-        <p><b>Location:</b> {{ this.floors_hash[reservation.space.floor_id] }}</p>
-        <p><b>Start Time: </b> {{ printTime(reservation.start_time) }}</p>
-        <p><b>End Time:</b> {{ printTime(reservation.end_time) }}</p>
-        </li>
-      </ul>
     </div>
   </div>
 </template>
@@ -39,28 +41,33 @@ export default {
       const hash = {};
       this.floors_data.forEach(floor => { hash[floor.id] = floor.floor_name })
       return hash
+    },
+    areReservations() {
+      return this.reservations_data && this.reservations_data.length > 0
     }
   },
   data(){
     return {
       reservations_data: [],
-      floors_data: []
+      floors_data: [],
+      loaded: false
     }
   },
-  async mounted(){
-    try{
+  async mounted() {
+    try {
       const reservationsResponse = await Reservations.get('dashboard')
       this.reservations_data = reservationsResponse.data
-    } catch (error){
+    } catch (error) {
       console.error(error)
     }
-    try{
+    try {
       const floorsResponse = await Reservations.get('floors')
       this.floors_data = floorsResponse.data
-    } catch (error){
+    } catch (error) {
       console.error(error)
     }
-    
+    console.log(this.reservations_data.length)
+    this.loaded = true
   },
   methods: {
     printDate(dateString){
