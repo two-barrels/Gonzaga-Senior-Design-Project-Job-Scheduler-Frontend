@@ -214,14 +214,8 @@ export default {
         if (resName.canceled) {
           return
         } 
-        calendar.events.add({
-          start: args.start,
-          end: args.end,
-          id: DayPilot.guid(),
-          text: resName.result
-        })
         try {
-          await http.post(
+          const response = await http.post(
             'reservations', {
               space_id: this.space_id,  
               start_time: args.start, 
@@ -229,9 +223,17 @@ export default {
               text: resName.result,
               admin_block: false
             })
+
+          calendar.events.add({
+            start: args.start,
+            end: args.end,
+            id: response.data.id,
+            text: resName.result
+          })
         } catch (error) {
           console.error('Error creating reservation:', error.message)
         }
+        
       }
     },
 
