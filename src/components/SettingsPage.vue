@@ -11,9 +11,7 @@
           buttonType="primary-default"
           @click="changeName()"
         />
-    </div>
-    <div>
-      <h4>Change Password</h4>
+        
     </div>
   </template>
   
@@ -60,6 +58,7 @@
       margin-top: 15px;
       padding-left: 1%;
       padding-right: 1%;
+      margin-bottom: 1%
     }
     .change-name{
       margin-left: 1%;

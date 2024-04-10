@@ -79,9 +79,9 @@ export default {
 <style lang="scss" scoped>
 .floor-space-name {
   margin-top: 15px;
-  padding-left: 1%;
-  padding-right: 1%;
-}
+  margin-left: 2.5%
+//    padding-left: 1%;
+ }
 
 .reservation-div  {
   max-height: 75vh;
