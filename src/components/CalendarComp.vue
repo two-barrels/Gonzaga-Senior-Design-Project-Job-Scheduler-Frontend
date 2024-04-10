@@ -256,13 +256,12 @@ export default {
       else if (!(this.workingHrsCheck(newRange.result['start']['value'], newRange.result['end']['value']))) {
         await DayPilot.Modal.alert("Error: Reservations cannot be made outside of working hours.")
       }
-      else if (this.overlapCheck(newRange.result["start"].getTime(), newRange.result["end"].getTime())) {
-        await DayPilot.Modal.alert("Error: Your reservation overlaps with an exisiting reservation")
-      }
       else if (newRange.result['start'].getTime() >= newRange.result['end'].getTime()) {
         await DayPilot.Modal.alert("Error: You entered an invalid range")
       }
-
+      else if (this.overlapCheck(newRange.result["start"].getTime(), newRange.result["end"].getTime())) {
+        await DayPilot.Modal.alert("Error: Your reservation overlaps with an exisiting reservation")
+      }
       else {
         this.events = this.events.filter(event => event.id !== events.source.data["id"]);
         this.events.push({
