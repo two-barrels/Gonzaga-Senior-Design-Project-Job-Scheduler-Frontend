@@ -200,12 +200,10 @@ export default {
       else if (!(this.workingHrsCheck(args.start['value'], args.end['value']))) {
         args.preventDefault()
         await DayPilot.Modal.alert("Error: Reservations cannot be made outside of working hours.")
-        
       }
       else if (this.overlapCheck(startTime, endTime)) {
         args.preventDefault()
         await DayPilot.Modal.alert("Error: Your reservation overlaps with an exisiting reservation")
-        
       }
       else {
         const resName = await DayPilot.Modal.prompt("Create a new reservation:", "Booked");
@@ -248,32 +246,45 @@ export default {
         start: startTime,
         end: endTime
       }
-      const blockRange = await DayPilot.Modal.form(form, data)
-      if (blockRange.canceled) {
+      const newRange = await DayPilot.Modal.form(form, data)
+      if (newRange.canceled) {
         return
-      } 
-
-      this.events = this.events.filter(event => event.id !== events.source.data["id"]);
-      this.events.push({
-        start: blockRange.result["start"]["value"],
-        end: blockRange.result["end"]["value"],
-        id: DayPilot.guid(),
-        text: events.source.data["text"]
-      })
-
-      try {
-        await http.put(
-          `reservations/${events.source.data["id"]}`, {
-            space_id: this.space_id, 
-            start_time: blockRange.result["start"]["value"], 
-            end_time: blockRange.result["end"]["value"],
-            text: events.source.data["text"],
-            admin_block: false
-          })
-      } catch (error) {
-        console.error('Error creating reservation:', error.message)
       }
-      this.calendar.update({events: this.events})
+      else if ((this.pastCheck(newRange.result["start"].getTime(), newRange.result["end"].getTime()))) {
+        await DayPilot.Modal.alert("Error: Reservations cannot be made in the past.")
+      }
+      else if (!(this.workingHrsCheck(newRange.result['start']['value'], newRange.result['end']['value']))) {
+        await DayPilot.Modal.alert("Error: Reservations cannot be made outside of working hours.")
+      }
+      else if (this.overlapCheck(newRange.result["start"].getTime(), newRange.result["end"].getTime())) {
+        await DayPilot.Modal.alert("Error: Your reservation overlaps with an exisiting reservation")
+      }
+      else if (newRange.result['start'].getTime() >= newRange.result['end'].getTime()) {
+        await DayPilot.Modal.alert("Error: You entered an invalid range")
+      }
+
+      else {
+        this.events = this.events.filter(event => event.id !== events.source.data["id"]);
+        this.events.push({
+          start: newRange.result["start"]["value"],
+          end: newRange.result["end"]["value"],
+          id: DayPilot.guid(),
+          text: events.source.data["text"]
+        })
+        try {
+          await http.put(
+            `reservations/${events.source.data["id"]}`, {
+              space_id: this.space_id, 
+              start_time: newRange.result["start"]["value"], 
+              end_time: newRange.result["end"]["value"],
+              text: events.source.data["text"],
+              admin_block: false
+            })
+        } catch (error) {
+          console.error('Error creating reservation:', error.message)
+        }
+        this.calendar.update({events: this.events})
+      }
     }
   },
   async mounted() {
