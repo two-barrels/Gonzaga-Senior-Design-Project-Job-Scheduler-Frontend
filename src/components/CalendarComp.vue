@@ -106,12 +106,14 @@ export default {
       this.calendar.update({events: this.events})
     },
 
-    overlapCheck(start, end) {
+    overlapCheck(start, end, id) {
       return this.events.some((item) => {
-        const existingStart = item.start.getTime()
-        const existingEnd = item.end.getTime()
-        return (start >= existingStart && start <= existingEnd) ||
-            (end >= existingStart && end <= existingEnd)
+        if(item.id !== id) {
+          const existingStart = item.start.getTime()
+          const existingEnd = item.end.getTime()
+          return (start >= existingStart && start <= existingEnd) ||
+              (end >= existingStart && end <= existingEnd)
+        }
       })
     },
 
@@ -201,7 +203,7 @@ export default {
         args.preventDefault()
         await DayPilot.Modal.alert("Error: Reservations cannot be made outside of working hours.")
       }
-      else if (this.overlapCheck(startTime, endTime)) {
+      else if (this.overlapCheck(startTime, endTime, null)) {
         args.preventDefault()
         await DayPilot.Modal.alert("Error: Your reservation overlaps with an exisiting reservation")
       }
@@ -259,7 +261,7 @@ export default {
       else if (newRange.result['start'].getTime() >= newRange.result['end'].getTime()) {
         await DayPilot.Modal.alert("Error: You entered an invalid range")
       }
-      else if (this.overlapCheck(newRange.result["start"].getTime(), newRange.result["end"].getTime())) {
+      else if (this.overlapCheck(newRange.result["start"].getTime(), newRange.result["end"].getTime(), events.source.data["id"])) {
         await DayPilot.Modal.alert("Error: Your reservation overlaps with an exisiting reservation")
       }
       else {
@@ -267,7 +269,7 @@ export default {
         this.events.push({
           start: newRange.result["start"]["value"],
           end: newRange.result["end"]["value"],
-          id: DayPilot.guid(),
+          id: events.source.data["id"],
           text: events.source.data["text"]
         })
         try {
