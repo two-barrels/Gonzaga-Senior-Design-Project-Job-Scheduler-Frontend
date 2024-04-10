@@ -111,8 +111,8 @@ export default {
         if(item.id !== id) {
           const existingStart = item.start.getTime()
           const existingEnd = item.end.getTime()
-          return (start >= existingStart && start <= existingEnd) ||
-              (end >= existingStart && end <= existingEnd)
+          return (start > existingStart && start < existingEnd) ||
+              (end > existingStart && end < existingEnd)
         }
       })
     },
