@@ -5,7 +5,7 @@
   <div v-if="loaded" class="wrap">
     <div class="months">
       <DayPilotNavigator id="nav" :config="navigatorConfig" />
-      <button type="button" @click=blockTimes>Block Times</button>
+      <button v-if="getIfUserAdmin" type="button" @click=blockTimes>Block Times</button>
     </div>
     <div class="week">
       <DayPilotCalendar id="weekCal" :config="config" ref="calendar" />
@@ -17,7 +17,6 @@
 import { DayPilot, DayPilotCalendar, DayPilotNavigator } from '@daypilot/daypilot-lite-vue'
 import http from '@/services/http-helper.js'
 import date from '@/services/curr-date-helper.js'
-//import wh from '@/services/working-hrs-helper.js'
 
 export default {
   name: 'CalendarComp',
@@ -96,7 +95,6 @@ export default {
         await http.post(
           'reservations', {
             space_id: this.space_id, 
-            user_id: this.user_id, 
             start_time: blockRange.result["start"]["value"], 
             end_time: blockRange.result["end"]["value"],
             text: "Blocked off by admin",
@@ -118,30 +116,20 @@ export default {
     },
 
     workingHrsCheck(start, end) {
-      const startTime = start.charAt(11) + start.charAt(12)
-      const endTime = end.charAt(11) + end.charAt(12)
+      const startTime = start.slice(11, 13)
+      const endTime = end.slice(11, 13)
       const startDay = new Date(start)
       const endDay = new Date(end)
       const workHrs = ['09', '10', '11', '12', '13', '14', '15', '16', '17']
       const workDays = [1, 2, 3, 4, 5]
 
-      if ((workHrs.includes(startTime) && workHrs.includes(endTime)) &&
-          (workDays.includes(startDay.getDay()) && workDays.includes(endDay.getDay()))) {
-        return true
-      }
-      else {
-        return false
-      }
+      return (workHrs.includes(startTime) && workHrs.includes(endTime)) &&
+          (workDays.includes(startDay.getDay()) && workDays.includes(endDay.getDay()))
     },
 
     pastCheck(start, end) {
       const currDateTime = new Date()
-      if (start < currDateTime.getTime() || end < currDateTime.getTime()) {
-        return true
-      }
-      else {
-        return false
-      }
+      return (start < currDateTime.getTime() || end < currDateTime.getTime())
     },
 
     initCalendar() {
@@ -190,7 +178,6 @@ export default {
         http.delete(
           `reservations/${events.source.data["id"]}`, {
             space_id: this.space_id, 
-            user_id: this.user_id, 
             start_time: events.source.data["start"], 
             end_time: events.source.data["end"]
           }
@@ -209,17 +196,16 @@ export default {
       if ((this.pastCheck(startTime, endTime))) {
         args.preventDefault()
         await DayPilot.Modal.alert("Error: Reservations cannot be made in the past.")
-        return
       }
-      if (!(this.workingHrsCheck(args.start['value'], args.end['value']))) {
+      else if (!(this.workingHrsCheck(args.start['value'], args.end['value']))) {
         args.preventDefault()
         await DayPilot.Modal.alert("Error: Reservations cannot be made outside of working hours.")
-        return
+        
       }
-      if (this.overlapCheck(startTime, endTime)) {
+      else if (this.overlapCheck(startTime, endTime)) {
         args.preventDefault()
         await DayPilot.Modal.alert("Error: Your reservation overlaps with an exisiting reservation")
-        return
+        
       }
       else {
         const resName = await DayPilot.Modal.prompt("Create a new reservation:", "Booked");
@@ -237,8 +223,7 @@ export default {
         try {
           await http.post(
             'reservations', {
-              space_id: this.space_id, 
-              user_id: this.user_id, 
+              space_id: this.space_id,  
               start_time: args.start, 
               end_time: args.end,
               text: resName.result,
@@ -264,6 +249,9 @@ export default {
         end: endTime
       }
       const blockRange = await DayPilot.Modal.form(form, data)
+      if (blockRange.canceled) {
+        return
+      } 
 
       this.events = this.events.filter(event => event.id !== events.source.data["id"]);
       this.events.push({
@@ -273,14 +261,10 @@ export default {
         text: events.source.data["text"]
       })
 
-      console.log(blockRange.result["start"]["value"])
-      console.log(blockRange.result["end"]["value"])
-
       try {
         await http.put(
           `reservations/${events.source.data["id"]}`, {
             space_id: this.space_id, 
-            user_id: this.user_id, 
             start_time: blockRange.result["start"]["value"], 
             end_time: blockRange.result["end"]["value"],
             text: events.source.data["text"],
