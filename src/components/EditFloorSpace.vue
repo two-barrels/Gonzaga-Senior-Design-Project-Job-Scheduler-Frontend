@@ -24,7 +24,7 @@
         <div class="row-buttons">
           <std-button @click="toggleWarnDeleteFloor()" 
             class="space-create-button"
-            title = "Confirm" 
+            title = "Delete" 
             buttonType="alert-default"
           />
           <std-button @click = "toggleWarnCancelFloor()"
