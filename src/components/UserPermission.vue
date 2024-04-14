@@ -15,23 +15,15 @@
   <vue-collapsible-panel-group class="drop-down">
     <vue-collapsible-panel
       :expanded="false"
+      v-for="(building,idx) in buildings"
+      :key="idx"
     >
     <template #title>
-      Building 1
+      {{building.name}}
     </template>
     <template #content>
-      (list floors and spaces here for Building 1)
+      This is building {{ building.name }}
     </template>
-    </vue-collapsible-panel>
-    <vue-collapsible-panel
-      :expanded="false"
-    >
-      <template #title>
-        Building 2
-      </template>
-      <template #content>
-        (list floors and spaces for Building 2)
-      </template>
     </vue-collapsible-panel>
   </vue-collapsible-panel-group>
 
@@ -49,6 +41,7 @@
   } from '@dafcoe/vue-collapsible-panel'
   import '@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css'
   import Assignments from '@/services/assignments-service'
+  import BuildingService from '@/services/building-service'
 
   export default {
     name: 'user-permission',
@@ -64,7 +57,8 @@
       return {
         hasClick: false,
         isAdminVisible: false,
-        assignments_data: []
+        assignments: [],
+        buildings: []
       }
     },
     computed: {
@@ -85,8 +79,10 @@
     async mounted(){
       try{
         const assignmentsResponse = await Assignments.get(`assignments/${this.userId}`)
-        this.assignments_data = assignmentsResponse.data
+        this.assignments = assignmentsResponse.data
         this.isAdminVisible = this.isAdmin
+        const buildingsResponse = await BuildingService.getAll()
+        this.buildings = buildingsResponse.data
       } catch (error){
           console.error(error)
       }
@@ -95,7 +91,7 @@
       buttonClicked(){
         this.hasClick = !this.hasClick
         console.log("click")
-        console.log(this.assignments_data)
+        console.log(this.assignments)
       },
       async changeAssignment(){
         try {
