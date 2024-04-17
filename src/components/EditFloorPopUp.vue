@@ -10,13 +10,19 @@
     <input type="text" class="in_name" v-model="floorDataHold.floor_name"><br>
     <label class="flr" for="floor_num">Associated Building:</label><br>
     <select name="Floors" class="in_flr">
-    <option v-for="(val, idx) in buildings" :key="idx" @click="changeBuilding(val.id)"> {{val.name}}</option> 
+      <option 
+        v-for="(val, idx) in buildings" 
+        :key="idx" 
+        @click="changeBuilding(val.id)"
+      > 
+        {{val.name}}
+      </option> 
     </select><br>
     <div v-if="showFloorEditPopup">
         <std-button 
           class="save"
-          @click="saveFloorChanges()" 
-          title = "Save" 
+          @click="saveFloorChanges()"
+          title = "Save"
           buttonType="upsell-default"
           />
         <std-button 
@@ -56,18 +62,18 @@
         buildingsData: Array
     },
     data(){
-      return{
+      return {
         showFloorEditPopup: true,
         floorDataHold: {},
         buildings: []
       }
     },
-    async mounted(){
+    async mounted() {
       this.buildings = this.buildingsData
       this.floorDataHold = this.floorData
       this.showFloorEditPopup = this.showEditPage
     },
-    methods:{
+    methods: {
       saveFloorChanges() {
         this.$emit('save-floor-changes', this.floorDataHold)
       },

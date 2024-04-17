@@ -8,6 +8,9 @@ export default {
   getAll() {
     return http.get('floors')
   },
+  get(route, params) {
+    return http.get(route, params)
+  },
   save(id, params) {
     return http.put(`floors/${id}`, params)
   },

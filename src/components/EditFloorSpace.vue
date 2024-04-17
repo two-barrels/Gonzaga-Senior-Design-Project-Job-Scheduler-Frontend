@@ -172,6 +172,7 @@ export default {
     clickOutside: vClickOutside.directive
   },
   props: {
+    building: Object,
     floorName: String
   }, 
   components: {
@@ -183,9 +184,13 @@ export default {
     StdButton
   },
   async mounted(){
+    if (!this.building) {
+    console.error("Building prop is not provided");
+    return;
+    }
     try{
       const spacesResponse = await SpaceService.getAll()
-      const floorResponse = await FloorService.getAll()
+      const floorResponse = await FloorService.get(`floors/${this.building.id}`)
       const buildingsResponse = await BuildingService.getAll()
       this.buildings = buildingsResponse.data
       this.floors = floorResponse.data
