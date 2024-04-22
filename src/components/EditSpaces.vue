@@ -1,18 +1,17 @@
 <template>
-    <h1 class="floor-space-name">Edit Available Spaces</h1>
+    <h1 class="floor-space-name">Edit Buildings, Floors, or Spaces</h1>
     <building-management/>
     <edit-floor-space/>
   </template>
   
   <script>
-  import EditFloorSpace from "./EditFloorSpace.vue"
   import buildingManagement from "@/components/buildingManagement"
   
   export default {
     name: 'edit-spaces',
     components: {
-      'building-management': buildingManagement,
-      'edit-floor-space': EditFloorSpace
+      'building-management': buildingManagement
+
     }
   }
   </script>

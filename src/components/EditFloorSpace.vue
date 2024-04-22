@@ -186,11 +186,12 @@ export default {
   async mounted(){
     if (!this.building) {
     console.error("Building prop is not provided");
+    console.log(this.building)
     return;
     }
     try{
       const spacesResponse = await SpaceService.getAll()
-      const floorResponse = await FloorService.get(`floors/${this.building.id}`)
+      const floorResponse = await FloorService.get(this.building.id)
       const buildingsResponse = await BuildingService.getAll()
       this.buildings = buildingsResponse.data
       this.floors = floorResponse.data
@@ -208,7 +209,6 @@ export default {
         const response = await SpaceService.create(this.popupSpaceData)
         this.popupSpaceData.id = response.data.id
         this.floors.find((floor) => floor.id === this.popupSpaceData.floor_id).spaces.push(this.popupSpaceData)
-        console.log(this.floors)
         this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'})
       }
       catch(error){
@@ -217,7 +217,7 @@ export default {
     },
     async createFloor(floorOutline){
       this.popupFloorData = _.cloneDeep(floorOutline)
-      try{
+      try {
         const response = await FloorService.create(this.popupFloorData)
         this.popupFloorData.id = response.data.id
         this.popupFloorData.spaces = []
@@ -225,9 +225,8 @@ export default {
         console.log(this.floors)
         this.toast.add({severity:'success', summary: 'Changes saved successfully', life: 2000, group:'tc'})
         this.closePopupFloor()
-      }
-      catch(error){
-        console.error(error)
+      } catch (e) {
+        console.error(e)
       }
     },
     createSpacePopUp(){
