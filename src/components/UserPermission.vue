@@ -1,6 +1,7 @@
 <template>
   <div>
     <h2>{{ user.email }}'s Role: {{ role }}</h2> 
+    <Toast/>
     <std-button 
       title="Change Role"
       buttonType="primary-default"
@@ -29,8 +30,8 @@
 
   <br>
   <std-button 
-      title="Edit Building and Floor Access"
-      buttonType="primary-default"
+    title="Edit Building and Floor Access"
+    buttonType="primary-default"
     />
 </template>
 <script>
@@ -42,13 +43,16 @@
   import '@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css'
   import Assignments from '@/services/assignments-service'
   import BuildingService from '@/services/building-service'
+  import { useToast } from 'primevue/usetoast'
+  import Toast from 'primevue/toast'
 
   export default {
     name: 'user-permission',
     components: {
       VueCollapsiblePanelGroup,
       VueCollapsiblePanel,
-      'std-button':StdButton
+      'std-button':StdButton,
+      Toast
     },
     props: {
       user: Object,
@@ -58,7 +62,8 @@
         hasClick: false,
         isAdminVisible: false,
         assignments: [],
-        buildings: []
+        buildings: [],
+        toast: useToast(),
       }
     },
     computed: {
@@ -97,8 +102,10 @@
         try {
           Assignments.post('assignments/change_admin_status', { id: this.user.id})
           this.isAdminVisible = !this.isAdminVisible
+          this.toast.add({severity: 'success', summary: 'Role Changed Successfully', life:2000})
         } catch(error){
-        console.error(error)
+            console.error(error)
+            this.toast.add({severity: 'error',  summary: "Error Changing Role", life:2000})
         }
       },
       async changeAssign(){

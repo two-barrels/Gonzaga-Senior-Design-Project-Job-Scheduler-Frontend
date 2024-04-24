@@ -27,10 +27,10 @@
               >
                 <div v-if="floor.id == value.floor_id" class="ind-floor">
                   <router-link :to="`/calendar/${123}/${value.id}/${value.spaces_name}`">
-                  <div>
+                  <div class="spaceDesc">
                     <h2>{{ value.spaces_name }}</h2>
-                    <p>Max Occupancy: {{ value.max_occupancy }} </p> 
-                    <p>Space Description: {{ value.floor_id }} </p>
+                    <p class="DescMargins">Max Occupancy: {{ value.max_occupancy }} </p> 
+                    <p class="DescMargins">Space Description: {{ value.floor_id }} </p>
                     <calendar-comp space_name='Conference'/>
                   </div>
                 </router-link>
@@ -117,10 +117,21 @@ a {
 .ind-floor{
   padding-bottom: 1%;
   margin-bottom: 1%;
-  background-color: $color-neutral--100;
+  background-color: #33333312;
   padding-left: 1%;
   outline: 1px $color-neutral--200 solid;
   border-radius: 5px;
   padding-top: 1%;
+}
+.spaceDesc {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+  justify-content: space-between;
+}
+.DescMargins {
+  flex-shrink: 0;
+  margin-bottom: 0;
 }
 </style>
