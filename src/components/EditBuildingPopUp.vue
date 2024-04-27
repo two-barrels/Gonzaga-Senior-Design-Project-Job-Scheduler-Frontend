@@ -8,7 +8,7 @@
         </div>
         <label class="name" for="sname">Building Name:</label><br>
         <input type="text" class="in_name" v-model="buildingHold.name"><br>
-        <div v-if="showBuildingEditPopup">
+        <div v-if="showBuildingEditPopup" class="pairButtons">
             <std-button 
             class="save"
             @click="saveBuildingChanges()"
@@ -22,10 +22,10 @@
             @click="closePopup()"
             />
         </div>
-        <div v-else>
+        <div v-else class="pairButtons">
             <std-button @click="createBuilding()" 
             class="save"
-            title = "Create Building" 
+            title = "Create"
             buttonType="upsell-default"
             />
             <std-button @click="closePopup()"
@@ -86,13 +86,17 @@ export default {
     display: inline;
   }
   .save{
-    display: inline-block;
+    margin-right:5%;
   }
   .exit{
     display: inline;
   }
   .exit1{
     display: inline;
+  }
+  .pairButtons{
+    margin-top:5%;
+    display: flex;
   }
   .in_det{
     &:focus{

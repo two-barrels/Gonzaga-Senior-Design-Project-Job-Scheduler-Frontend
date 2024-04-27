@@ -1,5 +1,18 @@
 <template>
-  <Toast position="top-center" group="bc">
+  <div class="row-buttons">
+    <std-button
+      @click="createSpacePopUp()" 
+      class="space-create-button"
+      title = "Create Space" 
+      buttonType="primary-default"
+    />
+    <std-button
+      @click="createFloorPopUp()"
+      title = "Create Floor" 
+      buttonType="primary-default"
+    />
+  </div>
+  <Toast position="top-center" :group="warnToastName">
     <template #message>
       <div class ="warning">
         <p> Are you sure you want to remove {{popupSpaceDataHold.spaces_name }}?</p><br>
@@ -17,7 +30,7 @@
       </div>
     </template>
   </Toast>
-  <Toast position="top-center" group="ac">
+  <Toast position="top-center" :group="warnToastNameFloor">
     <template #message>
       <div class ="warning">
         <p> Are you sure you want to remove {{popupFloorDataHold.floor_name }}?</p><br>
@@ -37,27 +50,14 @@
   </Toast>
   <Toast position="top-center" group="tc" />
   <div v-if="showPopup" class="popup"> 
-      <space-popup
-        :space-data="popupSpaceDataHold"
-        :floor-data="floors"
-        :show-edit-page="showEditPage"
-        @save-changes="saveChanges"
-        @create-space="createSpace"
-        @close-popup="closePopup"
-        @create-space-pop-up="createSpacePopUp"
-      />
-  </div>
-  <div class="row-buttons">
-    <std-button
-      @click="createSpacePopUp()" 
-      class="space-create-button"
-      title = "Create Space" 
-      buttonType="primary-default"
-    />
-    <std-button
-      @click="createFloorPopUp()"
-      title = "Create Floor" 
-      buttonType="primary-default"
+    <space-popup
+      :space-data="popupSpaceDataHold"
+      :floor-data="floors"
+      :show-edit-page="showEditPage"
+      @save-changes="saveChanges"
+      @create-space="createSpace"
+      @close-popup="closePopup"
+      @create-space-pop-up="createSpacePopUp"
     />
   </div>
   <div v-if="showPopupFloor" class="popup"> 
@@ -103,18 +103,18 @@
               class="ind-floor"
             >
               <div class = "space">
-                <std-button
-                  @click="openPopup(value, index, idx)" 
-                  class="edit"
-                  title = "Edit" 
-                  buttonType="primary-default"
-                />
-                <std-button
-                  @click="createWarningToast(value)"
-                  class="delete space-create-button"
-                  title = "Delete" 
-                  buttonType="alert-default"
-                />
+                  <std-button
+                    @click="openPopup(value, index, idx)" 
+                    class="edit"
+                    title = "Edit" 
+                    buttonType="primary-default"
+                  />
+                  <std-button
+                    @click="createWarningToast(value)"
+                    class="delete space-create-button"
+                    title = "Delete" 
+                    buttonType="alert-default"
+                  />
                 <h1>{{ value.spaces_name }}</h1>
                 <p>Space Description: {{ value.description }}</p>
                 <p>Max Occupancy: {{ value.max_occupancy }}</p>
@@ -183,23 +183,28 @@ export default {
     FloorPopup,
     StdButton
   },
+  computed: {
+    warnToastName() {
+      return `warnToast${this.building.id}`
+    },
+    warnToastNameFloor() {
+      return `warnToastFloor${this.building.id}`
+    }
+  },
   async mounted(){
-    if (!this.building) {
-    console.error("Building prop is not provided");
-    console.log(this.building)
-    return;
-    }
-    try{
-      const spacesResponse = await SpaceService.getAll()
-      const floorResponse = await FloorService.get(this.building.id)
-      const buildingsResponse = await BuildingService.getAll()
-      this.buildings = buildingsResponse.data
-      this.floors = floorResponse.data
-      this.spaces_data = spacesResponse.data
-      this.loaded = true
-    }
-    catch(error){
-      console.error(error)
+    if (this.building) {
+      try{
+        const spacesResponse = await SpaceService.getAll()
+        const floorResponse = await FloorService.get(this.building.id)
+        const buildingsResponse = await BuildingService.getAll()
+        this.buildings = buildingsResponse.data
+        this.floors = floorResponse.data
+        this.spaces_data = spacesResponse.data
+        this.loaded = true
+      }
+      catch (error) {
+        console.error(error)
+      }
     }
   },
   methods: {
@@ -211,7 +216,8 @@ export default {
         this.floors.find((floor) => floor.id === this.popupSpaceData.floor_id).spaces.push(this.popupSpaceData)
         this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'})
       }
-      catch(error){
+      catch (error) {
+        this.toast.add({severity:'error', summary:'Error saving changes', life:2000, group:'tc'})
         console.error(error)
       }
     },
@@ -226,6 +232,7 @@ export default {
         this.toast.add({severity:'success', summary: 'Changes saved successfully', life: 2000, group:'tc'})
         this.closePopupFloor()
       } catch (e) {
+        this.toast.add({severity:'error', summary:'Error saving changes', life:2000, group:'tc'})
         console.error(e)
       }
     },
@@ -292,7 +299,7 @@ export default {
     },
     createWarningToast(spaceData) {
       this.popupSpaceDataHold = spaceData;
-      this.toast.add({ severity: 'warn', summary: 'Delete', group: 'bc'})
+      this.toast.add({ severity: 'warn', summary: 'Delete', group: this.warnToastName})
     },
     async toggleWarnDelete(){
       this.popupSpaceData = this.popupSpaceDataHold
@@ -305,16 +312,15 @@ export default {
         console.error(e)
         this.toast.add({severity:'error', summary:'Error saving changes', life:2000, group:'tc'})
       }
-      this.toast.removeGroup('bc')
+      this.toast.removeGroup(this.warnToastName)
     },
-    
     toggleWarnCancel(){
-      this.toast.removeGroup('bc')
+      this.toast.removeGroup(this.warnToastName)
       this.visible = false;
     },
     createWarningToastFloor(floorData) {
       this.popupFloorDataHold = floorData
-      this.toast.add({ severity: 'warn', summary: 'Delete', group: 'ac'})
+      this.toast.add({ severity: 'warn', summary: 'Delete', group: this.warnToastNameFloor})
     },
     async toggleWarnDeleteFloor(){
       this.popupFloorData = _.cloneDeep(this.popupFloorDataHold)
@@ -326,10 +332,10 @@ export default {
         console.log(e)
         this.toast.add({severity:'error', summary:'Error saving changes. Remove spaces within first.', life:2000, group:'tc'})
       }
-      this.toast.removeGroup('ac')
+      this.toast.removeGroup(this.warnToastNameFloor)
     },
     toggleWarnCancelFloor(){
-      this.toast.removeGroup('ac')
+      this.toast.removeGroup(this.warnToastNameFloor)
       this.visible = false;
     }
   }
@@ -363,6 +369,8 @@ export default {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    margin-top:10px;
+    margin-right: 5px;
   }
 .space{
     border-bottom: 1px solid grey;
@@ -372,7 +380,7 @@ export default {
     padding-bottom: 0px;
     padding-left: 5px;
   }
-.space .delete{
+.space .delete {
     position: relative;
     float: right;
     cursor: pointer;
@@ -380,9 +388,10 @@ export default {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    margin-top:10px;
   }
 .popup {
-    width: 450px;
+    width: fit-content;
     height: fit-content;
     background-color: rgb(125, 175, 175);
     color: #fff;
@@ -390,10 +399,10 @@ export default {
     border-radius: 10px;
     padding: 10px;
     position: fixed;
-    top: 0;
+    top: 50%;
     z-index: 100;
-    margin-right: 50%;
-    margin-left: 37%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 .editbuttsave{
     margin-top: 20%;

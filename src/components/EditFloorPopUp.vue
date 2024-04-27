@@ -18,7 +18,7 @@
         {{val.name}}
       </option> 
     </select><br>
-    <div v-if="showFloorEditPopup">
+    <div v-if="showFloorEditPopup" class="pairButtons">
         <std-button 
           class="save"
           @click="saveFloorChanges()"
@@ -32,10 +32,10 @@
           @click="closePopup()"
           />
       </div>
-      <div v-else>
+      <div v-else class="pairButtons">
         <std-button @click="createFloor()" 
           class="save"
-          title = "Create Floor" 
+          title = "Create" 
           buttonType="upsell-default"
           />
         <std-button @click="closePopup()"
@@ -95,6 +95,10 @@
   overflow-x: hidden;
   overflow-y: auto;
 }
+.pairButtons{
+  display: flex;
+  margin-right:5%;
+}
 .h3{
   text-align:center;
 }
@@ -102,13 +106,7 @@
   display: inline;
 }
 .save{
-  display: inline-block;
-}
-.exit{
-  display: inline;
-}
-.exit1{
-  display: inline;
+  margin-right: 5%;
 }
 .in_det{
   &:focus{

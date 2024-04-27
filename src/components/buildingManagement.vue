@@ -1,13 +1,14 @@
 <template>
-  <Toast position="top-center" group="tc"/>
-  <Toast position="top-center" group="bc">
+  <Toast position="top-center" group="buildingSuccess"/>
+  <Toast position="top-center" group="err"/>
+  <Toast position="top-center" group="buildingWarn">
     <template #message>
       <div class ="warning">
-        <p> Are you sure you want to remove {{popupBuildingHold.name }}?</p><br>
+        <p> Are you sure you want to remove {{ popupBuildingHold.name }}?</p><br>
         <div class="row-buttons">
           <std-button @click="toggleWarnDelete()" 
             class="space-create-button"
-            title = "Confirm" 
+            title = "Confirm"
             buttonType="alert-default"
           />
           <std-button @click = "toggleWarnCancel()"
@@ -35,20 +36,20 @@
         role="tablist"
       >
         <a 
-          v-for="(building, idx) in buildings" 
-          :key="idx" 
+          v-for="(building) in buildings" 
+          :key="building.id" 
           class="list-group-item list-group-item-action" 
-          :id="'list-' + building.name" 
+          :id="'list-' + building.buildingIdx" 
           data-bs-toggle="list" 
-          role="tab" 
-          :aria-controls="'list-' + building.name" 
-          :href="'#' + building.name"
+          role="tab"
+          :aria-controls="'list-' + building.id" 
+          :href="'#' + building.id"
         >
           {{ building.name }}
           <div class="row-buttons">
             <std-button
               @click="editBuildingPopUp(building, idx)" 
-              class="space-create-button"
+              class="space-create-button edit"
               title = "Edit Building" 
               buttonType="primary-default"
             />
@@ -63,23 +64,26 @@
       </div>
     </div>
     <div class="col-8">
-      <div class="tab-content tab-details" id="nav-tabContent" >
+      <div class="tab-content tab-details" id="nav-tabContent">
         <div 
-          v-for="(building, idx) in buildings" 
-          :key="idx" class="tab-pane fade" 
-          :id="building.name" 
-          role="tabpanel" 
-          :aria-labelledby="'list-' + building.name"
+          v-for="(building) in buildings" 
+          :key="building.id"
+          class="tab-pane fade"
+          :id="building.id"
+          role="tabpanel"
+          :aria-labelledby="'list-' + building.id"
         >
-          <floor-space 
-            :building="building" 
+          <floor-space
+            :building="building"
           />
         </div>
       </div>
     </div>
   </div>
+
+  
   <div v-if="showBuildingPopup" class="popup"> 
-    <building-popup
+    <edit-building-pop-up
       :building="popupBuildingHold"
       :showEditPage="showEditBuildingPage"
       @save-building-changes="saveBuildingChanges"
@@ -94,16 +98,16 @@ import BuildingService from '@/services/building-service'
 import FloorSpace from '@/components/EditFloorSpace.vue'
 import StdButton from "@/components/StdButton.vue"
 import _ from 'lodash'
-import editBuildingPopUp from '@/components/EditBuildingPopUp'
+import EditBuildingPopUp from '@/components/EditBuildingPopUp'
 import { useToast } from 'primevue/usetoast'
 import Toast from 'primevue/toast'
 
 export default {
   name: 'builidng-management',
   components: {
-    'floor-space': FloorSpace,
+    FloorSpace,
     StdButton,
-    'building-popup': editBuildingPopUp,
+    EditBuildingPopUp,
     Toast
   },
   data(){
@@ -122,7 +126,6 @@ export default {
     try{
       const buildingResponse = await BuildingService.getAll()
       this.buildings = buildingResponse.data
-      console.log(this.buildings)
     } catch (error){
         console.error(error)
     }
@@ -134,11 +137,11 @@ export default {
         const response = await BuildingService.create(this.popupBuilding)
         this.popupBuilding.id = response.data.id
         this.buildings.push(this.popupBuilding)
-        this.toast.add({severity:'success', summary: 'Changes saved successfully', life: 2000, group:'tc'})
+        this.toast.add({severity:'success', summary: 'Changes saved successfully', life: 2000, group:'buildingSuccess'})
         this.closePopupBuilding()
       } catch (e) {
         console.error(e)
-        this.toast.add({severity:'error', summary:'Error saving changes', life:2000, group:'tc'})
+        this.toast.add({severity:'error', summary:'Error saving changes', life:2000, group:'err'})
         this.closePopupBuilding()
       }
     },
@@ -147,11 +150,11 @@ export default {
       try {
         await BuildingService.save(this.popupBuildingHold.id, this.popupBuildingHold)
         this.buildings[this.buildingIdx] = this.popupBuildingHold
-        this.toast.add({severity:'success', summary: 'Changes saved successfully', life: 2000, group:'tc'})
+        this.toast.add({severity:'success', summary: 'Changes saved successfully', life: 2000, group:'buildingSuccess'})
         this.closePopupBuilding()
       } catch (e) {
         console.error(e)
-        this.toast.add({severity:'error', summary:'Error saving changes', life:2000, group:'tc'})
+        this.toast.add({severity:'error', summary:'Error saving changes', life:2000, group:'err'})
         this.closePopupBuilding()
       }
     },
@@ -159,28 +162,20 @@ export default {
       this.popupBuilding = _.cloneDeep(this.popupBuildingHold)
       try {
         await BuildingService.delete(this.popupBuilding.id)
-        this.buildings = this.floors.filter(item => item.id !== this.popupBuilding.id)
-        this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'})
+        this.buildings = this.buildings.filter(item => item.id !== this.popupBuilding.id)
+        this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'buildingSuccess'})
       } catch (e) {
-        this.toast.add({severity:'error', summary:'Error saving changes. Remove spaces within first.', life:2000, group:'tc'})
+        this.toast.add({severity:'error', summary:'Error saving changes. Remove Floors within.', life:2000, group:'err'})
       }
-      this.toast.removeGroup('bc')
+      this.toast.removeGroup('buildingWarn')
     },
     toggleWarnCancel () {
-      this.toast.removeGroup('bc')
+      this.toast.removeGroup('buildingWarn')
       this.visible = false
-    },
-    triggerToast (flag) {
-      if (flag) { // if flag is true, success toast
-        this.toast.add({severity:'success', summary: 'Changes saved successfully', life: 2000, group:'tc'})
-      }
-      else { //else, error toast
-        this.toast.add({severity:'error', summary:'Error saving changes. Remove spaces within first.', life:2000, group:'tc'})
-      }
     },
     createWarningToastBuilding (building) {
       this.popupBuildingHold = building
-      this.toast.add({ severity: 'warn', summary: 'Delete', group: 'bc'})
+      this.toast.add({ severity: 'warn', summary: 'Delete', group: 'buildingWarn'})
     },
     createBuildingPopUp () {
       console.log(this.showBuildingPopup)
@@ -209,6 +204,9 @@ export default {
     padding-left: 1%;
     padding-right: 1%;
   }
+  .build {
+    display: flex;
+  }
   .tab-details {
       min-height: 100vh;
   }
@@ -218,8 +216,11 @@ export default {
     display: flex;
     margin: 15px;
   }
+  .row-buttons .edit{
+    margin-right: 10px;
+  }
   .popup {
-    width: 450px;
+    width: fit-content;
     height: fit-content;
     background-color: rgb(125, 175, 175);
     color: #fff;
@@ -227,10 +228,10 @@ export default {
     border-radius: 10px;
     padding: 10px;
     position: fixed;
-    top: 0;
+    top: 50%;
     z-index: 100;
-    margin-right: 50%;
-    margin-left: 37%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 </style>
   
