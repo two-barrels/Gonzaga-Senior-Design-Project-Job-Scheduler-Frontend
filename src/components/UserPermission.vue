@@ -10,29 +10,80 @@
 
   </div>
   <br>
-  <h3>Current Access to buildings/floors</h3>
+  <h3>Current Access to Buildings and Floors</h3>
   <p>Select building to view {{ user.email }}'s access to floors and spaces</p>
-
   <vue-collapsible-panel-group class="drop-down">
     <vue-collapsible-panel
-      :expanded="false"
-      v-for="(building,idx) in buildings"
-      :key="idx"
-    >
+    :expanded="false"
+    v-for="(building, idx) in buildings"
+    :key="idx">
     <template #title>
-      {{building.name}}
+      Building {{ building.name }}
     </template>
     <template #content>
-      This is building {{ building.name }}
+      This is building
     </template>
     </vue-collapsible-panel>
   </vue-collapsible-panel-group>
-
   <br>
-  <std-button 
-    title="Edit Building and Floor Access"
-    buttonType="primary-default"
-    />
+
+  <h3>Edit Access to Buildings and Floors</h3>
+  <vue-collapsible-panel-group class="drop-down">
+    <vue-collapsible-panel :expanded="false">
+    <template #title>
+      Edit Building Access
+    </template>
+    <template #content>
+      Click on Building to add access
+      <div class="ind-floor">
+        cheese
+      </div>
+      <hr>
+      Click on Building to remove access
+      <div class="ind-floor" @click="buttonClicked">
+        cheese
+      </div>
+    </template>
+    </vue-collapsible-panel>
+  </vue-collapsible-panel-group>
+  <br>
+  <vue-collapsible-panel-group class="drop-down">
+    <vue-collapsible-panel :expanded="false">
+    <template #title>
+      Edit Building Access
+    </template>
+    <template #content>
+      Click on Building to add access
+      <div class="ind-floor">
+        cheese
+      </div>
+      <hr>
+      Click on Building to remove access
+      <div class="ind-floor" @click="buttonClicked">
+        cheese
+      </div>
+    </template>
+    </vue-collapsible-panel>
+  </vue-collapsible-panel-group>
+  <br>
+  <vue-collapsible-panel-group class="drop-down">
+    <vue-collapsible-panel :expanded="false">
+    <template #title>
+      Edit Space Access
+    </template>
+    <template #content>
+      Click on Space to add access
+      <div class="ind-floor">
+        cheese
+      </div>
+      <hr>
+      Click on Space to remove access
+      <div class="ind-floor" @click="buttonClicked">
+        (name of Space), Building (name), Floor (name)
+      </div>
+    </template>
+    </vue-collapsible-panel>
+  </vue-collapsible-panel-group>
 </template>
 <script>
   import StdButton from "@/components/StdButton.vue"
@@ -63,7 +114,10 @@
         isAdminVisible: false,
         assignments: [],
         buildings: [],
+        floors: [],
+        spaces: [],
         toast: useToast(),
+        currentAccess: []
       }
     },
     computed: {
@@ -94,13 +148,11 @@
     },
     methods: {
       buttonClicked(){
-        this.hasClick = !this.hasClick
-        console.log("click")
         console.log(this.assignments)
       },
       async changeAssignment(){
         try {
-          Assignments.post('assignments/change_admin_status', { id: this.user.id})
+          Assignments.changeAdminStatus({id: this.user.id})
           this.isAdminVisible = !this.isAdminVisible
           this.toast.add({severity: 'success', summary: 'Role Changed Successfully', life:2000})
         } catch(error){
@@ -113,11 +165,33 @@
           console.log(this.isAdminVisible)
           await this.isAdminVisible ? 
             Assignments.delete(this.adminAssignmentId) : 
-            Assignments.post('assignments', { user_id: this.user.id, role_id: this.adminRoleId })
+            Assignments.create({ user_id: this.user.id, role_id: this.adminRoleId })
           this.isAdminVisible = !this.isAdminVisible
         } catch(error){
         console.error(error)
         }
+      },
+      async addBuilding(){
+        try{
+          const assignmentsResponse = await Assignments.create({ user_id: this.user.id, role_id: this.adminRoleId })
+          this.assignments = assignmentsResponse.data
+          this.isAdminVisible = this.isAdmin
+          const buildingsResponse = await BuildingService.getAll()
+          this.buildings = buildingsResponse.data
+      } catch (error){
+          console.error(error)
+      }
+      },
+      async deleteBuilding(){
+        try{
+          const assignmentsResponse = await Assignments.get(`assignments/${this.userId}`)
+          this.assignments = assignmentsResponse.data
+          this.isAdminVisible = this.isAdmin
+          const buildingsResponse = await BuildingService.getAll()
+          this.buildings = buildingsResponse.data
+      } catch (error){
+          console.error(error)
+      }
       }
     }
   }
@@ -127,6 +201,15 @@
 <style lang="scss" scoped>
 .drop-down{
   width: 45%;
+}
+.ind-floor{
+  padding-bottom: 1%;
+  margin-bottom: 1%;
+  background-color: #33333312;
+  padding-left: 1%;
+  outline: 1px $color-neutral--200 solid;
+  border-radius: 5px;
+  padding-top: 1%;
 }
 </style>
       

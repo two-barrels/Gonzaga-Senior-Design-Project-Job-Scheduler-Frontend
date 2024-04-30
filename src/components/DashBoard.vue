@@ -100,7 +100,6 @@ export default {
 
 .reservation-div  {
   max-height: 75vh;
-  // display: flex;
 }
 
 .card {
