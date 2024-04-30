@@ -1,12 +1,44 @@
 <template>
-  <div class="drop-down">
+  <div class="row">
+  <div class="col-4">
+    <div 
+      class="list-group overflow-auto" 
+      style="max-height: 100vh;" 
+      id="list-tab" 
+      role="tablist"
+    >
+      <a 
+      v-for="(building) in buildings" 
+          :key="building.id" 
+          class="list-group-item list-group-item-action"
+          :id="'list-' + building.buildingIdx" 
+          data-bs-toggle="list" 
+          role="tab"
+          :aria-controls="'list-' + building.id" 
+          :href="'#' + building.id"
+      >
+      Building {{building.name}}
+      </a>
+    </div>
+  </div>
+  <div class="col-8">
+    <div class="tab-content" id="nav-tabContent">
+      <div 
+      v-for="(building) in buildings" 
+          :key="building.id"
+          class="tab-pane fade"
+          :id="building.id"
+          role="tabpanel"
+          :aria-labelledby="'list-' + building.id"
+      >
+      <div class="drop-down">
     <vue-collapsible-panel-group>
-      <div>
+      <div v-for="(floor, idx) in floors_data" 
+          :key="idx">
         <vue-collapsible-panel 
           :expanded="false" 
           @click="onGetInfo" 
-          v-for="(floor, idx) in floors_data" 
-          :key="idx"
+          v-if="building.id === floor.building_id"
         >
             <template #title> 
               <div class="floor-title">
@@ -42,6 +74,12 @@
       </div>
     </vue-collapsible-panel-group>
   </div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
 </template>
 
 <script>
@@ -51,6 +89,7 @@ import {
 } from '@dafcoe/vue-collapsible-panel'
 import '@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css'
 import http_helper from '@/services/http-helper'
+import BuildingService from '@/services/building-service'
 import "@/store/index.js"
 
 
@@ -63,7 +102,6 @@ export default {
   components: {
     VueCollapsiblePanelGroup,
     VueCollapsiblePanel,
-    // 'std-button':StdButton
   },
   computed: {
     floors_hash() {
@@ -76,7 +114,8 @@ export default {
     return{
       spaces_data: [],
       floors_data: [],
-      floor_numbers: []
+      floor_numbers: [],
+      buildings: []
     }
   },
   async mounted(){
@@ -86,6 +125,8 @@ export default {
       const [ spacesResponse, floorsResponse ] = await Promise.all([ spacesPromise, floorsPromise ])  
       this.spaces_data = spacesResponse.data
       this.floors_data = floorsResponse.data
+      const buildingsResponse = await BuildingService.getAll()
+      this.buildings = buildingsResponse.data
     } catch (error){
       console.error(error)
     }
@@ -103,9 +144,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-a {
-  all: unset;
-}
 
 .drop-down{
   text-align: left;
@@ -134,4 +172,5 @@ a {
   flex-shrink: 0;
   margin-bottom: 0;
 }
+
 </style>

@@ -18,7 +18,7 @@
     v-for="(building, idx) in buildings"
     :key="idx">
     <template #title>
-      Building {{ building.name }}
+      Building
     </template>
     <template #content>
       This is building
@@ -35,13 +35,21 @@
     </template>
     <template #content>
       Click on Building to add access
-      <div class="ind-floor">
-        cheese
+      <div 
+        class="ind-floor" 
+        @click="buttonClicked"
+        v-for="(building, idx) in buildings"
+        :key="idx">
+        Building {{ building.name }}
       </div>
       <hr>
       Click on Building to remove access
-      <div class="ind-floor" @click="buttonClicked">
-        cheese
+      <div 
+      class="ind-floor" 
+      @click="buttonClicked"
+      v-for="(building, idx) in buildings"
+      :key="idx">
+        Building {{ building.name }}
       </div>
     </template>
     </vue-collapsible-panel>
@@ -114,6 +122,7 @@
         isAdminVisible: false,
         assignments: [],
         buildings: [],
+        currentBuildings: [],
         floors: [],
         spaces: [],
         toast: useToast(),
@@ -132,6 +141,9 @@
       },
       adminAssignmentId() {
         return this.user.assignments.find(assignment => assignment.role.name === 'Admin').id
+       },
+      buildingId() {
+        return this.user.assignments.find(assignment => assignment.role.reference_type === 'building').id
       }
 
     },
@@ -141,14 +153,14 @@
         this.assignments = assignmentsResponse.data
         this.isAdminVisible = this.isAdmin
         const buildingsResponse = await BuildingService.getAll()
-        this.buildings = buildingsResponse.data
+        this.currentBuilding = buildingsResponse.data
       } catch (error){
           console.error(error)
       }
     },
     methods: {
       buttonClicked(){
-        console.log(this.assignments)
+        console.log(this.buildings)
       },
       async changeAssignment(){
         try {
@@ -173,11 +185,8 @@
       },
       async addBuilding(){
         try{
-          const assignmentsResponse = await Assignments.create({ user_id: this.user.id, role_id: this.adminRoleId })
-          this.assignments = assignmentsResponse.data
-          this.isAdminVisible = this.isAdmin
-          const buildingsResponse = await BuildingService.getAll()
-          this.buildings = buildingsResponse.data
+          const assignmentsResponse = await Assignments.create({ user_id: this.user.id, role_id: this.buildingId  })
+          this.addBuildings = assignmentsResponse.data
       } catch (error){
           console.error(error)
       }
