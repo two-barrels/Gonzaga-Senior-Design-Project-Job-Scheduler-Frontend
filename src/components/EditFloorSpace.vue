@@ -155,7 +155,7 @@ export default {
         floors: [],
         popupFloorData: {},
         popupFloorDataHold:{},
-        dummyFloor: {floor_name: 'Floor', building_id: 1},
+        dummyFloor: {floor_name: 'Floor', building_id: this.building.id},
         buildings: [],
         floor_numbers:[],
         showPopup: false,

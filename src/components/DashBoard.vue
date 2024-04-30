@@ -2,7 +2,6 @@
   <div v-if="loaded">
     <h3 class="floor-space-name">
         Home Page
-        <button @click="printReservations">Click me</button>
     </h3>
     <div v-if="!areReservations">
       <p>No events to display</p>
@@ -83,9 +82,6 @@ export default {
     },
     printTime(dateString){
       return new Date(dateString).toLocaleTimeString()
-    },
-    printReservations(){
-      console.log(this.reservations_data)
     }
   }
 }

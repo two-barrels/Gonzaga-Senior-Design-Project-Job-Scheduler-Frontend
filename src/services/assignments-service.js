@@ -1,8 +1,8 @@
 import http from "./http-helper"
 
 export default {
-    get(route, params) {
-        return http.get(route, params)
+    getAll() {
+        return http.get("assignments")
     },
     changeAdminStatus(params) {
         return http.post('assignments/change_admin_status', params)
