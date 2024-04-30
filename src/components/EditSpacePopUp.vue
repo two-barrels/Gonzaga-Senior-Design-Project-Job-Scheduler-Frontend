@@ -16,7 +16,7 @@
       <input type="number" class="in_max" min="1" v-model="spaceDataHold.max_occupancy"><br>
       <label class="det">Space Details:</label><br>
       <textarea class="in_det" rows="7" cols="50" v-model="spaceDataHold.description"></textarea><bbr></bbr>
-      <div v-if="showEditPage">
+      <div v-if="showEditPage" class="pairButtons">
         <std-button 
           class="save"
           @click="saveChanges()" 
@@ -30,7 +30,7 @@
           @click="closePopup()"
           />
       </div>
-      <div v-else>
+      <div v-else class="pairButtons">
         <std-button
           @click="createSpace()"
           class="save"
@@ -94,6 +94,13 @@ export default {
 .scroll{
   overflow-x: hidden;
   overflow-y: auto;
+}
+.pairButtons{
+  margin-top:5%;
+  display: flex;
+}
+.save{
+  margin-right:5%;
 }
 .in_det{
   &:focus{
