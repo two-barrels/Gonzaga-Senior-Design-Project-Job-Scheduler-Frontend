@@ -1,5 +1,5 @@
   <template>
-    <h1 class="floor-space-name">Available Spaces</h1 >
+    <h1 class="floor-space-name">Available Spaces</h1>
     <floor-space/>
   </template>
   
@@ -16,6 +16,7 @@
   
   <style lang="scss" scoped>
     .floor-space-name{
+      margin-top: 15px;
       padding-left: 1%;
       padding-right: 1%;
     }

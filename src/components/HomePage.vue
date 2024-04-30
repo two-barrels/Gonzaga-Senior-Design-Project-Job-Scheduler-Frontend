@@ -22,8 +22,5 @@
       padding-left: 1%;
       padding-right: 1%;
     }
-    .video-placement {
-        margin-left: 15px
-    }
   </style>
   

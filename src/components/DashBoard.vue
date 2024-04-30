@@ -2,12 +2,12 @@
   <div v-if="loaded">
     <h3 class="floor-space-name">
         Home Page
+        <button @click="printReservations">Click me</button>
     </h3>
     <div v-if="!areReservations">
       <p>No events to display</p>
     </div>
     <div v-else class="reservation-div overflow-auto">
-      <!-- <button @click="printReservations">Click me</button> -->
       <div 
         v-for="(reservation, idx) in reservations_data"
         :key="idx"
@@ -19,7 +19,7 @@
         <ul class="list-group list-group-flush">
           <li class="list-group-item">
           <p><b>Space Name:</b> {{ reservation.space.spaces_name }} </p>
-          <p><b>Location:</b> {{ this.floors_hash[reservation.space.floor_id] }}</p>
+          <p><b>Location:</b> {{ this.floors_hash[reservation.space.floor_id] }}, Building {{ reservation.space.floor.building_id }}</p>
           <p><b>Start Time: </b> {{ printTime(reservation.start_time) }}</p>
           <p><b>End Time:</b> {{ printTime(reservation.end_time) }}</p>
           </li>
@@ -31,6 +31,7 @@
 
 <script>
 import Reservations from '@/services/dashboard-service'
+import Buildings from '@/services/building-service'
 
 export default {
   name: 'dash-board',
@@ -44,11 +45,12 @@ export default {
     },
     areReservations() {
       return this.reservations_data && this.reservations_data.length > 0
-    }
+    },
   },
   data(){
     return {
       reservations_data: [],
+      buildings: [],
       floors_data: [],
       loaded: false
     }
@@ -63,6 +65,12 @@ export default {
     try {
       const floorsResponse = await Reservations.get('floors')
       this.floors_data = floorsResponse.data
+    } catch (error) {
+      console.error(error)
+    }
+    try {
+      const buildingsResponse = await Buildings.getAll()
+      this.buildings = buildingsResponse.data
     } catch (error) {
       console.error(error)
     }
