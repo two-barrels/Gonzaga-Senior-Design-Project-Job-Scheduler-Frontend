@@ -15,7 +15,7 @@
             :class="{'active': idx === 0}"
             :id="'list-' + user.email" 
             data-bs-toggle="list" 
-            role="tab" 
+            role="tab"
             :aria-controls="'list-' + user.email" 
             :href="'#' + user.email">{{ user.email }}
           </a>
@@ -25,9 +25,8 @@
         <div class="tab-content tab-details" id="nav-tabContent">
           <div 
             v-for="(user, idx) in users_data" 
-            :key="idx" 
-            class="tab-pane fade" 
-            :class="{'show active': idx === 0}"
+            :key="idx" class="tab-pane fade" 
+            :class="{'active': idx === 0}"
             :id="user.email" 
             role="tabpanel" 
             :aria-labelledby="'list-' + user.email"

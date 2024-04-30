@@ -10,13 +10,19 @@
     <input type="text" class="in_name" v-model="floorDataHold.floor_name"><br>
     <label class="flr" for="floor_num">Associated Building:</label><br>
     <select name="Floors" class="in_flr">
-    <option v-for="(val, idx) in buildings" :key="idx" @click="changeBuilding(val.id)"> {{val.name}}</option> 
+      <option 
+        v-for="(val, idx) in buildings" 
+        :key="idx" 
+        @click="changeBuilding(val.id)"
+      > 
+        {{val.name}}
+      </option> 
     </select><br>
-    <div v-if="showFloorEditPopup">
+    <div v-if="showFloorEditPopup" class="pairButtons">
         <std-button 
           class="save"
-          @click="saveFloorChanges()" 
-          title = "Save" 
+          @click="saveFloorChanges()"
+          title = "Save"
           buttonType="upsell-default"
           />
         <std-button 
@@ -26,10 +32,10 @@
           @click="closePopup()"
           />
       </div>
-      <div v-else>
+      <div v-else class="pairButtons">
         <std-button @click="createFloor()" 
           class="save"
-          title = "Create Floor" 
+          title = "Create" 
           buttonType="upsell-default"
           />
         <std-button @click="closePopup()"
@@ -56,18 +62,18 @@
         buildingsData: Array
     },
     data(){
-      return{
+      return {
         showFloorEditPopup: true,
         floorDataHold: {},
         buildings: []
       }
     },
-    async mounted(){
+    async mounted() {
       this.buildings = this.buildingsData
       this.floorDataHold = this.floorData
       this.showFloorEditPopup = this.showEditPage
     },
-    methods:{
+    methods: {
       saveFloorChanges() {
         this.$emit('save-floor-changes', this.floorDataHold)
       },
@@ -89,6 +95,10 @@
   overflow-x: hidden;
   overflow-y: auto;
 }
+.pairButtons{
+  display: flex;
+  margin-right:5%;
+}
 .h3{
   text-align:center;
 }
@@ -96,13 +106,7 @@
   display: inline;
 }
 .save{
-  display: inline-block;
-}
-.exit{
-  display: inline;
-}
-.exit1{
-  display: inline;
+  margin-right: 5%;
 }
 .in_det{
   &:focus{

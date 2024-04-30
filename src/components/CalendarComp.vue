@@ -1,4 +1,5 @@
 <template>
+  <Toast position="top-center" group="tc" />
   <div class="spaceName">
     <b>{{ space_name }}</b>
   </div>
@@ -17,6 +18,8 @@
 import { DayPilot, DayPilotCalendar, DayPilotNavigator } from '@daypilot/daypilot-lite-vue'
 import http from '@/services/http-helper.js'
 import date from '@/services/curr-date-helper.js'
+import { useToast } from 'primevue/usetoast'
+import Toast from 'primevue/toast'
 
 export default {
   name: 'CalendarComp',
@@ -24,6 +27,7 @@ export default {
     return {
       events: [],
       loaded: false,
+      toast: useToast(),
       navigatorConfig: {
         showMonths: 2,
         skipMonths: 2,
@@ -43,6 +47,7 @@ export default {
     space_name: String
   },
   components: {
+    Toast,
     DayPilotCalendar,
     DayPilotNavigator
   },
@@ -55,7 +60,6 @@ export default {
     async loadEvents() {
       try {
         const response = await http.get(`reservations/space/${this.space_id}`)
-        
         response?.data?.forEach((item) => {
           this.events.push({
             id: item.id,
@@ -108,12 +112,10 @@ export default {
 
     overlapCheck(start, end, id) {
       return this.events.some((item) => {
-        if(item.id !== id) {
           const existingStart = item.start.getTime()
           const existingEnd = item.end.getTime()
-          return (start > existingStart && start < existingEnd) ||
-              (end > existingStart && end < existingEnd)
-        }
+          return item.id !== id && ((start >= existingStart && start < existingEnd) ||
+              (end > existingStart && end <= existingEnd))
       })
     },
 
@@ -153,11 +155,11 @@ export default {
 
     initContextMenu() {
       return new DayPilot.Menu([
-        // //dev purposes
+        // dev purposes
         // {
         //   text: "Show event ID",
         //   onClick: events => {
-        //     console.log(events.source.data["start"])
+        //     console.log(events.source.data["id"])
         //   }
         // },
         {
@@ -189,13 +191,22 @@ export default {
       } catch (error) {
         console.error("Error deleting reservation:", error.message)
       }
+      this.toast.add({severity:'success', summary:'Reservation deleted successfully', life:2000, group:'tc'})
     },
 
     async handleTimeRangeSelected(args) {
-      const startTime = args.start.getTime()
-      const endTime = args.end.getTime()
+      const calendar = args.control
+      const form = [
+        {name: "Reservation name", id: "name", type: "text"},
+        {name: "Start Date/Time", id: "start", dateFormat: "M/d/yyyy", timeInterval: 30, type: "datetime"},
+        {name: "End Date/Time", id: "end", dateFormat: "M/d/yyyy", timeInterval: 30, type: "datetime"}
+      ]
+      const data = {
+        start: args.start,
+        end: args.end
+      }
 
-      if ((this.pastCheck(startTime, endTime))) {
+      if (this.pastCheck(args.start.getTime()), this.pastCheck(args.end.getTime())) {
         args.preventDefault()
         await DayPilot.Modal.alert("Error: Reservations cannot be made in the past.")
       }
@@ -203,37 +214,54 @@ export default {
         args.preventDefault()
         await DayPilot.Modal.alert("Error: Reservations cannot be made outside of working hours.")
       }
-      else if (this.overlapCheck(startTime, endTime, null)) {
+      else if ( this.overlapCheck(args.start.getTime(), args.end.getTime(), null)) {
         args.preventDefault()
         await DayPilot.Modal.alert("Error: Your reservation overlaps with an exisiting reservation")
       }
       else {
-        const resName = await DayPilot.Modal.prompt("Create a new reservation:", "Booked");
-        const calendar = args.control;
-        calendar.clearSelection();
-        if (resName.canceled) {
+        calendar.clearSelection()
+        const newRes = await DayPilot.Modal.form(form, data)
+
+        if (newRes.canceled) {
           return
         } 
-        try {
-          const response = await http.post(
-            'reservations', {
-              space_id: this.space_id,  
-              start_time: args.start, 
-              end_time: args.end,
-              text: resName.result,
-              admin_block: false
-            })
-
-          calendar.events.add({
-            start: args.start,
-            end: args.end,
-            id: response.data.id,
-            text: resName.result
-          })
-        } catch (error) {
-          console.error('Error creating reservation:', error.message)
+        else if ((this.pastCheck(newRes.result["start"].getTime(), newRes.result["end"].getTime()))) {
+          args.preventDefault()
+          await DayPilot.Modal.alert("Error: Reservations cannot be made in the past.")
         }
-        
+        else if (!(this.workingHrsCheck(newRes.result['start']['value'], newRes.result['end']['value']))) {
+          args.preventDefault()
+          await DayPilot.Modal.alert("Error: Reservations cannot be made outside of working hours.")
+        }
+        else if (newRes.result['start'].getTime() >= newRes.result['end'].getTime()) {
+          await DayPilot.Modal.alert("Error: You entered an invalid range")
+        }
+        else if (this.overlapCheck(newRes.result["start"].getTime(), newRes.result["end"].getTime(), null)) {
+          args.preventDefault()
+          await DayPilot.Modal.alert("Error: Your reservation overlaps with an exisiting reservation")
+        }
+        else {
+          try {
+            const response = await http.post(
+              'reservations', {
+                space_id: this.space_id,  
+                start_time: newRes.result["start"]["value"], 
+                end_time: newRes.result["end"]["value"],
+                text: newRes.result["name"],
+                admin_block: false
+              })
+  
+            calendar.events.add({
+              start: newRes.result["start"]["value"],
+              end: newRes.result["end"]["value"],
+              id: response.data.id,
+              text: newRes.result["name"]
+            })
+          } catch (error) {
+          console.error('Error creating reservation:', error.message)
+          }
+          this.toast.add({severity:'success', summary:'Reservation created successfully', life:2000, group:'tc'})
+        }
       }
     },
 
@@ -287,6 +315,7 @@ export default {
           console.error('Error creating reservation:', error.message)
         }
         this.calendar.update({events: this.events})
+        this.toast.add({severity:'success', summary:'Changes saved successfully', life:2000, group:'tc'})
       }
     }
   },
@@ -297,6 +326,32 @@ export default {
   }
 }
 </script>
+
+<style lang=scss>
+.modal_default_ok {
+  width: fit-content ;
+    padding: 14px 40px;
+    color: white;
+    background-color: $color-secondary--400;
+    border-radius: 5px;
+    &:hover {
+        background-color: $color-secondary--800;
+        cursor: pointer;
+    }
+}
+.modal_default_cancel {
+  width: fit-content;
+    padding: 14px 40px;
+    color: white;
+    background-color: $color-danger--400;
+    border-radius: 5px;
+    &:hover {
+        background-color: $color-danger--900;
+        cursor: pointer;
+    }
+}
+
+</style>
 
 <style lang="scss" scoped>
 .spaceName {
@@ -314,10 +369,10 @@ export default {
   flex-grow: 1;
 }
 
-.calendar_default_event_inner {
-  background: #f16d01;
-  color: red;
-  border-radius: 5px;
-  opacity: 0.9;
-}
+// .calendar_default_event_inner {
+//   background: #f16d01;
+//   color: red;
+//   border-radius: 5px;
+//   opacity: 0.9;
+// }
 </style>
