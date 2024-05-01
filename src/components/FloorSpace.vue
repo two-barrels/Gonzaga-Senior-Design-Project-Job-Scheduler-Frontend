@@ -12,7 +12,6 @@
       :key="building.id" 
     >
       <a 
-        v-if="building.reference_type === 'building'"
         class="list-group-item list-group-item-action"
         :id="'list-' + building.buildingIdx" 
         data-bs-toggle="list" 
@@ -61,12 +60,12 @@
                 v-for="space in spaces"
                 :key="space.id"
               >
-                <div v-if="floor.id == value.floor_id" class="ind-floor">
-                  <router-link :to="`/calendar/${123}/${value.id}/${value.spaces_name}`" class="a-links">
+                <div v-if="floor.id == space.floor_id" class="ind-floor">
+                  <router-link :to="`/calendar/${123}/${space.id}/${space.spaces_name}`" class="a-links">
                   <div class="spaceDesc">
-                    <h2>{{ value.spaces_name }}</h2>
-                    <p class="DescMargins">Max Occupancy: {{ value.max_occupancy }} </p> 
-                    <p class="DescMargins">Space Description: {{ value.floor_id }} </p>
+                    <h2>{{ space.spaces_name }}</h2>
+                    <p class="DescMargins">Max Occupancy: {{ space.max_occupancy }} </p> 
+                    <p class="DescMargins">Space Description: {{ space.floor_id }} </p>
                     <calendar-comp space_name='Conference'/>
                   </div>
                 </router-link>
@@ -114,7 +113,7 @@ export default {
     ...mapGetters(['getUserRoles']),
     floors_hash() {
       const hash = {};
-      this.floors_data.forEach(floor => { hash[floor.id] = floor.floor_name })
+      this.floors.forEach(floor => { hash[floor.id] = floor.floor_name })
       return hash
     }
   },
@@ -131,13 +130,13 @@ export default {
       const assignmentsResponse = await Assignments.assignmentsForCurrentUser()
       this.assignments = assignmentsResponse.data
 
-      const buildingsResponse = await Buildings.getByIds(this.assignments.filter(assignment => assignment.role.reference_type === 'building').map(assignment => assignment.id))
+      const buildingsResponse = await Buildings.getByIds(this.assignments.filter(assignment => assignment.role.reference_type === 'building').map(assignment => assignment.role.associated_id))
       this.buildings = buildingsResponse.data
 
-      const floorsResponse = await Floors.getByIds(this.assignments.filter(assignment => assignment.role.reference_type === 'floor').map(assignment => assignment.id))
+      const floorsResponse = await Floors.getByIds(this.assignments.filter(assignment => assignment.role.reference_type === 'floor').map(assignment => assignment.role.associated_id))
       this.floors = floorsResponse.data
 
-      const spacesResponse = await Spaces.getByIds(this.assignments.filter(assignment => assignment.role.reference_type === 'space').map(assignment => assignment.id))
+      const spacesResponse = await Spaces.getByIds(this.assignments.filter(assignment => assignment.role.reference_type === 'space').map(assignment => assignment.role.associated_id))
       this.spaces = spacesResponse.data
       
     } catch (error){
@@ -148,12 +147,8 @@ export default {
     console.log(this.roles)
   },
   methods: {
-    printFloors(){
-      console.log(this.spaces_data)
-      console.log(this.floors_data)
-    },
     checkForSpaces(floorId){
-      return this.spaces_data.some(space => space.floor_id == floorId)
+      return this.spaces.some(space => space.floor_id == floorId)
     }
   }
 }

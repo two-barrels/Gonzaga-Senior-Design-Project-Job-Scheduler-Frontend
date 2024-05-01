@@ -14,6 +14,6 @@ export default {
         return http.delete(`assignments/${id} }`)
     },
     assignmentsForCurrentUser(){
-        return http.get('assignments/assignments_by_user')
+        return http.get('assignments_by_user')
     }
 }

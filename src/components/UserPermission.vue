@@ -74,7 +74,7 @@
         v-for="assignment in floorAssignments"
         :key="assignment.id">
           <div @click="deleteAssignment(assignment.id)">
-            {{ assignment.role.name}}, 
+            {{ assignment.role.name}}, {{ findBuildingName(findBuildingByFloorId(assignment.role.associated_id))}}
           </div>
       </div>
     </template>
@@ -99,7 +99,7 @@
           v-if="!spaceMatch(space.id)"
           @click="addAssignment(findSpaceID(space.id))"
           >
-            {{ space.spaces_name}} , {{ findFloorName(space.floor_id) }}
+            {{ space.spaces_name}} , {{ findFloorName(space.floor_id) }} , {{ findBuildingName(findBuildingByFloorId(space.floor_id))}}
           </div>
       </div>
       <hr>
@@ -109,7 +109,7 @@
         v-for="assignment in spaceAssignments"
         :key="assignment.id">
           <div @click="deleteAssignment(assignment.id)">
-            {{ assignment.role.name}}, 
+            {{ assignment.role.name}}, {{ findFloorName(findFloorBySpaceId(assignment.role.associated_id))}}, {{findBuildingName(findBuildingByFloorId(findFloorBySpaceId(assignment.role.associated_id)))}}
           </div>
       </div>
     </template>
@@ -234,6 +234,12 @@
       },
       findBuildingName(buildingId){
         return this.buildings.find(building => building.id === buildingId)?.name
+      },
+      findBuildingByFloorId(floorId){
+        return this.floors.find(floor => floor.id === floorId)?.building_id
+      },
+      findFloorBySpaceId(spaceId){
+        return this.spaces.find(space => space.id === spaceId)?.floor_id
       },
       findFloorName(floorId){
         return this.floors.find(floor => floor.id === floorId)?.floor_name
