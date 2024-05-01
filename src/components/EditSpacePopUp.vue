@@ -9,8 +9,8 @@
       <label class="name" for="sname">Space Name:</label><br>
       <input type="text" class="in_name" v-model="spaceDataHold.spaces_name"><br>
       <label class="flr" for="floor_num">Floor Name:</label><br>
-      <select name="Floors" class="in_flr">
-      <option v-for="(floor, idx) in floorData" :key="idx" @click="changeFloor(floor.id)"> {{floor.floor_name}}</option> 
+      <select v-model="spaceDataHold.floor_id" name="Floors" class="in_flr">
+      <option v-for="floor in floorData" :key="floor.id" :value="floor.id"> {{floor.floor_name}}</option> 
       </select><br>
       <label class="labels" for="max_num">Max Occupancy:</label><br>
       <input type="number" class="in_max" min="1" v-model="spaceDataHold.max_occupancy"><br>
@@ -63,14 +63,18 @@ export default {
   },
   data() {
     return{
-      spaceDataHold: {}
+      spaceDataHold: {
+        floor_id: this.floorData[0].id
+      }
     }
   },
   async mounted() {
     this.spaceDataHold = _.cloneDeep(this.spaceData)
+    console.log(this.floorData)
   },
   methods: {
     changeFloor(floorVal) {
+      console.log(floorVal)
       this.spaceDataHold.floor_id = floorVal
     },
     saveChanges() {

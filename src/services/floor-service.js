@@ -16,5 +16,11 @@ export default {
   },
   delete(id) {
     return http.delete(`floors/${id}`)
+  },
+  getByBuildings(buildingIds){
+    return http.post('by_building', {building_ids: buildingIds})
+  },
+  getByIds(floorsIds){
+    return http.post('floors_by_ids', { floor_ids: floorsIds })
   }
 }

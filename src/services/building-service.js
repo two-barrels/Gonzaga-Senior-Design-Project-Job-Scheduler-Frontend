@@ -13,5 +13,8 @@ export default {
   },
   delete(id) {
     return http.delete(`buildings/${id}`)
+  },
+  getByIds(buildingIds){
+    return http.post('buildings_by_ids', { building_ids: buildingIds })
   }
 }

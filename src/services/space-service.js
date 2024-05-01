@@ -13,5 +13,11 @@ export default {
   },
   delete(id) {
     return http.delete(`spaces/${id}`)
+  },
+  getByFloors(floorsIds){
+    return http.post('by_floor', { floor_ids: floorsIds })
+  },
+  getByIds(spacesIds){
+    return http.post('spaces_by_ids', { space_ids: spacesIds })
   }
 }

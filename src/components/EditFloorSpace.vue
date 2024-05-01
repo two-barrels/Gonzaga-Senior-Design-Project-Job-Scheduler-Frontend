@@ -155,7 +155,7 @@ export default {
         floors: [],
         popupFloorData: {},
         popupFloorDataHold:{},
-        dummyFloor: {floor_name: 'Floor', building_id: 1},
+        dummyFloor: {floor_name: 'Floor', building_id: this.building.id},
         buildings: [],
         floor_numbers:[],
         showPopup: false,
@@ -343,10 +343,10 @@ export default {
 </script>
 
   <style lang="scss" scoped>
-  #title, #content {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-  }
+  // #title, #content {
+  //   font-family: Avenir, Helvetica, Arial, sans-serif;
+  //   -webkit-font-smoothing: antialiased;
+  // }
   button {
     background-color: #c4870c; 
     color: white;

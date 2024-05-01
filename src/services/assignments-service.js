@@ -1,17 +1,19 @@
 import http from "./http-helper"
 
-
 export default {
-    get(route, params) {
-        return http.get(route, params)
+    getAll() {
+        return http.get("assignments")
     },
-    post(route, params) {
-        return http.post(route, params)
+    changeAdminStatus(params) {
+        return http.post('assignments/change_admin_status', params)
     },
-    put(route, params) {
-        return http.put(route, params)
+    create(params) {
+        return http.post('assignments', params)
     },
-    delete(id,params) {
-        return http.delete(`assignments/${id} }`, params)
+    delete(id) {
+        return http.delete(`assignments/${id} }`)
+    },
+    assignmentsForCurrentUser(){
+        return http.get('assignments_by_user')
     }
 }
