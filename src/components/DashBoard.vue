@@ -13,7 +13,7 @@
         class="card"
       >
         <div class="card-header">
-          <span>{{ reservation.text }}, {{printDate(reservation.start_time)}}</span>
+          <span>{{ reservation.text }}, {{ printDate(reservation.start_time) }}</span>
         </div>
         <ul class="list-group list-group-flush">
           <li class="list-group-item">
@@ -43,6 +43,9 @@ export default {
       return hash
     },
     areReservations() {
+      console.log("yes")
+      console.log(this.reservations_data)
+      console.log("no")
       return this.reservations_data && this.reservations_data.length > 0
     },
   },

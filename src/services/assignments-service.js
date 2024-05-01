@@ -10,7 +10,10 @@ export default {
     create(params) {
         return http.post('assignments', params)
     },
-    delete(id,params) {
-        return http.delete(`assignments/${id} }`, params)
+    delete(id) {
+        return http.delete(`assignments/${id} }`)
+    },
+    assignmentsForCurrentUser(){
+        return http.get('assignments/get_assignments_by_user')
     }
 }

@@ -10,25 +10,7 @@
 
   </div>
   <br>
-  <h3>Current Access to Buildings and Floors</h3>
-  <p>Select building to view {{ user.email }}'s access to floors and spaces</p>
-  <vue-collapsible-panel-group class="drop-down">
-    <vue-collapsible-panel :expanded="false">
-    <template #title>
-      <div 
-      v-for="(building, idx) in currentBuildings"
-      :key="idx">
-      {{ building.role.name }}
-      </div>
-    </template>
-    <template #content>
-      This is building
-    </template>
-    </vue-collapsible-panel>
-  </vue-collapsible-panel-group>
-  <br>
-
-  <h3>Edit Access to Buildings and Floors</h3>
+  <h3>Edit Access to Buildings, Floors, and Spaces</h3>
   <vue-collapsible-panel-group class="drop-down">
     <vue-collapsible-panel :expanded="false">
     <template #title>
@@ -37,14 +19,14 @@
     <template #content>
       Click on Building to add access
       <div 
-        class="ind-floor" 
         @click="buttonClicked"
         v-for="building in buildings"
         :key="building.id">
           <div 
-          v-if="!buildingMatch(building.id)"
-          @click="addBuilding(building.id)">
-          <!-- ADD METHOD TO GRAB CORRECT ID : MAKE SURE IT IS THE ROLE ID NOT BUILDING ID-->
+            class="ind-floor" 
+            v-if="!buildingMatch(building.id)"
+            @click="addAssignment(findBuildingID(building.id))"
+          >
             {{ building.name }}
           </div>
       </div>
@@ -53,53 +35,87 @@
       <div 
         class="ind-floor" 
         @click="buttonClicked"
-        v-for="building in buildings"
-        :key="building.id">
-          <div v-if="buildingMatch(building.id)">
-            {{ building.name}}
+        v-for="assignment in buildingAssignments"
+        :key="assignment.id"
+      >
+          <div @click="deleteAssignment(assignment.id)">
+            {{ assignment.role.name }}
           </div>
       </div>
     </template>
     </vue-collapsible-panel>
   </vue-collapsible-panel-group>
+
+  <!-- FLOOR ACCESS -->
   <br>
-  <!-- <vue-collapsible-panel-group class="drop-down">
+  <vue-collapsible-panel-group class="drop-down">
     <vue-collapsible-panel :expanded="false">
     <template #title>
-      Edit Building Access
+      Edit Floor Access
     </template>
     <template #content>
-      Click on Building to add access
-      <div class="ind-floor">
-        cheese
+      Click on Floor to add access
+      <div 
+        v-for="floor in floors"
+        :key="floor.id"
+        >
+          <div
+          class="ind-floor" 
+          v-if="!floorMatch(floor.id)"
+          @click="addAssignment(findFloorID(floor.id))"
+          >
+            {{ floor.floor_name}} , {{ findBuildingName(floor.building_id) }}
+          </div>
       </div>
       <hr>
-      Click on Building to remove access
-      <div class="ind-floor" @click="buttonClicked">
-        cheese
+      Click on Floor to remove access
+      <div 
+        class="ind-floor" 
+        v-for="assignment in floorAssignments"
+        :key="assignment.id">
+          <div @click="deleteAssignment(assignment.id)">
+            {{ assignment.role.name}}, 
+          </div>
       </div>
     </template>
     </vue-collapsible-panel>
-  </vue-collapsible-panel-group> -->
-  <br>
-  <!-- <vue-collapsible-panel-group class="drop-down">
+  </vue-collapsible-panel-group>
+
+   <!-- SPACE ACCESS -->
+   <br>
+  <vue-collapsible-panel-group class="drop-down">
     <vue-collapsible-panel :expanded="false">
     <template #title>
       Edit Space Access
     </template>
     <template #content>
       Click on Space to add access
-      <div class="ind-floor">
-        cheese
+      <div 
+        v-for="space in spaces"
+        :key="space.id"
+        >
+          <div
+          class="ind-floor" 
+          v-if="!spaceMatch(space.id)"
+          @click="addAssignment(findSpaceID(space.id))"
+          >
+            {{ space.spaces_name}} , {{ findFloorName(space.floor_id) }}
+          </div>
       </div>
       <hr>
       Click on Space to remove access
-      <div class="ind-floor" @click="buttonClicked">
-        (name of Space), Building (name), Floor (name)
+      <div 
+        class="ind-floor" 
+        v-for="assignment in spaceAssignments"
+        :key="assignment.id">
+          <div @click="deleteAssignment(assignment.id)">
+            {{ assignment.role.name}}, 
+          </div>
       </div>
     </template>
     </vue-collapsible-panel>
-  </vue-collapsible-panel-group> -->
+  </vue-collapsible-panel-group>
+
 </template>
 <script>
   import StdButton from "@/components/StdButton.vue"
@@ -110,8 +126,11 @@
   import '@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css'
   import Assignments from '@/services/assignments-service'
   import BuildingService from '@/services/building-service'
+  import Roles from '@/services/roles-service'
   import { useToast } from 'primevue/usetoast'
   import Toast from 'primevue/toast'
+  import Floors from '@/services/floor-service'
+  import Spaces from '@/services/space-service'
 
   export default {
     name: 'user-permission',
@@ -133,7 +152,8 @@
         floors: [],
         spaces: [],
         toast: useToast(),
-        currentAccess: []
+        currentAccess: [],
+        roles: []
       }
     },
     computed: {
@@ -149,37 +169,83 @@
       adminAssignmentId() {
         return this.user.assignments.find(assignment => assignment.role.name === 'Admin').id
        },
-      currentBuildings() {
+      buildingAssignments() {
         return this.assignments.filter(
-        assignment => assignment.user_id === this.user.id && assignment.role.reference_type === 'building');
+          assignment => assignment.user_id === this.user.id && assignment.role.reference_type === 'building'
+        )
       },
-      currentFloors() {
+      floorAssignments(){
         return this.assignments.filter(
-        assignment => assignment.user_id === this.user.id && assignment.role.reference_type === 'floor');
+          assignment => assignment.user_id === this.user.id && assignment.role.reference_type === 'floor'
+        )
+      },
+      spaceAssignments(){
+        return this.assignments.filter(
+          assignment => assignment.user_id === this.user.id && assignment.role.reference_type === 'space'
+        )
+      },
+
+      currentFloors() {
+        return this.assignments.filter(assignment => {
+          return assignment.user_id === this.user.id &&
+            assignment.role.reference_type === 'floor' &&
+            this.floors.some(floor => floor.id === assignment.reference_id)
+        })
       },
       currentSpaces() {
-        return this.assignments.filter(
-        assignment => assignment.user_id === this.user.id && assignment.role.reference_type === 'space');
-      }
+        return this.assignments.filter(assignment => {
+          return assignment.user_id === this.user.id &&
+            assignment.role.reference_type === 'space' &&
+            this.spaces.some(space => space.id === assignment.reference_id)
+        })
+      },
     },
     async mounted(){
       try{
         const assignmentsResponse = await Assignments.getAll()
         this.assignments = assignmentsResponse.data
+
         this.isAdminVisible = this.isAdmin
+
         const buildingsResponse = await BuildingService.getAll()
         this.buildings = buildingsResponse.data
+
+        const rolesResponse = await Roles.getAll()
+        this.roles = rolesResponse.data
+
+        const floorsResponse = await Floors.getByBuildings(this.buildingAssignments.map(assignment => assignment.role.associated_id))
+        this.floors = floorsResponse.data
+
+        const spacesResponse = await Spaces.getByFloors(this.floorAssignments.map(assignment => assignment.role.associated_id))
+        this.spaces = spacesResponse.data
       } catch (error){
           console.error(error)
       }
     },
     methods: {
       buildingMatch(id){
-        return this.currentBuildings.some(building => building.role.associated_id === id);
+        return this.buildingAssignments.some(building => building.role.associated_id === id)
       },
-
-      buttonClicked(){
-        console.log(this.assignments)
+      floorMatch(id){
+        return this.floorAssignments.some(floor => floor.role.associated_id === id)
+      },
+      spaceMatch(id){
+        return this.spaceAssignments.some(space => space.role.associated_id === id)
+      },
+      findBuildingName(buildingId){
+        return this.buildings.find(building => building.id === buildingId)?.name
+      },
+      findFloorName(floorId){
+        return this.floors.find(floor => floor.id === floorId)?.floor_name
+      },
+      findBuildingID(id) {
+        return this.roles.find(role => role.associated_id === id)?.id
+      },
+      findFloorID(id) {
+        return this.roles.find(role => role.associated_id === id)?.id
+      },
+      findSpaceID(id) {
+        return this.roles.find(role => role.associated_id === id)?.id
       },
       async changeAssignment(){
         try {
@@ -191,31 +257,31 @@
             this.toast.add({severity: 'error',  summary: "Error Changing Role", life:2000})
         }
       },
-      async changeAssign(){
-        try {
-          console.log(this.isAdminVisible)
-          await this.isAdminVisible ? 
-            Assignments.delete(this.adminAssignmentId) : 
-            Assignments.create({ user_id: this.user.id, role_id: this.adminRoleId })
-          this.isAdminVisible = !this.isAdminVisible
-        } catch(error){
-        console.error(error)
-        }
-      },
-      async addBuilding(buildingId){
+      async addAssignment(roleId){
         try{
-          Assignments.create({ user_id: this.user.id, role_id: buildingId  })
+          await Assignments.create({ user_id: this.user.id, role_id: roleId })
+          const assignmentsResponse = await Assignments.getAll()
+          this.assignments = assignmentsResponse.data
+          const floorsResponse = await Floors.getByBuildings(this.buildingAssignments.map(assignment => assignment.role.associated_id))
+          this.floors = floorsResponse.data
+
+          const spacesResponse = await Spaces.getByFloors(this.floorAssignments.map(assignment => assignment.role.associated_id))
+          this.spaces = spacesResponse.data
       } catch (error){
           console.error(error)
       }
       },
-      async deleteBuilding(){
+      async deleteAssignment(roleId){
         try{
-          const assignmentsResponse = await Assignments.get(`assignments/${this.user.id}`)
+
+          await Assignments.delete(roleId)
+          const assignmentsResponse = await Assignments.getAll()
           this.assignments = assignmentsResponse.data
-          this.isAdminVisible = this.isAdmin
-          const buildingsResponse = await BuildingService.getAll()
-          this.buildings = buildingsResponse.data
+          const floorsResponse = await Floors.getByBuildings(this.buildingAssignments.map(assignment => assignment.role.associated_id))
+          this.floors = floorsResponse.data
+          const spacesResponse = await Spaces.getByFloors(this.floorAssignments.map(assignment => assignment.role.associated_id))
+          this.spaces = spacesResponse.data
+          
       } catch (error){
           console.error(error)
       }

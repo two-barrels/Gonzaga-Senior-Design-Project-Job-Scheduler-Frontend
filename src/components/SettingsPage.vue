@@ -13,9 +13,6 @@
           @click="changeName()"
         />
     </div>
-    <div>
-      <h4>Change Password</h4>
-    </div>
   </template>
   
   <script>

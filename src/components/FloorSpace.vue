@@ -7,24 +7,28 @@
       id="list-tab" 
       role="tablist"
     >
+    <div
+      v-for="(building) in roles" 
+      :key="building.id" 
+    >
       <a 
-      v-for="(building) in buildings" 
-          :key="building.id" 
-          class="list-group-item list-group-item-action"
-          :id="'list-' + building.buildingIdx" 
-          data-bs-toggle="list" 
-          role="tab"
-          :aria-controls="'list-' + building.id" 
-          :href="'#' + building.id"
+        v-if="building.reference_type === 'building'"
+        class="list-group-item list-group-item-action"
+        :id="'list-' + building.buildingIdx" 
+        data-bs-toggle="list" 
+        role="tab"
+        :aria-controls="'list-' + building.id" 
+        :href="'#' + building.id"
       >
-      Building {{building.name}}
+      <div> {{building.name}} </div>
       </a>
+      </div>
     </div>
   </div>
   <div class="col-8">
     <div class="tab-content" id="nav-tabContent">
       <div 
-      v-for="(building) in buildings" 
+      v-for="(building) in roles" 
           :key="building.id"
           class="tab-pane fade"
           :id="building.id"
@@ -32,9 +36,10 @@
           :aria-labelledby="'list-' + building.id"
       >
       <div class="drop-down">
-    <vue-collapsible-panel-group>
-      <div v-for="(floor, idx) in floors_data" 
-          :key="idx">
+      <vue-collapsible-panel-group>
+      <div v-for="floor in roles" 
+          :key="floor.id">
+      <div v-if="floor.reference_type === 'floor' && building.reference_type === 'building'">
         <vue-collapsible-panel 
           :expanded="false" 
           @click="onGetInfo" 
@@ -58,7 +63,7 @@
                 :key="index"
               >
                 <div v-if="floor.id == value.floor_id" class="ind-floor">
-                  <router-link :to="`/calendar/${123}/${value.id}/${value.spaces_name}`">
+                  <router-link :to="`/calendar/${123}/${value.id}/${value.spaces_name}`" class="a-links">
                   <div class="spaceDesc">
                     <h2>{{ value.spaces_name }}</h2>
                     <p class="DescMargins">Max Occupancy: {{ value.max_occupancy }} </p> 
@@ -70,7 +75,9 @@
                </div>
               </div>
             </template>
-        </vue-collapsible-panel>             
+        </vue-collapsible-panel>            
+          </div>
+             
       </div>
     </vue-collapsible-panel-group>
   </div>
@@ -88,9 +95,12 @@ import {
   VueCollapsiblePanel,
 } from '@dafcoe/vue-collapsible-panel'
 import '@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css'
-import http_helper from '@/services/http-helper'
-import BuildingService from '@/services/building-service'
+import Buildings from '@/services/building-service'
+import Floors from '@/services/floor-service'
+import Spaces from '@/services/space-service'
+import Assignments from '@/services/assignments-service'
 import "@/store/index.js"
+import { mapGetters } from 'vuex'
 
 
 export default {
@@ -104,6 +114,7 @@ export default {
     VueCollapsiblePanel,
   },
   computed: {
+    ...mapGetters(['getUserRoles']),
     floors_hash() {
       const hash = {};
       this.floors_data.forEach(floor => { hash[floor.id] = floor.floor_name })
@@ -112,24 +123,32 @@ export default {
   },
   data(){
     return{
-      spaces_data: [],
-      floors_data: [],
-      floor_numbers: [],
-      buildings: []
+      spaces: [],
+      floors: [],
+      buildings: [],
+      assignments: []
     }
   },
   async mounted(){
     try{
-      const spacesPromise = http_helper.get('spaces') 
-      const floorsPromise = http_helper.get('floors')
-      const [ spacesResponse, floorsResponse ] = await Promise.all([ spacesPromise, floorsPromise ])  
-      this.spaces_data = spacesResponse.data
-      this.floors_data = floorsResponse.data
-      const buildingsResponse = await BuildingService.getAll()
+      const assignmentsResponse = await Assignments.assignmentsForCurrentUser()
+      this.assignments = assignmentsResponse.data
+
+      const buildingsResponse = await Buildings.getByIds(this.assignments.filter(assignment => assignment.role.reference_type === 'building').map(assignment => assignment.id))
       this.buildings = buildingsResponse.data
+
+      const floorsResponse = await Floors.getByIds(this.assignments.filter(assignment => assignment.role.reference_type === 'floor').map(assignment => assignment.id))
+      this.floors = floorsResponse.data
+
+      const spacesResponse = await Spaces.getByIds(this.assignments.filter(assignment => assignment.role.reference_type === 'space').map(assignment => assignment.id))
+      this.spaces = spacesResponse.data
+      
     } catch (error){
       console.error(error)
     }
+    this.roles = this.getUserRoles
+    console.log("yes")
+    console.log(this.roles)
   },
   methods: {
     printFloors(){
@@ -144,7 +163,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.a-links{
+    all: unset;
+  }
 .drop-down{
   text-align: left;
   color: black;
