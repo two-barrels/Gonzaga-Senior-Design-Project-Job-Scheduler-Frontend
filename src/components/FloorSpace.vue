@@ -8,7 +8,7 @@
       role="tablist"
     >
     <div
-      v-for="(building) in roles" 
+      v-for="building in buildings" 
       :key="building.id" 
     >
       <a 
@@ -28,7 +28,7 @@
   <div class="col-8">
     <div class="tab-content" id="nav-tabContent">
       <div 
-      v-for="(building) in roles" 
+      v-for="building in buildings" 
           :key="building.id"
           class="tab-pane fade"
           :id="building.id"
@@ -37,9 +37,8 @@
       >
       <div class="drop-down">
       <vue-collapsible-panel-group>
-      <div v-for="floor in roles" 
+      <div v-for="floor in floors" 
           :key="floor.id">
-      <div v-if="floor.reference_type === 'floor' && building.reference_type === 'building'">
         <vue-collapsible-panel 
           :expanded="false" 
           @click="onGetInfo" 
@@ -59,8 +58,8 @@
                 <hr>
               <div 
                 class="spaces-buttons"
-                v-for="(value, index) in spaces_data"
-                :key="index"
+                v-for="space in spaces"
+                :key="space.id"
               >
                 <div v-if="floor.id == value.floor_id" class="ind-floor">
                   <router-link :to="`/calendar/${123}/${value.id}/${value.spaces_name}`" class="a-links">
@@ -76,8 +75,6 @@
               </div>
             </template>
         </vue-collapsible-panel>            
-          </div>
-             
       </div>
     </vue-collapsible-panel-group>
   </div>
